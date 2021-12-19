@@ -4,15 +4,17 @@ import {
   SYSVAR_RENT_PUBKEY,
   TransactionInstruction,
 } from '@solana/web3.js'
-import { GOVERNANCE_SCHEMA } from './serialisation'
+import { getGovernanceSchema } from './serialisation'
 import { serialize } from 'borsh'
 import { CreateProposalArgs } from './instructions'
-import { GOVERNANCE_PROGRAM_SEED } from './accounts'
+import { GOVERNANCE_PROGRAM_SEED, VoteType } from './accounts'
 import { SYSTEM_PROGRAM_ID } from './core/api'
+import { PROGRAM_VERSION_V1 } from './registry/api'
 
 export const withCreateProposal = async (
   instructions: TransactionInstruction[],
   programId: PublicKey,
+  programVersion: number,
   realm: PublicKey,
   governance: PublicKey,
   tokenOwnerRecord: PublicKey,
@@ -23,13 +25,22 @@ export const withCreateProposal = async (
   proposalIndex: number,
   payer: PublicKey
 ) => {
+  const systemId = SYSTEM_PROGRAM_ID
+  // V2 Approve/Deny configuration
+  const voteType = VoteType.SINGLE_CHOICE
+  const options = ['Approve']
+  const useDenyOption = true
   const args = new CreateProposalArgs({
     name,
     descriptionLink,
     governingTokenMint,
+    voteType,
+    options,
+    useDenyOption,
   })
-  const data = Buffer.from(serialize(GOVERNANCE_SCHEMA, args))
-  const systemId = SYSTEM_PROGRAM_ID
+
+  const data = Buffer.from(serialize(getGovernanceSchema(programVersion), args))
+
   const proposalIndexBuffer = Buffer.alloc(4)
   proposalIndexBuffer.writeInt32LE(proposalIndex, 0)
 
@@ -63,6 +74,15 @@ export const withCreateProposal = async (
       isWritable: true,
       isSigner: false,
     },
+    ...(programVersion > PROGRAM_VERSION_V1
+      ? [
+          {
+            pubkey: governingTokenMint,
+            isWritable: false,
+            isSigner: false,
+          },
+        ]
+      : []),
     {
       pubkey: governanceAuthority,
       isWritable: false,

@@ -20,7 +20,7 @@ interface InstructionDataWithHoldUpTime {
 }
 
 export const createProposal = async (
-  { connection, wallet, programId, walletPubkey }: RpcContext,
+  { connection, wallet, programId, programVersion, walletPubkey }: RpcContext,
   realm: PublicKey,
   governance: PublicKey,
   tokenOwnerRecord: PublicKey,
@@ -41,6 +41,7 @@ export const createProposal = async (
   const proposalAddress = await withCreateProposal(
     instructions,
     programId,
+    programVersion,
     realm,
     governance,
     tokenOwnerRecord,

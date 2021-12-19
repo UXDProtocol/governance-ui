@@ -42,9 +42,13 @@ import {
   RealmConfigAccount,
   VoteThresholdPercentage,
   VoteWeight,
+  VoteType,
+  VoteTypeKind,
 } from './accounts'
 import { serialize } from 'borsh'
 import { ProgramVersion } from './registry/constants'
+import { PROGRAM_VERSION_V1 } from './registry/api'
+
 ;(BinaryReader.prototype as any).readU16 = function () {
   const reader = (this as unknown) as BinaryReader
   const value = reader.buf.readUInt16LE(reader.offset)
@@ -58,6 +62,17 @@ import { ProgramVersion } from './registry/constants'
   reader.maybeResize()
   reader.buf.writeUInt16LE(value, reader.length)
   reader.length += 2
+}
+;(BinaryWriter.prototype as any).writeVoteType = function (value: VoteType) {
+  const reader = (this as unknown) as BinaryWriter
+  reader.maybeResize()
+  reader.buf.writeUInt8(value.type, reader.length)
+  reader.length += 1
+
+  if (value.type === VoteTypeKind.MultiChoice) {
+    reader.buf.writeUInt16LE(value.choiceCount!, reader.length)
+    reader.length += 2
+  }
 }
 
 // Serializes sdk instruction into InstructionData and encodes it as base64 which then can be entered into the UI form
@@ -199,7 +214,13 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
           ['instruction', 'u8'],
           ['name', 'string'],
           ['descriptionLink', 'string'],
-          ['governingTokenMint', 'pubkey'],
+          ...(programVersion === PROGRAM_VERSION_V1
+            ? [['governingTokenMint', 'pubkey']]
+            : [
+                ['voteType', 'voteType'],
+                ['options', ['string']],
+                ['useDenyOption', 'u8'],
+              ]),
         ],
       },
     ],
