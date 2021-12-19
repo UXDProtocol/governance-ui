@@ -44,18 +44,23 @@ import {
   VoteWeight,
   VoteType,
   VoteTypeKind,
+  ProposalOption,
+  GovernanceAccountType,
+  getAccountProgramVersion,
+  GovernanceAccountClass,
 } from './accounts'
 import { serialize } from 'borsh'
 import { ProgramVersion } from './registry/constants'
 import { PROGRAM_VERSION_V1 } from './registry/api'
+import { BorshAccountParser } from './core/serialisation'
 
+// Temp. workaround to support u16.
 ;(BinaryReader.prototype as any).readU16 = function () {
   const reader = (this as unknown) as BinaryReader
   const value = reader.buf.readUInt16LE(reader.offset)
   reader.offset += 2
   return value
 }
-
 // Temp. workaround to support u16.
 ;(BinaryWriter.prototype as any).writeU16 = function (value: number) {
   const reader = (this as unknown) as BinaryWriter
@@ -63,12 +68,25 @@ import { PROGRAM_VERSION_V1 } from './registry/api'
   reader.buf.writeUInt16LE(value, reader.length)
   reader.length += 2
 }
+
+;(BinaryReader.prototype as any).readVoteType = function () {
+  const reader = (this as unknown) as BinaryReader
+  const value = reader.buf.readUInt8(reader.offset)
+  reader.offset += 1
+
+  if (value === VoteTypeKind.SingleChoice) {
+    return VoteType.SINGLE_CHOICE
+  }
+
+  const choiceCount = reader.buf.readUInt16LE(reader.offset)
+  return VoteType.MULTI_CHOICE(choiceCount)
+}
+
 ;(BinaryWriter.prototype as any).writeVoteType = function (value: VoteType) {
   const reader = (this as unknown) as BinaryWriter
   reader.maybeResize()
   reader.buf.writeUInt8(value.type, reader.length)
   reader.length += 1
-
   if (value.type === VoteTypeKind.MultiChoice) {
     reader.buf.writeUInt16LE(value.choiceCount!, reader.length)
     reader.length += 2
@@ -455,6 +473,20 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
       },
     ],
     [
+      ProposalOption,
+      {
+        kind: 'struct',
+        fields: [
+          ['label', 'string'],
+          ['voteWeight', 'u64'],
+          ['voteResult', 'u8'],
+          ['instructionsExecutedCount', 'u16'],
+          ['instructionsCount', 'u16'],
+          ['instructionsNextIndex', 'u16'],
+        ],
+      },
+    ],
+    [
       Proposal,
       {
         kind: 'struct',
@@ -466,11 +498,21 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
           ['tokenOwnerRecord', 'pubkey'],
           ['signatoriesCount', 'u8'],
           ['signatoriesSignedOffCount', 'u8'],
-          ['yesVotesCount', 'u64'],
-          ['noVotesCount', 'u64'],
-          ['instructionsExecutedCount', 'u16'],
-          ['instructionsCount', 'u16'],
-          ['instructionsNextIndex', 'u16'],
+
+          ...(programVersion === PROGRAM_VERSION_V1
+            ? [
+                ['yesVotesCount', 'u64'],
+                ['noVotesCount', 'u64'],
+                ['instructionsExecutedCount', 'u16'],
+                ['instructionsCount', 'u16'],
+                ['instructionsNextIndex', 'u16'],
+              ]
+            : [
+                ['voteType', 'voteType'],
+                ['options', [ProposalOption]],
+                ['denyVoteWeight', { kind: 'option', type: 'u64' }],
+              ]),
+
           ['draftAt', 'u64'],
           ['signingOffAt', { kind: 'option', type: 'u64' }],
           ['votingAt', { kind: 'option', type: 'u64' }],
@@ -541,6 +583,11 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
     ],
   ])
 }
+
+export const GovernanceAccountParser = (classType: GovernanceAccountClass) =>
+  BorshAccountParser(classType, (accountType: GovernanceAccountType) =>
+    getGovernanceSchema(getAccountProgramVersion(accountType))
+  )
 
 export function getInstructionDataFromBase64(instructionDataBase64: string) {
   const instructionDataBin = Buffer.from(instructionDataBase64, 'base64')

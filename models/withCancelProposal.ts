@@ -6,14 +6,17 @@ import {
 import { GOVERNANCE_SCHEMA } from './serialisation'
 import { serialize } from 'borsh'
 import { CancelProposalArgs } from './instructions'
+import { PROGRAM_VERSION_V1 } from './registry/api'
 // import { InstructionData } from './accounts'
 
 export const withCancelProposal = (
   instructions: TransactionInstruction[],
   programId: PublicKey,
+  programVersion: number,
   proposal: PublicKey,
-  tokenOwnerRecord: PublicKey,
-  governanceAuthority: PublicKey
+  proposalOwnerRecord: PublicKey,
+  governanceAuthority: PublicKey,
+  governance: PublicKey
 ) => {
   const args = new CancelProposalArgs()
   const data = Buffer.from(serialize(GOVERNANCE_SCHEMA, args))
@@ -25,7 +28,7 @@ export const withCancelProposal = (
       isSigner: false,
     },
     {
-      pubkey: tokenOwnerRecord,
+      pubkey: proposalOwnerRecord,
       isWritable: true,
       isSigner: false,
     },
@@ -40,6 +43,14 @@ export const withCancelProposal = (
       isWritable: false,
     },
   ]
+
+  if (programVersion > PROGRAM_VERSION_V1) {
+    keys.push({
+      pubkey: governance,
+      isWritable: false,
+      isSigner: false,
+    })
+  }
 
   instructions.push(
     new TransactionInstruction({

@@ -7,8 +7,8 @@ import { sendTransaction } from 'utils/send'
 import { withCancelProposal } from '@models/withCancelProposal'
 
 export const cancelProposal = async (
-  { connection, wallet, programId, walletPubkey }: RpcContext,
-  proposal: ParsedAccount<Proposal> | undefined
+  { connection, wallet, programId, programVersion, walletPubkey }: RpcContext,
+  proposal: ParsedAccount<Proposal>
 ) => {
   const instructions: TransactionInstruction[] = []
   const signers: Account[] = []
@@ -17,9 +17,11 @@ export const cancelProposal = async (
   withCancelProposal(
     instructions,
     programId,
+    programVersion,
     proposal!.pubkey,
     proposal!.info.tokenOwnerRecord,
-    governanceAuthority
+    governanceAuthority,
+    proposal.info.governance
   )
 
   const transaction = new Transaction({ feePayer: walletPubkey })

@@ -6,11 +6,11 @@ import { ParsedAccountBase } from './accounts'
 
 export function BorshAccountParser(
   classType: any,
-  schema: Schema
+  getSchema: (accountType: number) => Schema
 ): (pubKey: PublicKey, info: AccountInfo<Buffer>) => ParsedAccountBase {
   return (pubKey: PublicKey, info: AccountInfo<Buffer>) => {
     const buffer = Buffer.from(info.data)
-    const data = deserializeBorsh(schema, classType, buffer)
+    const data = deserializeBorsh(getSchema(info.data[0]), classType, buffer)
 
     return {
       pubkey: pubKey,
