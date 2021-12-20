@@ -57,6 +57,8 @@ import { ProgramVersion } from './registry/constants'
 import { PROGRAM_VERSION_V1 } from './registry/api'
 import { BorshAccountParser } from './core/serialisation'
 
+// ------------ u16 ------------
+
 // Temp. workaround to support u16.
 ;(BinaryReader.prototype as any).readU16 = function () {
   const reader = (this as unknown) as BinaryReader
@@ -66,11 +68,13 @@ import { BorshAccountParser } from './core/serialisation'
 }
 // Temp. workaround to support u16.
 ;(BinaryWriter.prototype as any).writeU16 = function (value: number) {
-  const reader = (this as unknown) as BinaryWriter
-  reader.maybeResize()
-  reader.buf.writeUInt16LE(value, reader.length)
-  reader.length += 2
+  const writer = (this as unknown) as BinaryWriter
+  writer.maybeResize()
+  writer.buf.writeUInt16LE(value, writer.length)
+  writer.length += 2
 }
+
+// ------------ VoteType ------------
 ;(BinaryReader.prototype as any).readVoteType = function () {
   const reader = (this as unknown) as BinaryReader
   const value = reader.buf.readUInt8(reader.offset)
@@ -84,15 +88,17 @@ import { BorshAccountParser } from './core/serialisation'
   return VoteType.MULTI_CHOICE(choiceCount)
 }
 ;(BinaryWriter.prototype as any).writeVoteType = function (value: VoteType) {
-  const reader = (this as unknown) as BinaryWriter
-  reader.maybeResize()
-  reader.buf.writeUInt8(value.type, reader.length)
-  reader.length += 1
+  const writer = (this as unknown) as BinaryWriter
+  writer.maybeResize()
+  writer.buf.writeUInt8(value.type, writer.length)
+  writer.length += 1
   if (value.type === VoteTypeKind.MultiChoice) {
-    reader.buf.writeUInt16LE(value.choiceCount!, reader.length)
-    reader.length += 2
+    writer.buf.writeUInt16LE(value.choiceCount!, writer.length)
+    writer.length += 2
   }
 }
+
+// ------------ Vote ------------
 ;(BinaryReader.prototype as any).readVote = function () {
   const reader = (this as unknown) as BinaryReader
   const value = reader.buf.readUInt8(reader.offset)
@@ -102,16 +108,39 @@ import { BorshAccountParser } from './core/serialisation'
     return new Vote({ voteType: value, approveChoices: undefined, deny: true })
   }
 
-  //TODO: deserialize choices
-  return new Vote({ voteType: value, approveChoices: [], deny: undefined })
+  const approveChoices: VoteChoice[] = []
+
+  reader.readArray(() => {
+    const rank = reader.buf.readUInt8(reader.offset)
+    reader.offset += 1
+    const weightPercentage = reader.buf.readUInt8(reader.offset)
+    reader.offset += 1
+
+    approveChoices.push(
+      new VoteChoice({ rank: rank, weightPercentage: weightPercentage })
+    )
+  })
+
+  return new Vote({
+    voteType: value,
+    approveChoices: approveChoices,
+    deny: undefined,
+  })
 }
 ;(BinaryWriter.prototype as any).writeVote = function (value: Vote) {
-  const reader = (this as unknown) as BinaryWriter
-  reader.maybeResize()
-  reader.buf.writeUInt8(value.voteType, reader.length)
-  reader.length += 1
+  const writer = (this as unknown) as BinaryWriter
+  writer.maybeResize()
+  writer.buf.writeUInt8(value.voteType, writer.length)
+  writer.length += 1
 
-  //TODO: serialize choices
+  if (value.voteType === VoteKind.Approve) {
+    writer.writeArray(value.approveChoices as any[], (item: VoteChoice) => {
+      writer.buf.writeUInt8(item.rank, writer.length)
+      writer.length += 1
+      writer.buf.writeUInt8(item.weightPercentage, writer.length)
+      writer.length += 1
+    })
+  }
 }
 
 // Serializes sdk instruction into InstructionData and encodes it as base64 which then can be entered into the UI form
