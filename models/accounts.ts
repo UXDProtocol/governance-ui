@@ -1,5 +1,6 @@
 import { PublicKey } from '@solana/web3.js'
 import BigNumber from 'bignumber.js'
+import { Vote, VoteKind } from './instructions'
 import BN from 'bn.js'
 import moment from 'moment'
 import { PROGRAM_VERSION_V1, PROGRAM_VERSION_V2 } from './registry/api'
@@ -818,30 +819,86 @@ export class VoteWeight {
 }
 
 export class VoteRecord {
-  accountType = GovernanceAccountType.VoteRecordV1
+  accountType: GovernanceAccountType
   proposal: PublicKey
   governingTokenOwner: PublicKey
   isRelinquished: boolean
-  voteWeight: VoteWeight
+
+  // V1
+  voteWeight: VoteWeight | undefined
+
+  // V2 -------------------------------
+  voterWeight: BN | undefined
+  vote: Vote | undefined
+  // -------------------------------
 
   constructor(args: {
+    accountType: GovernanceAccountType
     proposal: PublicKey
     governingTokenOwner: PublicKey
     isRelinquished: boolean
-    voteWeight: VoteWeight
+
+    // V1
+    voteWeight: VoteWeight | undefined
+    // V2 -------------------------------
+    voterWeight: BN | undefined
+    vote: Vote | undefined
+    // -------------------------------
   }) {
+    this.accountType = args.accountType
     this.proposal = args.proposal
     this.governingTokenOwner = args.governingTokenOwner
     this.isRelinquished = !!args.isRelinquished
+    // V1
     this.voteWeight = args.voteWeight
+    // V2 -------------------------------
+    this.voterWeight = args.voterWeight
+    this.vote = args.vote
+    // -------------------------------
   }
 
-  isYes() {
-    return this.voteWeight.yes && !this.voteWeight.yes.isZero()
+  getNoVoteWeight() {
+    switch (this.accountType) {
+      case GovernanceAccountType.VoteRecordV1: {
+        return this.voteWeight?.no
+      }
+      case GovernanceAccountType.VoteRecordV2: {
+        switch (this.vote?.voteType) {
+          case VoteKind.Approve: {
+            return undefined
+          }
+          case VoteKind.Deny: {
+            return this.voterWeight
+          }
+          default:
+            throw new Error('Invalid voteKind')
+        }
+      }
+      default:
+        throw new Error(`Invalid account type ${this.accountType} `)
+    }
   }
 
-  getVoteWeight() {
-    return this.isYes() ? this.voteWeight.yes : this.voteWeight.no
+  getYesVoteWeight() {
+    switch (this.accountType) {
+      case GovernanceAccountType.VoteRecordV1: {
+        return this.voteWeight?.yes
+      }
+      case GovernanceAccountType.VoteRecordV2: {
+        switch (this.vote?.voteType) {
+          case VoteKind.Approve: {
+            return this.voterWeight
+          }
+          case VoteKind.Deny: {
+            return undefined
+          }
+          default:
+            throw new Error('Invalid voteKind')
+        }
+      }
+      default:
+        throw new Error(`Invalid account type ${this.accountType} `)
+    }
   }
 }
 

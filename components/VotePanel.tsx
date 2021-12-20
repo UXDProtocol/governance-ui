@@ -10,7 +10,7 @@ import { ProposalState } from '../models/accounts'
 import { RpcContext } from '../models/core/api'
 import { GoverningTokenType } from '../models/enums'
 
-import { Vote } from '../models/instructions'
+import { YesNoVote } from '../models/instructions'
 import useWalletStore from '../stores/useWalletStore'
 import Button from './Button'
 import VoteCommentModal from './VoteCommentModal'
@@ -137,14 +137,14 @@ const VotePanel = () => {
                   <div className="w-full flex justify-between items-center gap-5">
                     <Button
                       className="w-1/2"
-                      onClick={() => handleShowVoteModal(Vote.Yes)}
+                      onClick={() => handleShowVoteModal(YesNoVote.Yes)}
                       disabled={!isVoteEnabled}
                     >
                       Approve
                     </Button>
                     <Button
                       className="w-1/2"
-                      onClick={() => handleShowVoteModal(Vote.No)}
+                      onClick={() => handleShowVoteModal(YesNoVote.No)}
                       disabled={!isVoteEnabled}
                     >
                       Deny

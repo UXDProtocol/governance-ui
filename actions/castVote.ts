@@ -8,17 +8,17 @@ import { Proposal } from '../models/accounts'
 import { ParsedAccount } from '../models/core/accounts'
 import { RpcContext } from '../models/core/api'
 
-import { Vote } from '../models/instructions'
+import { YesNoVote } from '../models/instructions'
 
 import { withCastVote } from '../models/withCastVote'
 import { sendTransaction } from '../utils/send'
 
 export async function castVote(
-  { connection, wallet, programId, walletPubkey }: RpcContext,
+  { connection, wallet, programId, programVersion, walletPubkey }: RpcContext,
   realm: PublicKey,
   proposal: ParsedAccount<Proposal>,
   tokeOwnerRecord: PublicKey,
-  vote: Vote
+  vote: YesNoVote
 ) {
   const signers: Account[] = []
   const instructions: TransactionInstruction[] = []
@@ -29,6 +29,7 @@ export async function castVote(
   await withCastVote(
     instructions,
     programId,
+    programVersion,
     realm,
     proposal.info.governance,
     proposal.pubkey,

@@ -5,8 +5,8 @@ import { RpcContext } from '../models/core/api'
 import useWalletStore from '../stores/useWalletStore'
 import useRealm from '../hooks/useRealm'
 import { castVote } from '../actions/castVote'
-import { Vote } from '../models/instructions'
 import Button, { SecondaryButton } from './Button'
+import { YesNoVote } from '../models/instructions'
 // import { notify } from '../utils/notifications'
 import Loading from './Loading'
 import Modal from './Modal'
@@ -18,7 +18,7 @@ import { ParsedAccount } from '../models/core/accounts'
 interface VoteCommentModalProps {
   onClose: () => void
   isOpen: boolean
-  vote: Vote
+  vote: YesNoVote
   voterTokenRecord: ParsedAccount<TokenOwnerRecord>
 }
 
@@ -38,7 +38,7 @@ const VoteCommentModal: FunctionComponent<VoteCommentModalProps> = ({
   const { realm, realmInfo } = useRealm()
   const { fetchRealm } = useWalletStore((s) => s.actions)
 
-  const submitVote = async (vote: Vote) => {
+  const submitVote = async (vote: YesNoVote) => {
     setSubmitting(true)
     const rpcContext = new RpcContext(
       proposal!.account.owner,

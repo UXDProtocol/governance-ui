@@ -23,6 +23,9 @@ import {
   SetRealmAuthorityArgs,
   SetRealmConfigArgs,
   SignOffProposalArgs,
+  Vote,
+  VoteChoice,
+  VoteKind,
   WithdrawGoverningTokensArgs,
 } from './instructions'
 import {
@@ -68,7 +71,6 @@ import { BorshAccountParser } from './core/serialisation'
   reader.buf.writeUInt16LE(value, reader.length)
   reader.length += 2
 }
-
 ;(BinaryReader.prototype as any).readVoteType = function () {
   const reader = (this as unknown) as BinaryReader
   const value = reader.buf.readUInt8(reader.offset)
@@ -81,7 +83,6 @@ import { BorshAccountParser } from './core/serialisation'
   const choiceCount = reader.buf.readUInt16LE(reader.offset)
   return VoteType.MULTI_CHOICE(choiceCount)
 }
-
 ;(BinaryWriter.prototype as any).writeVoteType = function (value: VoteType) {
   const reader = (this as unknown) as BinaryWriter
   reader.maybeResize()
@@ -91,6 +92,26 @@ import { BorshAccountParser } from './core/serialisation'
     reader.buf.writeUInt16LE(value.choiceCount!, reader.length)
     reader.length += 2
   }
+}
+;(BinaryReader.prototype as any).readVote = function () {
+  const reader = (this as unknown) as BinaryReader
+  const value = reader.buf.readUInt8(reader.offset)
+  reader.offset += 1
+
+  if (value === VoteKind.Deny) {
+    return new Vote({ voteType: value, approveChoices: undefined, deny: true })
+  }
+
+  //TODO: deserialize choices
+  return new Vote({ voteType: value, approveChoices: [], deny: undefined })
+}
+;(BinaryWriter.prototype as any).writeVote = function (value: Vote) {
+  const reader = (this as unknown) as BinaryWriter
+  reader.maybeResize()
+  reader.buf.writeUInt8(value.voteType, reader.length)
+  reader.length += 1
+
+  //TODO: serialize choices
 }
 
 // Serializes sdk instruction into InstructionData and encodes it as base64 which then can be entered into the UI form
@@ -281,12 +302,24 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
       },
     ],
     [
+      VoteChoice,
+      {
+        kind: 'struct',
+        fields: [
+          ['rank', 'u8'],
+          ['weightPercentage', 'u8'],
+        ],
+      },
+    ],
+    [
       CastVoteArgs,
       {
         kind: 'struct',
         fields: [
           ['instruction', 'u8'],
-          ['vote', 'u8'],
+          programVersion === PROGRAM_VERSION_V1
+            ? ['yesNoVote', 'u8']
+            : ['vote', 'vote'],
         ],
       },
     ],
@@ -562,7 +595,12 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
           ['proposal', 'pubkey'],
           ['governingTokenOwner', 'pubkey'],
           ['isRelinquished', 'u8'],
-          ['voteWeight', VoteWeight],
+          ...(programVersion === PROGRAM_VERSION_V1
+            ? [['voteWeight', VoteWeight]]
+            : [
+                ['voterWeight', 'u64'],
+                ['vote', 'vote'],
+              ]),
         ],
       },
     ],
