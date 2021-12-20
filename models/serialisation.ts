@@ -358,10 +358,13 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
         kind: 'struct',
         fields: [
           ['instruction', 'u8'],
+          programVersion > PROGRAM_VERSION_V1
+            ? ['optionIndex', 'u16']
+            : undefined,
           ['index', 'u16'],
           ['holdUpTime', 'u32'],
           ['instructionData', InstructionData],
-        ],
+        ].filter(Boolean),
       },
     ],
     [
@@ -640,12 +643,15 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
         fields: [
           ['accountType', 'u8'],
           ['proposal', 'pubkey'],
+          programVersion > PROGRAM_VERSION_V1
+            ? ['optionIndex', 'u16']
+            : undefined,
           ['instructionIndex', 'u16'],
           ['holdUpTime', 'u32'],
           ['instruction', InstructionData],
           ['executedAt', { kind: 'option', type: 'u64' }],
           ['executionStatus', 'u8'],
-        ],
+        ].filter(Boolean),
       },
     ],
   ])

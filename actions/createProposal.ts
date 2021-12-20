@@ -73,6 +73,7 @@ export const createProposal = async (
       await withInsertInstruction(
         instructions,
         programId,
+        programVersion,
         governance,
         proposalAddress,
         tokenOwnerRecord,
