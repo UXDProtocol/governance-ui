@@ -15,7 +15,7 @@ export function getGovernanceChatMessages(
 ) {
   return getBorshProgramAccounts<ChatMessage>(
     governanceChatProgramId,
-    GOVERNANCE_CHAT_SCHEMA,
+    (_) => GOVERNANCE_CHAT_SCHEMA,
     endpoint,
     ChatMessage,
     [pubkeyFilter(1, proposal) as MemcmpFilter]
@@ -28,7 +28,7 @@ export function getGovernanceChatMessagesByVoter(
 ) {
   return getBorshProgramAccounts<ChatMessage>(
     governanceChatProgramId,
-    GOVERNANCE_CHAT_SCHEMA,
+    (_) => GOVERNANCE_CHAT_SCHEMA,
     endpoint,
     ChatMessage,
     [pubkeyFilter(33, voter) as MemcmpFilter]

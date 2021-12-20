@@ -73,7 +73,7 @@ export async function getBorshProgramAccounts<
   TAccount extends ProgramAccountWithType
 >(
   programId: PublicKey,
-  borshSchema: Schema,
+  getSchema: (accountType: number) => Schema,
   endpoint: string,
   accountFactory: new (args: any) => TAccount,
   filters: MemcmpFilter[] = [],
@@ -116,17 +116,15 @@ export async function getBorshProgramAccounts<
   if (rawAccounts) {
     for (const rawAccount of rawAccounts) {
       try {
+        const data = Buffer.from(rawAccount.account.data[0], 'base64')
+        const accountType = data[0]
         const account = {
           pubkey: new PublicKey(rawAccount.pubkey),
           account: {
             ...rawAccount.account,
             data: [], // There is no need to keep the raw data around once we deserialize it into TAccount
           },
-          info: deserializeBorsh(
-            borshSchema,
-            accountFactory,
-            Buffer.from(rawAccount.account.data[0], 'base64')
-          ),
+          info: deserializeBorsh(getSchema(accountType), accountFactory, data),
         }
 
         accounts[account.pubkey.toBase58()] = account

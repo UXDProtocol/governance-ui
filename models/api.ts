@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from '@solana/web3.js'
-import { GOVERNANCE_SCHEMA } from './serialisation'
+import { getGovernanceSchemaForAccount } from './serialisation'
 import {
   getAccountTypes,
   Governance,
@@ -31,7 +31,7 @@ export async function getUnrelinquishedVoteRecords(
 ) {
   return getBorshProgramAccounts<VoteRecord>(
     programId,
-    GOVERNANCE_SCHEMA,
+    (at) => getGovernanceSchemaForAccount(at),
     endpoint,
     VoteRecord,
     [
@@ -89,7 +89,7 @@ export async function getRealm(connection: Connection, realmPk: PublicKey) {
 export async function getRealms(programId: PublicKey, endpoint: string) {
   return getBorshProgramAccounts<Realm>(
     programId,
-    GOVERNANCE_SCHEMA,
+    (at) => getGovernanceSchemaForAccount(at),
     endpoint,
     Realm
   )
@@ -105,7 +105,7 @@ export async function getGovernanceAccounts<TAccount extends GovernanceAccount>(
   if (accountTypes.length === 1) {
     return getBorshProgramAccounts<TAccount>(
       programId,
-      GOVERNANCE_SCHEMA,
+      (at) => getGovernanceSchemaForAccount(at),
       endpoint,
       accountClass as any,
       filters,
@@ -117,7 +117,7 @@ export async function getGovernanceAccounts<TAccount extends GovernanceAccount>(
     accountTypes.map((at) =>
       getBorshProgramAccounts<TAccount>(
         programId,
-        GOVERNANCE_SCHEMA,
+        (at) => getGovernanceSchemaForAccount(at),
         endpoint,
         accountClass as any,
         filters,
@@ -145,10 +145,9 @@ export async function getGovernanceAccount<TAccount extends GovernanceAccount>(
     )
   }
 
-  const account = BorshAccountParser(accountClass, GOVERNANCE_SCHEMA)(
-    accountPubKey,
-    accountInfo
-  )
+  const account = BorshAccountParser(accountClass, (at) =>
+    getGovernanceSchemaForAccount(at)
+  )(accountPubKey, accountInfo)
 
   return account as ParsedAccount<TAccount>
 }
