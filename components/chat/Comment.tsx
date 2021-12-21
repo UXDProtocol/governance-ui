@@ -60,17 +60,17 @@ const Comment = ({
         {voteRecord && (
           <div className="bg-bkg-3 hidden lg:flex lg:items-center px-4 py-2 rounded-full">
             <div className="flex items-center pr-2 text-fgd-1 text-xs">
-              {voteRecord.isYes() ? (
+              {voteRecord.getYesVoteWeight() ? (
                 <CheckCircleIcon className="h-5 mr-1 text-green w-5" />
               ) : (
                 <XCircleIcon className="h-5 mr-1 text-red w-5" />
               )}
-              {voteRecord.isYes() ? 'Approve' : 'Deny'}
+              {voteRecord.getYesVoteWeight() ? 'Approve' : 'Deny'}
             </div>
             <span className="text-fgd-4">|</span>
             <span className="pl-2 text-xs">
               {`${fmtTokenAmount(
-                voteRecord.getVoteWeight(),
+                voteRecord.getYesVoteWeight() ?? voteRecord.getNoVoteWeight(),
                 proposalMint?.decimals
               ).toLocaleString()} ${voteSymbol}`}
             </span>

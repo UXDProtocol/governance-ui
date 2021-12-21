@@ -193,7 +193,7 @@ const MemberOverview = () => {
               ))}
             </div>
             <div className="ml-auto text-fgd-3 text-xs flex flex-col">
-              {x.info.isYes() ? (
+              {x.info.getYesVoteWeight() ? (
                 <CheckCircleIcon className="h-4 mr-1 text-green w-4" />
               ) : (
                 <XCircleIcon className="h-4 mr-1 text-red w-4" />

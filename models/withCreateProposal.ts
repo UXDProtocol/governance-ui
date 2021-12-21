@@ -23,13 +23,13 @@ export const withCreateProposal = async (
   governingTokenMint: PublicKey,
   governanceAuthority: PublicKey,
   proposalIndex: number,
+  voteType: VoteType,
+  options: string[],
+  useDenyOption: boolean,
   payer: PublicKey
 ) => {
   const systemId = SYSTEM_PROGRAM_ID
-  // V2 Approve/Deny configuration
-  const voteType = VoteType.SINGLE_CHOICE
-  const options = ['Approve']
-  const useDenyOption = true
+
   const args = new CreateProposalArgs({
     name,
     descriptionLink,

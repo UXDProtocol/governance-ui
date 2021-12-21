@@ -9,7 +9,7 @@ import { withCreateProposal } from '../models/withCreateProposal'
 import { withAddSignatory } from '../models/withAddSignatory'
 import { RpcContext } from '../models/core/api'
 import { withInsertInstruction } from '@models/withInsertInstruction'
-import { InstructionData } from '@models/accounts'
+import { InstructionData, VoteType } from '@models/accounts'
 import { sendTransaction } from 'utils/send'
 import { withSignOffProposal } from '@models/withSignOffProposal'
 
@@ -36,6 +36,12 @@ export const createProposal = async (
   const governanceAuthority = walletPubkey
   const signatory = walletPubkey
   const payer = walletPubkey
+
+  // V2 Approve/Deny configuration
+  const voteType = VoteType.SINGLE_CHOICE
+  const options = ['Approve']
+  const useDenyOption = true
+
   const notificationTitle = isDraft ? 'proposal draft' : 'proposal'
   const prerequisiteInstructions: TransactionInstruction[] = []
   const proposalAddress = await withCreateProposal(
@@ -50,6 +56,9 @@ export const createProposal = async (
     governingTokenMint,
     governanceAuthority,
     proposalIndex,
+    voteType,
+    options,
+    useDenyOption,
     payer
   )
 
