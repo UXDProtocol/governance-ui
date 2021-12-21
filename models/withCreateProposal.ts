@@ -9,7 +9,7 @@ import { serialize } from 'borsh'
 import { CreateProposalArgs } from './instructions'
 import { GOVERNANCE_PROGRAM_SEED, VoteType } from './accounts'
 import { SYSTEM_PROGRAM_ID } from './core/api'
-import { PROGRAM_VERSION_V1 } from './registry/api'
+import { ProgramVersion } from './registry/constants'
 
 export const withCreateProposal = async (
   instructions: TransactionInstruction[],
@@ -74,7 +74,7 @@ export const withCreateProposal = async (
       isWritable: true,
       isSigner: false,
     },
-    ...(programVersion > PROGRAM_VERSION_V1
+    ...(programVersion > ProgramVersion.V1
       ? [
           {
             pubkey: governingTokenMint,

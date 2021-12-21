@@ -9,7 +9,7 @@ import { serialize } from 'borsh'
 import { CastVoteArgs, Vote } from './instructions'
 import { getVoteRecordAddress } from './accounts'
 import { SYSTEM_PROGRAM_ID } from './core/api'
-import { PROGRAM_VERSION_V1 } from './registry/api'
+import { ProgramVersion } from './registry/constants'
 
 export const withCastVote = async (
   instructions: TransactionInstruction[],
@@ -26,7 +26,7 @@ export const withCastVote = async (
   payer: PublicKey
 ) => {
   const args = new CastVoteArgs(
-    programVersion === PROGRAM_VERSION_V1
+    programVersion === ProgramVersion.V1
       ? { yesNoVote: vote.toYesNoVote(), vote: undefined }
       : { yesNoVote: undefined, vote: vote }
   )

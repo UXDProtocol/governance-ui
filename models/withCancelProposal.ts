@@ -6,7 +6,7 @@ import {
 import { GOVERNANCE_SCHEMA } from './serialisation'
 import { serialize } from 'borsh'
 import { CancelProposalArgs } from './instructions'
-import { PROGRAM_VERSION_V1 } from './registry/api'
+import { ProgramVersion } from './registry/constants'
 // import { InstructionData } from './accounts'
 
 export const withCancelProposal = (
@@ -44,7 +44,7 @@ export const withCancelProposal = (
     },
   ]
 
-  if (programVersion > PROGRAM_VERSION_V1) {
+  if (programVersion > ProgramVersion.V1) {
     keys.push({
       pubkey: governance,
       isWritable: false,

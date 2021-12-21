@@ -54,7 +54,6 @@ import {
 } from './accounts'
 import { serialize } from 'borsh'
 import { ProgramVersion } from './registry/constants'
-import { PROGRAM_VERSION_V1 } from './registry/api'
 import { BorshAccountParser } from './core/serialisation'
 
 // ------------ u16 ------------
@@ -282,7 +281,7 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
           ['instruction', 'u8'],
           ['name', 'string'],
           ['descriptionLink', 'string'],
-          ...(programVersion === PROGRAM_VERSION_V1
+          ...(programVersion === ProgramVersion.V1
             ? [['governingTokenMint', 'pubkey']]
             : [
                 ['voteType', 'voteType'],
@@ -346,7 +345,7 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
         kind: 'struct',
         fields: [
           ['instruction', 'u8'],
-          programVersion === PROGRAM_VERSION_V1
+          programVersion === ProgramVersion.V1
             ? ['yesNoVote', 'u8']
             : ['vote', 'vote'],
         ],
@@ -358,7 +357,7 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
         kind: 'struct',
         fields: [
           ['instruction', 'u8'],
-          programVersion > PROGRAM_VERSION_V1
+          programVersion > ProgramVersion.V1
             ? ['optionIndex', 'u16']
             : undefined,
           ['index', 'u16'],
@@ -564,7 +563,7 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
           ['signatoriesCount', 'u8'],
           ['signatoriesSignedOffCount', 'u8'],
 
-          ...(programVersion === PROGRAM_VERSION_V1
+          ...(programVersion === ProgramVersion.V1
             ? [
                 ['yesVotesCount', 'u64'],
                 ['noVotesCount', 'u64'],
@@ -627,7 +626,7 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
           ['proposal', 'pubkey'],
           ['governingTokenOwner', 'pubkey'],
           ['isRelinquished', 'u8'],
-          ...(programVersion === PROGRAM_VERSION_V1
+          ...(programVersion === ProgramVersion.V1
             ? [['voteWeight', VoteWeight]]
             : [
                 ['voterWeight', 'u64'],
@@ -643,7 +642,7 @@ function createGovernanceSchema(programVersion: ProgramVersion) {
         fields: [
           ['accountType', 'u8'],
           ['proposal', 'pubkey'],
-          programVersion > PROGRAM_VERSION_V1
+          programVersion > ProgramVersion.V1
             ? ['optionIndex', 'u16']
             : undefined,
           ['instructionIndex', 'u16'],

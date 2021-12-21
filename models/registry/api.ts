@@ -10,11 +10,8 @@ import type { ConnectionContext } from 'utils/connection'
 import { equalsIgnoreCase } from '../../tools/core/strings'
 import { ProgramVersion } from './constants'
 
-export const PROGRAM_VERSION_V1 = 1
-export const PROGRAM_VERSION_V2 = 2
-
 // The most up to date program version
-export const PROGRAM_VERSION = PROGRAM_VERSION_V2
+export const PROGRAM_VERSION = ProgramVersion.V2
 
 export interface RealmInfo {
   symbol: string
