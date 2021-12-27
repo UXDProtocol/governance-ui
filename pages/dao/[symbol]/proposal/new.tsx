@@ -43,6 +43,7 @@ import SetMangoDepositoriesRedeemableSoftCap from './components/instructions/Set
 import DepositInsuranceToMangoDepository from './components/instructions/DepositInsuranceToMangoDepository'
 import WithdrawInsuranceFromMangoDepository from './components/instructions/WithdrawInsuranceFromMangoDepository'
 import VoteBySwitch from './components/VoteBySwitch'
+import SetUpgradeAuthority from './components/instructions/SetUpgradeAuthority'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -313,6 +314,8 @@ const New = () => {
         )
       case Instructions.Mint:
         return <Mint index={idx} governance={governance}></Mint>
+      case Instructions.AuthorityUpgrade:
+        return <SetUpgradeAuthority index={idx} governance={governance} />
       case Instructions.Base64:
         return <CustomBase64 index={idx} governance={governance}></CustomBase64>
       case Instructions.None:

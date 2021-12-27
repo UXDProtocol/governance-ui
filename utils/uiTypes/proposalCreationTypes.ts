@@ -43,6 +43,17 @@ export interface ProgramUpgradeForm {
   bufferAddress: string
 }
 
+export interface AuthorityUpgradeForm {
+  governedAccount: GovernedProgramAccount | GovernedTokenAccount | undefined
+  accountId: string | undefined
+  destinationAuthority: string
+}
+export interface MintUpgradeForm {
+  governedAccount: GovernedTokenAccount | undefined
+  tokenMint: string | undefined
+  newMintAuthority: string
+}
+
 export interface Base64InstructionForm {
   governedAccount: GovernedMultiTypeAccount | undefined
   base64: string
@@ -56,6 +67,7 @@ export interface EmptyInstructionForm {
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
+  AuthorityUpgrade,
   Mint,
   Base64,
   None,

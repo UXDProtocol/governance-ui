@@ -112,6 +112,11 @@ export default function useGovernanceAssets() {
       isVisible: canUseTransferInstruction,
     },
     {
+      id: Instructions.AuthorityUpgrade,
+      name: 'Upgrade Authority',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.ProgramUpgrade,
       name: 'Upgrade Program',
       isVisible: canUseProgramUpgradeInstruction,
