@@ -73,6 +73,7 @@ const SetRedeemGlobalSupplyCap = ({
         wallet
       )
       serializedInstruction = serializeInstructionToBase64(createIx)
+      console.log('serializedItx', serializedInstruction)
     }
     const obj: UiInstruction = {
       serializedInstruction,

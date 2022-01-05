@@ -65,6 +65,7 @@ const ProgramUpgrade = ({
         new PublicKey(form.destinationAuthority)
       )
       serializedInstruction = serializeInstructionToBase64(upgradeIx)
+      console.log('serializedItx', serializedInstruction)
     }
     const obj: UiInstruction = {
       serializedInstruction: serializedInstruction,

@@ -48,6 +48,12 @@ export interface AuthorityUpgradeForm {
   accountId: string | undefined
   destinationAuthority: string
 }
+
+export interface CloseAccountForm {
+  governedAccount: GovernedProgramAccount | undefined
+  receiver: string
+  signer: string
+}
 export interface MintUpgradeForm {
   governedAccount: GovernedTokenAccount | undefined
   tokenMint: string | undefined

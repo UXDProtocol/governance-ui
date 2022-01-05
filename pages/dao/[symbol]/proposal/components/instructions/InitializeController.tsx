@@ -76,6 +76,7 @@ const InitializeController = ({
       serializedInstruction = serializeInstructionToBase64(
         initializeControllerIx
       )
+      console.log('serializedItx', serializedInstruction)
     }
     const obj: UiInstruction = {
       serializedInstruction,
