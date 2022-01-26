@@ -148,6 +148,11 @@ export default function useGovernanceAssets() {
 
   const availableInstructions = [
     {
+      id: Instructions.CreateAssociatedAccount,
+      name: 'Create Associated Account',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.InitializeController,
       name: 'Initialize Controller',
       isVisible: canUseUxdInstructions,

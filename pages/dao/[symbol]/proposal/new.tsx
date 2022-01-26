@@ -47,6 +47,7 @@ import TokenBalanceCardWrapper from '@components/TokenBalance/TokenBalanceCardWr
 import { getProgramVersionForRealm } from '@models/registry/api'
 import AddLiquidityRaydium from './components/instructions/raydium/AddLiquidity'
 import { useVoteRegistry } from 'VoteStakeRegistry/hooks/useVoteRegistry'
+import CreateAssociatedAccount from './components/instructions/CreateAssociatedAccount'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -297,6 +298,8 @@ const New = () => {
             governance={governance}
           ></SetProgramAuthority>
         )
+      case Instructions.CreateAssociatedAccount:
+        return <CreateAssociatedAccount index={idx} governance={governance} />
       case Instructions.AddLiquidityRaydium:
         return <AddLiquidityRaydium index={idx} governance={governance} />
       case Instructions.InitializeController:

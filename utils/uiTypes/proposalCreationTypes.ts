@@ -4,6 +4,7 @@ import { ProgramAccount } from '@solana/spl-governance'
 import { RpcContext } from '@solana/spl-governance'
 import { MintInfo } from '@solana/spl-token'
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
+import { TokenAccountMintNames } from '@utils/tokenAccounts'
 import {
   GovernedMintInfoAccount,
   GovernedMultiTypeAccount,
@@ -76,6 +77,11 @@ export interface EmptyInstructionForm {
   governedAccount: GovernedMultiTypeAccount | undefined
 }
 
+export interface CreateAssociatedAccountForm {
+  governedAccount?: GovernedMultiTypeAccount
+  splTokenMintName?: TokenAccountMintNames
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -91,6 +97,7 @@ export enum Instructions {
   DepositInsuranceToMangoDepository,
   WithdrawInsuranceFromMangoDepository,
   MangoMakeChangeMaxAccounts,
+  CreateAssociatedAccount,
 }
 
 export interface InitializeControllerForm {
