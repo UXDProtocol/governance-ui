@@ -48,6 +48,7 @@ import { getProgramVersionForRealm } from '@models/registry/api'
 import AddLiquidityRaydium from './components/instructions/raydium/AddLiquidity'
 import { useVoteRegistry } from 'VoteStakeRegistry/hooks/useVoteRegistry'
 import CreateAssociatedAccount from './components/instructions/CreateAssociatedAccount'
+import CreateObligationAccount from './components/instructions/solend/CreateObligationAccount'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -300,6 +301,8 @@ const New = () => {
         )
       case Instructions.CreateAssociatedAccount:
         return <CreateAssociatedAccount index={idx} governance={governance} />
+      case Instructions.CreateSolendObligationAccount:
+        return <CreateObligationAccount index={idx} governance={governance} />
       case Instructions.AddLiquidityRaydium:
         return <AddLiquidityRaydium index={idx} governance={governance} />
       case Instructions.InitializeController:

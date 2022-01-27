@@ -153,6 +153,11 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.CreateSolendObligationAccount,
+      name: 'Create Solend Obligation Account',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.InitializeController,
       name: 'Initialize Controller',
       isVisible: canUseUxdInstructions,

@@ -82,6 +82,10 @@ export interface CreateAssociatedAccountForm {
   splTokenMintName?: TokenAccountMintNames
 }
 
+export interface CreateSolendObligationAccountForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -98,6 +102,7 @@ export enum Instructions {
   WithdrawInsuranceFromMangoDepository,
   MangoMakeChangeMaxAccounts,
   CreateAssociatedAccount,
+  CreateSolendObligationAccount,
 }
 
 export interface InitializeControllerForm {
