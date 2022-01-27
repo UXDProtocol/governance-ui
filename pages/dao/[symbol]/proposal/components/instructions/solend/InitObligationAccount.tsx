@@ -6,26 +6,21 @@ import * as yup from 'yup'
 import { isFormValid } from '@utils/formValidation'
 import {
   UiInstruction,
-  CreateAssociatedAccountForm,
+  InitSolendObligationAccountForm,
 } from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../new'
+import { NewProposalContext } from '../../../new'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
 import useWalletStore from 'stores/useWalletStore'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
-import Select from '@components/inputs/Select'
 import {
   ProgramAccount,
   serializeInstructionToBase64,
   Governance,
 } from '@solana/spl-governance'
-import GovernedAccountSelect from '../GovernedAccountSelect'
-import { createAssociatedTokenAccount } from '@utils/associated'
-import {
-  getTokenAccountMintByName,
-  TOKEN_ACCOUNT_MINTS,
-} from '@utils/tokenAccounts'
+import GovernedAccountSelect from '../../GovernedAccountSelect'
+import { initObligationAccount } from '@tools/sdk/solend/initObligationAccount'
 
-const CreateAssociatedAccount = ({
+const InitObligationAccount = ({
   index,
   governance,
 }: {
@@ -76,7 +71,7 @@ const CreateAssociatedAccount = ({
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
-  const [form, setForm] = useState<CreateAssociatedAccountForm>({})
+  const [form, setForm] = useState<InitSolendObligationAccountForm>({})
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
 
@@ -99,7 +94,6 @@ const CreateAssociatedAccount = ({
       !isValid ||
       !programId ||
       !form.governedAccount?.governance?.account ||
-      !form.splTokenMintName ||
       !wallet?.publicKey
     ) {
       return {
@@ -109,26 +103,8 @@ const CreateAssociatedAccount = ({
       }
     }
 
-    const [tx] = await createAssociatedTokenAccount(
-      // fundingAddress
-      wallet.publicKey,
-
-      // walletAddress
-      form.governedAccount.governance.pubkey,
-
-      // splTokenMintAddress
-      getTokenAccountMintByName(form.splTokenMintName)
-    )
-
-    console.log('infos', {
-      governanceAccount: form.governedAccount.governance.account,
-      governanceOwner: form.governedAccount.governance.owner.toString(),
-      fundingAddress: wallet.publicKey.toString(),
-      walletAddress: form.governedAccount.governance.pubkey.toString(),
-      splTokenMintName: form.splTokenMintName,
-      splTokenMintAddress: getTokenAccountMintByName(
-        form.splTokenMintName
-      ).toString(),
+    const tx = await initObligationAccount({
+      obligationOwner: form.governedAccount.governance.pubkey,
     })
 
     console.log('tx', tx)
@@ -162,7 +138,6 @@ const CreateAssociatedAccount = ({
       .object()
       .nullable()
       .required('Governed account is required'),
-    splTokenMintName: yup.string().required('SPL Token Mint is required'),
   })
 
   return (
@@ -178,30 +153,8 @@ const CreateAssociatedAccount = ({
         shouldBeGoverned={shouldBeGoverned}
         governance={governance}
       ></GovernedAccountSelect>
-
-      <Select
-        label="SPL Token Mint"
-        value={form.splTokenMintName}
-        placeholder="Please select..."
-        onChange={(value) =>
-          handleSetForm({ value, propertyName: 'splTokenMintName' })
-        }
-        error={formErrors['baseTokenName']}
-      >
-        {Object.entries(TOKEN_ACCOUNT_MINTS).map(([key, { name, mint }]) => (
-          <Select.Option key={key} value={name}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span>{name}</span>
-
-              <span style={{ color: 'grey', fontSize: '0.8em' }}>
-                {mint.toString()}
-              </span>
-            </div>
-          </Select.Option>
-        ))}
-      </Select>
     </>
   )
 }
 
-export default CreateAssociatedAccount
+export default InitObligationAccount

@@ -5,6 +5,7 @@ import {
   SOLEND_CREATE_OBLIGATION_ACCOUNT_SPACE_MAGIC_NUMBER,
   SOLEND_PROGRAM_ID,
 } from './constant'
+import { deriveObligationAddressFromWalletAndSeed } from './utils'
 
 export async function createObligationAccount({
   fundingAddress,
@@ -18,10 +19,8 @@ export async function createObligationAccount({
   const lamports = SOLEND_CREATE_OBLIGATION_ACCOUNT_LAMPORTS_MAGIC_NUMBER
   const space = SOLEND_CREATE_OBLIGATION_ACCOUNT_SPACE_MAGIC_NUMBER
 
-  const newAccountPubkey = await PublicKey.createWithSeed(
-    walletAddress,
-    seed,
-    solendProgramId
+  const newAccountPubkey = await deriveObligationAddressFromWalletAndSeed(
+    walletAddress
   )
 
   console.log('createObligationAccount tx building detail', {

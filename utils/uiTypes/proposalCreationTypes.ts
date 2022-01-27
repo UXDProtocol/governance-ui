@@ -86,6 +86,10 @@ export interface CreateSolendObligationAccountForm {
   governedAccount?: GovernedMultiTypeAccount
 }
 
+export interface InitSolendObligationAccountForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -103,6 +107,7 @@ export enum Instructions {
   MangoMakeChangeMaxAccounts,
   CreateAssociatedAccount,
   CreateSolendObligationAccount,
+  InitSolendObligationAccount,
 }
 
 export interface InitializeControllerForm {
