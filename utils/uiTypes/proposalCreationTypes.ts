@@ -4,7 +4,7 @@ import { ProgramAccount } from '@solana/spl-governance'
 import { RpcContext } from '@solana/spl-governance'
 import { MintInfo } from '@solana/spl-token'
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import { TokenAccountMintNames } from '@utils/tokenAccounts'
+import { SplTokenUIName } from '@utils/splTokens'
 import {
   GovernedMintInfoAccount,
   GovernedMultiTypeAccount,
@@ -79,7 +79,7 @@ export interface EmptyInstructionForm {
 
 export interface CreateAssociatedAccountForm {
   governedAccount?: GovernedMultiTypeAccount
-  splTokenMintName?: TokenAccountMintNames
+  splTokenMintUIName?: SplTokenUIName
 }
 
 export interface CreateSolendObligationAccountForm {
@@ -88,6 +88,11 @@ export interface CreateSolendObligationAccountForm {
 
 export interface InitSolendObligationAccountForm {
   governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface DepositReserveLiquidityAndObligationCollateralForm {
+  governedAccount?: GovernedMultiTypeAccount
+  amount: number
 }
 
 export enum Instructions {
@@ -108,6 +113,7 @@ export enum Instructions {
   CreateAssociatedAccount,
   CreateSolendObligationAccount,
   InitSolendObligationAccount,
+  DepositReserveLiquidityAndObligationCollateral,
 }
 
 export interface InitializeControllerForm {

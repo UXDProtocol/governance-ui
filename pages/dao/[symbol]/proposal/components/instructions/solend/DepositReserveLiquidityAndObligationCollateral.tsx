@@ -6,23 +6,22 @@ import * as yup from 'yup'
 import { isFormValid } from '@utils/formValidation'
 import {
   UiInstruction,
-  CreateAssociatedAccountForm,
+  DepositReserveLiquidityAndObligationCollateralForm,
 } from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../new'
+import { NewProposalContext } from '../../../new'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
 import useWalletStore from 'stores/useWalletStore'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
-import Select from '@components/inputs/Select'
 import {
   ProgramAccount,
   serializeInstructionToBase64,
   Governance,
 } from '@solana/spl-governance'
-import GovernedAccountSelect from '../GovernedAccountSelect'
-import { createAssociatedTokenAccount } from '@utils/associated'
-import { getSplTokenMintAddressByUIName, SPL_TOKENS } from '@utils/splTokens'
+import GovernedAccountSelect from '../../GovernedAccountSelect'
+import Input from '@components/inputs/Input'
+import { depositReserveLiquidityAndObligationCollateral } from '@tools/sdk/solend/depositReserveLiquidityAndObligationCollateral'
 
-const CreateAssociatedAccount = ({
+const DepositReserveLiquidityAndObligationCollateral = ({
   index,
   governance,
 }: {
@@ -73,7 +72,12 @@ const CreateAssociatedAccount = ({
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
-  const [form, setForm] = useState<CreateAssociatedAccountForm>({})
+  const [
+    form,
+    setForm,
+  ] = useState<DepositReserveLiquidityAndObligationCollateralForm>({
+    amount: 0,
+  })
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
 
@@ -96,7 +100,6 @@ const CreateAssociatedAccount = ({
       !isValid ||
       !programId ||
       !form.governedAccount?.governance?.account ||
-      !form.splTokenMintUIName ||
       !wallet?.publicKey
     ) {
       return {
@@ -106,26 +109,9 @@ const CreateAssociatedAccount = ({
       }
     }
 
-    const [tx] = await createAssociatedTokenAccount(
-      // fundingAddress
-      wallet.publicKey,
-
-      // walletAddress
-      form.governedAccount.governance.pubkey,
-
-      // splTokenMintAddress
-      getSplTokenMintAddressByUIName(form.splTokenMintUIName)
-    )
-
-    console.log('infos', {
-      governanceAccount: form.governedAccount.governance.account,
-      governanceOwner: form.governedAccount.governance.owner.toString(),
-      fundingAddress: wallet.publicKey.toString(),
-      walletAddress: form.governedAccount.governance.pubkey.toString(),
-      splTokenMintName: form.splTokenMintUIName,
-      splTokenMintAddress: getSplTokenMintAddressByUIName(
-        form.splTokenMintUIName
-      ).toString(),
+    const tx = await depositReserveLiquidityAndObligationCollateral({
+      obligationOwner: form.governedAccount.governance.pubkey,
+      liquidityAmount: form.amount,
     })
 
     console.log('tx', tx)
@@ -159,7 +145,6 @@ const CreateAssociatedAccount = ({
       .object()
       .nullable()
       .required('Governed account is required'),
-    splTokenMintUIName: yup.string().required('SPL Token Mint is required'),
   })
 
   return (
@@ -176,29 +161,22 @@ const CreateAssociatedAccount = ({
         governance={governance}
       ></GovernedAccountSelect>
 
-      <Select
-        label="SPL Token Mint"
-        value={form.splTokenMintUIName}
-        placeholder="Please select..."
-        onChange={(value) =>
-          handleSetForm({ value, propertyName: 'splTokenMintUIName' })
+      <Input
+        label="Amount to deposit"
+        value={form.amount}
+        type="number"
+        min={0}
+        max={10 ** 12}
+        onChange={(evt) =>
+          handleSetForm({
+            value: evt.target.value,
+            propertyName: 'amount',
+          })
         }
-        error={formErrors['baseTokenName']}
-      >
-        {Object.entries(SPL_TOKENS).map(([key, { name, mint }]) => (
-          <Select.Option key={key} value={name}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span>{name}</span>
-
-              <span style={{ color: 'grey', fontSize: '0.8em' }}>
-                {mint.toString()}
-              </span>
-            </div>
-          </Select.Option>
-        ))}
-      </Select>
+        error={formErrors['amount']}
+      />
     </>
   )
 }
 
-export default CreateAssociatedAccount
+export default DepositReserveLiquidityAndObligationCollateral

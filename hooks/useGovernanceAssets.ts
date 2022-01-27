@@ -163,6 +163,11 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.DepositReserveLiquidityAndObligationCollateral,
+      name: 'Deposit funds in Solend',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.InitializeController,
       name: 'Initialize Controller',
       isVisible: canUseUxdInstructions,

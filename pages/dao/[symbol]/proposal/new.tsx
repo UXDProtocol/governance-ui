@@ -50,6 +50,7 @@ import { useVoteRegistry } from 'VoteStakeRegistry/hooks/useVoteRegistry'
 import CreateAssociatedAccount from './components/instructions/CreateAssociatedAccount'
 import CreateObligationAccount from './components/instructions/solend/CreateObligationAccount'
 import InitObligationAccount from './components/instructions/solend/InitObligationAccount'
+import DepositReserveLiquidityAndObligationCollateral from './components/instructions/solend/DepositReserveLiquidityAndObligationCollateral'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -306,7 +307,13 @@ const New = () => {
         return <CreateObligationAccount index={idx} governance={governance} />
       case Instructions.InitSolendObligationAccount:
         return <InitObligationAccount index={idx} governance={governance} />
-
+      case Instructions.DepositReserveLiquidityAndObligationCollateral:
+        return (
+          <DepositReserveLiquidityAndObligationCollateral
+            index={idx}
+            governance={governance}
+          />
+        )
       case Instructions.AddLiquidityRaydium:
         return <AddLiquidityRaydium index={idx} governance={governance} />
       case Instructions.InitializeController:

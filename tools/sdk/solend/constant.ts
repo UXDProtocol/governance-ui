@@ -1,26 +1,36 @@
 import { PublicKey } from '@solana/web3.js'
+import { BASE_MINTS } from '@utils/splTokens'
 
-export const SOLEND_TOKEN_ACCOUNT_MINTS = {
+export const SOLEND_SPL_TOKENS = {
   SOLEND_CUSDC: {
     name: 'Solend Protocol: cUSDC',
     mint: new PublicKey('993dVFL2uXWYeoXuEBFXR4BijeXdTv4s6BzsCjJZuwqk'),
+    decimals: 6,
+    relatedMint: 'USDC',
   },
-  SOLEND_CSOL: {
-    name: 'Solend Protocol: cSOL',
-    mint: new PublicKey('5h6ssFpeDeRbzsEHDbTQNH7nVGgsKrZydxdSTnLm6QdV'),
-  },
-  SOLEND_CETH: {
-    name: 'Solend Protocol: cETH',
-    mint: new PublicKey('AppJPZka33cu4DyUenFe9Dc1ZmZ3oQju6mBn9k37bNAa'),
-  },
-  SOLEND_CBTC: {
-    name: 'Solend Protocol: cBTC',
-    mint: new PublicKey('Gqu3TFmJXfnfSX84kqbZ5u9JjSBVoesaHjfTsaPjRSnZ'),
-  },
+
+  // Add here to handle more TOKEN like cSOL ...
 } as const
 
-export const SOLEND_CREATE_OBLIGATION_ACCOUNT_SEED =
-  '4UpD2fh7xH3VP9QQaXtsS1YY3bxzWhtf'
+export const SOLEND_ADDRESSES_PER_TOKEN = {
+  USDC: {
+    relatedCollateralMint: SOLEND_SPL_TOKENS.SOLEND_CUSDC.mint,
+    mint: BASE_MINTS.USDC.mint,
+    reserve: new PublicKey('BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw'),
+    reserveLiquiditySupply: new PublicKey(
+      '8SheGtsopRUDzdiD6v6BR9a6bqZ9QwywYQY99Fp5meNf'
+    ),
+    pythOracle: new PublicKey('Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD'),
+    switchboardFeedAddress: new PublicKey(
+      'CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb'
+    ),
+    destinationCollateral: new PublicKey(
+      'UtRy8gcEu9fCkDuUrU8EmC7Uc6FZy5NCwttzG7i6nkw'
+    ),
+  },
+
+  // Add here to handle more TOKEN to transfer
+}
 
 export const SOLEND_PROGRAM_ID = new PublicKey(
   'So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo'
@@ -32,3 +42,14 @@ export const SOLEND_CREATE_OBLIGATION_ACCOUNT_SPACE_MAGIC_NUMBER = 1300
 export const SOLEND_LENDING_MARKET = new PublicKey(
   '4UpD2fh7xH3VP9QQaXtsS1YY3bxzWhtfpks7FatyKvdY'
 )
+export const SOLEND_CREATE_OBLIGATION_ACCOUNT_SEED = SOLEND_LENDING_MARKET.toString().slice(
+  0,
+  32
+)
+
+export const SOLEND_LENDING_MARKET_AUTHORITY = new PublicKey(
+  'DdZR6zRFiUt4S5mg7AV1uKB2z1f1WzcNYCaTEEWPAuby'
+)
+
+export type SolendSplToken = keyof typeof SOLEND_SPL_TOKENS
+export type SolendSplTokenUIName = typeof SOLEND_SPL_TOKENS[keyof typeof SOLEND_SPL_TOKENS]['name']
