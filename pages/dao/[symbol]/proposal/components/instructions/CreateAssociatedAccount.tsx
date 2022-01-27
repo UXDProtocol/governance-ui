@@ -122,20 +122,24 @@ const CreateAssociatedAccount = ({
 
     const [tx] = await createAssociatedTokenAccount(
       // fundingAddress
-      form.governedAccount.governance.pubkey,
+      new PublicKey(wallet.publicKey.toBase58()),
 
       // walletAddress
-      new PublicKey(wallet.publicKey.toBase58()),
+      form.governedAccount.governance.pubkey,
 
       // splTokenMintAddress
       getTokenAccountMintByName(form.splTokenMintName)
     )
 
     console.log('infos', {
-      fundingAddress: form.governedAccount.governance.pubkey.toString(),
-      walletAddress: wallet.publicKey.toString(),
+      governanceAccount: form.governedAccount.governance.account,
+      governanceOwner: form.governedAccount.governance.owner.toString(),
+      fundingAddress: wallet.publicKey.toString(),
+      walletAddress: form.governedAccount.governance.pubkey.toString(),
       splTokenMintName: form.splTokenMintName,
-      splTokenMintAddress: getTokenAccountMintByName(form.splTokenMintName),
+      splTokenMintAddress: getTokenAccountMintByName(
+        form.splTokenMintName
+      ).toString(),
     })
 
     console.log('tx', tx)
