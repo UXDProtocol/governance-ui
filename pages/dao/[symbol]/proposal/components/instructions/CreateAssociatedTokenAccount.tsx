@@ -6,7 +6,7 @@ import * as yup from 'yup'
 import { isFormValid } from '@utils/formValidation'
 import {
   UiInstruction,
-  CreateAssociatedAccountForm,
+  CreateAssociatedTokenAccountForm,
 } from '@utils/uiTypes/proposalCreationTypes'
 import { NewProposalContext } from '../../new'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
@@ -22,7 +22,7 @@ import GovernedAccountSelect from '../GovernedAccountSelect'
 import { createAssociatedTokenAccount } from '@utils/associated'
 import { getSplTokenMintAddressByUIName, SPL_TOKENS } from '@utils/splTokens'
 
-const CreateAssociatedAccount = ({
+const CreateAssociatedTokenAccount = ({
   index,
   governance,
 }: {
@@ -73,7 +73,7 @@ const CreateAssociatedAccount = ({
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
-  const [form, setForm] = useState<CreateAssociatedAccountForm>({})
+  const [form, setForm] = useState<CreateAssociatedTokenAccountForm>({})
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
 
@@ -201,4 +201,4 @@ const CreateAssociatedAccount = ({
   )
 }
 
-export default CreateAssociatedAccount
+export default CreateAssociatedTokenAccount

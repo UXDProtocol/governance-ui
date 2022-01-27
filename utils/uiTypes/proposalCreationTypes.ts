@@ -78,7 +78,7 @@ export interface EmptyInstructionForm {
   governedAccount: GovernedMultiTypeAccount | undefined
 }
 
-export interface CreateAssociatedAccountForm {
+export interface CreateAssociatedTokenAccountForm {
   governedAccount?: GovernedMultiTypeAccount
   splTokenMintUIName?: SplTokenUIName
 }
@@ -118,7 +118,7 @@ export enum Instructions {
   DepositInsuranceToMangoDepository,
   WithdrawInsuranceFromMangoDepository,
   MangoMakeChangeMaxAccounts,
-  CreateAssociatedAccount,
+  CreateAssociatedTokenAccount,
   CreateSolendObligationAccount,
   InitSolendObligationAccount,
   DepositReserveLiquidityAndObligationCollateral,

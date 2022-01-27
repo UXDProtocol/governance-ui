@@ -148,8 +148,8 @@ export default function useGovernanceAssets() {
 
   const availableInstructions = [
     {
-      id: Instructions.CreateAssociatedAccount,
-      name: 'Create Associated Account',
+      id: Instructions.CreateAssociatedTokenAccount,
+      name: 'Create Associated Token Account',
       isVisible: canUseAnyInstruction,
     },
     {

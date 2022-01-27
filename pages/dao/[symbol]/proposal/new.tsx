@@ -47,11 +47,11 @@ import TokenBalanceCardWrapper from '@components/TokenBalance/TokenBalanceCardWr
 import { getProgramVersionForRealm } from '@models/registry/api'
 import AddLiquidityRaydium from './components/instructions/raydium/AddLiquidity'
 import { useVoteRegistry } from 'VoteStakeRegistry/hooks/useVoteRegistry'
-import CreateAssociatedAccount from './components/instructions/CreateAssociatedAccount'
 import CreateObligationAccount from './components/instructions/solend/CreateObligationAccount'
 import InitObligationAccount from './components/instructions/solend/InitObligationAccount'
 import DepositReserveLiquidityAndObligationCollateral from './components/instructions/solend/DepositReserveLiquidityAndObligationCollateral'
 import WithdrawObligationCollateralAndRedeemReserveLiquidity from './components/instructions/solend/WithdrawObligationCollateralAndRedeemReserveLiquidity'
+import CreateAssociatedTokenAccount from './components/instructions/CreateAssociatedTokenAccount'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -302,8 +302,10 @@ const New = () => {
             governance={governance}
           ></SetProgramAuthority>
         )
-      case Instructions.CreateAssociatedAccount:
-        return <CreateAssociatedAccount index={idx} governance={governance} />
+      case Instructions.CreateAssociatedTokenAccount:
+        return (
+          <CreateAssociatedTokenAccount index={idx} governance={governance} />
+        )
       case Instructions.CreateSolendObligationAccount:
         return <CreateObligationAccount index={idx} governance={governance} />
       case Instructions.InitSolendObligationAccount:
