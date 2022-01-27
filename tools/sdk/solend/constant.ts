@@ -1,5 +1,4 @@
 import { PublicKey } from '@solana/web3.js'
-import { BASE_MINTS } from '@utils/splTokens'
 
 export const SOLEND_SPL_TOKENS = {
   SOLEND_CUSDC: {
@@ -15,7 +14,7 @@ export const SOLEND_SPL_TOKENS = {
 export const SOLEND_ADDRESSES_PER_TOKEN = {
   USDC: {
     relatedCollateralMint: SOLEND_SPL_TOKENS.SOLEND_CUSDC.mint,
-    mint: BASE_MINTS.USDC.mint,
+    mint: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
     reserve: new PublicKey('BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw'),
     reserveLiquiditySupply: new PublicKey(
       '8SheGtsopRUDzdiD6v6BR9a6bqZ9QwywYQY99Fp5meNf'
@@ -24,7 +23,7 @@ export const SOLEND_ADDRESSES_PER_TOKEN = {
     switchboardFeedAddress: new PublicKey(
       'CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb'
     ),
-    destinationCollateral: new PublicKey(
+    reserveCollateralSupplySplTokenAccount: new PublicKey(
       'UtRy8gcEu9fCkDuUrU8EmC7Uc6FZy5NCwttzG7i6nkw'
     ),
   },
@@ -53,3 +52,9 @@ export const SOLEND_LENDING_MARKET_AUTHORITY = new PublicKey(
 
 export type SolendSplToken = keyof typeof SOLEND_SPL_TOKENS
 export type SolendSplTokenUIName = typeof SOLEND_SPL_TOKENS[keyof typeof SOLEND_SPL_TOKENS]['name']
+
+export type SolendDepositableAndWithdrawableSupportedMint = keyof typeof SOLEND_ADDRESSES_PER_TOKEN
+
+export function getSolendDepositableAndWithdrawableSupportedMint() {
+  return Object.keys(SOLEND_ADDRESSES_PER_TOKEN)
+}

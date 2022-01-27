@@ -3,6 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { depositReserveLiquidityAndObligationCollateralInstruction } from '@solendprotocol/solend-sdk'
 import { findATAAddrSync } from '@uxdprotocol/uxd-client'
 import {
+  SolendDepositableAndWithdrawableSupportedMint,
   SOLEND_ADDRESSES_PER_TOKEN,
   SOLEND_LENDING_MARKET,
   SOLEND_LENDING_MARKET_AUTHORITY,
@@ -13,9 +14,11 @@ import { deriveObligationAddressFromWalletAndSeed } from './utils'
 export async function depositReserveLiquidityAndObligationCollateral({
   obligationOwner,
   liquidityAmount,
+  mintName,
 }: {
   obligationOwner: PublicKey
   liquidityAmount: number | BN
+  mintName: SolendDepositableAndWithdrawableSupportedMint
 }) {
   const {
     relatedCollateralMint,
@@ -24,8 +27,8 @@ export async function depositReserveLiquidityAndObligationCollateral({
     reserveLiquiditySupply,
     pythOracle,
     switchboardFeedAddress,
-    destinationCollateral,
-  } = SOLEND_ADDRESSES_PER_TOKEN.USDC
+    reserveCollateralSupplySplTokenAccount,
+  } = SOLEND_ADDRESSES_PER_TOKEN[mintName]
 
   const reserveCollateralMint = relatedCollateralMint
 
@@ -46,6 +49,7 @@ export async function depositReserveLiquidityAndObligationCollateral({
 
   const sourceLiquidity = usdcTokenAccount
   const sourceCollateral = cusdcTokenAccount
+  const destinationCollateral = reserveCollateralSupplySplTokenAccount
 
   const obligation = await deriveObligationAddressFromWalletAndSeed(
     obligationOwner

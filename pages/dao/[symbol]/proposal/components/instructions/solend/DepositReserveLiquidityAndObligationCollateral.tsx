@@ -20,6 +20,8 @@ import {
 import GovernedAccountSelect from '../../GovernedAccountSelect'
 import Input from '@components/inputs/Input'
 import { depositReserveLiquidityAndObligationCollateral } from '@tools/sdk/solend/depositReserveLiquidityAndObligationCollateral'
+import Select from '@components/inputs/Select'
+import { getSolendDepositableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
 
 const DepositReserveLiquidityAndObligationCollateral = ({
   index,
@@ -100,7 +102,8 @@ const DepositReserveLiquidityAndObligationCollateral = ({
       !isValid ||
       !programId ||
       !form.governedAccount?.governance?.account ||
-      !wallet?.publicKey
+      !wallet?.publicKey ||
+      !form.mintName
     ) {
       return {
         serializedInstruction: '',
@@ -112,9 +115,8 @@ const DepositReserveLiquidityAndObligationCollateral = ({
     const tx = await depositReserveLiquidityAndObligationCollateral({
       obligationOwner: form.governedAccount.governance.pubkey,
       liquidityAmount: form.amount,
+      mintName: form.mintName,
     })
-
-    console.log('tx', tx)
 
     return {
       serializedInstruction: serializeInstructionToBase64(tx),
@@ -145,13 +147,18 @@ const DepositReserveLiquidityAndObligationCollateral = ({
       .object()
       .nullable()
       .required('Governed account is required'),
+    mintName: yup.string().required('Token Name is required'),
+    amount: yup
+      .number()
+      .moreThan(0, 'Amount should be more than 0')
+      .required('Amount is required'),
   })
 
   return (
     <>
       <GovernedAccountSelect
         label="Governance"
-        governedAccounts={governedAccounts as GovernedMultiTypeAccount[]}
+        governedAccounts={governedAccounts}
         onChange={(value) => {
           handleSetForm({ value, propertyName: 'governedAccount' })
         }}
@@ -160,6 +167,20 @@ const DepositReserveLiquidityAndObligationCollateral = ({
         shouldBeGoverned={shouldBeGoverned}
         governance={governance}
       ></GovernedAccountSelect>
+
+      <Select
+        label="Token Name"
+        value={form.mintName}
+        placeholder="Please select..."
+        onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
+        error={formErrors['baseTokenName']}
+      >
+        {getSolendDepositableAndWithdrawableSupportedMint().map((value, i) => (
+          <Select.Option key={value + i} value={value}>
+            {value}
+          </Select.Option>
+        ))}
+      </Select>
 
       <Input
         label="Amount to deposit"

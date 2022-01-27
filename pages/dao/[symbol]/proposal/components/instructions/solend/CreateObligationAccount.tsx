@@ -108,8 +108,6 @@ const CreateObligationAccount = ({
       walletAddress: form.governedAccount.governance.pubkey,
     })
 
-    console.log('tx', tx)
-
     return {
       serializedInstruction: serializeInstructionToBase64(tx),
       isValid: true,
@@ -145,7 +143,7 @@ const CreateObligationAccount = ({
     <>
       <GovernedAccountSelect
         label="Governance"
-        governedAccounts={governedAccounts as GovernedMultiTypeAccount[]}
+        governedAccounts={governedAccounts}
         onChange={(value) => {
           handleSetForm({ value, propertyName: 'governedAccount' })
         }}
