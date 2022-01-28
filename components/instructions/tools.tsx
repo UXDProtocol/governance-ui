@@ -14,6 +14,9 @@ import { getProgramName, isGovernanceProgram } from './programs/names'
 import { RAYDIUM_INSTRUCTIONS } from './programs/raydium'
 import { SPL_TOKEN_INSTRUCTIONS } from './programs/splToken'
 import { UXD_PROGRAM_INSTRUCTIONS } from './programs/uxdProtocol'
+import { SOLEND_PROGRAM_INSTRUCTIONS } from './programs/solend'
+import { SYSTEM_PROGRAM_INSTRUCTIONS } from './programs/system'
+import { ATA_PROGRAM_INSTRUCTIONS } from './programs/associatedTokenAccount'
 
 /**
  * Default governance program id instance
@@ -147,6 +150,9 @@ export const INSTRUCTION_DESCRIPTORS = {
   ...MANGO_INSTRUCTIONS,
   ...RAYDIUM_INSTRUCTIONS,
   ...UXD_PROGRAM_INSTRUCTIONS,
+  ...SOLEND_PROGRAM_INSTRUCTIONS,
+  ...SYSTEM_PROGRAM_INSTRUCTIONS,
+  ...ATA_PROGRAM_INSTRUCTIONS,
 }
 
 export async function getInstructionDescriptor(
@@ -159,9 +165,29 @@ export async function getInstructionDescriptor(
     descriptors =
       GOVERNANCE_INSTRUCTIONS['GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw']
   } else {
+    console.log(
+      '>>>>> INSTRUCTION_DESCRIPTORS[instruction.programId.toBase58()]',
+      instruction.programId.toBase58(),
+      instruction.programId.toString()
+    )
     descriptors = INSTRUCTION_DESCRIPTORS[instruction.programId.toBase58()]
   }
-  const descriptor = descriptors && descriptors[instruction.data[0]]
+
+  console.log(
+    '>>>>> getInstructionDescriptor',
+    instruction,
+    instruction.data[0],
+    descriptors
+  )
+
+  // Make it work for program with one instruction like ATA program
+  // and for the one with multiple instructions
+  const descriptor = !instruction.data.length
+    ? descriptors
+    : descriptors && descriptors[instruction.data[0]]
+
+  console.log('descriptor', descriptor)
+
   const dataUI = (descriptor?.getDataUI &&
     (await descriptor?.getDataUI(
       connection,

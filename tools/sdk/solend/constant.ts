@@ -58,3 +58,18 @@ export type SolendDeposableAndWithdrawableSupportedMint = keyof typeof SOLEND_AD
 export function getSolendDeposableAndWithdrawableSupportedMint() {
   return Object.keys(SOLEND_ADDRESSES_PER_TOKEN)
 }
+
+export function getTokenNameByReservePublicKey(
+  reserve: PublicKey
+): string | undefined {
+  return Object.keys(SOLEND_ADDRESSES_PER_TOKEN).reduce((tmp, mintName) => {
+    if (
+      SOLEND_ADDRESSES_PER_TOKEN[mintName].reserve.toString() ==
+      reserve.toString()
+    ) {
+      return mintName
+    }
+
+    return tmp
+  }, void 0)
+}
