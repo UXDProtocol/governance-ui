@@ -108,6 +108,11 @@ export interface RefreshObligationForm {
   mintName?: SolendDeposableAndWithdrawableSupportedMint
 }
 
+export interface RefreshReserveForm {
+  governedAccount?: GovernedMultiTypeAccount
+  mintName?: SolendDeposableAndWithdrawableSupportedMint
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -128,7 +133,8 @@ export enum Instructions {
   InitSolendObligationAccount,
   DepositReserveLiquidityAndObligationCollateral,
   WithdrawObligationCollateralAndRedeemReserveLiquidity,
-  RefreshObligation,
+  RefreshSolendObligation,
+  RefreshSolendReserve,
 }
 
 export interface InitializeControllerForm {

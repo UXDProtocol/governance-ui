@@ -168,7 +168,12 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.RefreshObligation,
+      id: Instructions.RefreshSolendReserve,
+      name: 'Refresh Solend Reserve',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.RefreshSolendObligation,
       name: 'Refresh Solend Obligation',
       isVisible: canUseAnyInstruction,
     },
