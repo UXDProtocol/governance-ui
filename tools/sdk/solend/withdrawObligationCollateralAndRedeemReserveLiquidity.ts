@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js'
 import { withdrawObligationCollateralAndRedeemReserveLiquidity as originalWithdrawFunction } from '@solendprotocol/solend-sdk'
 import { findATAAddrSync } from '@uxdprotocol/uxd-client'
 import {
-  SolendDepositableAndWithdrawableSupportedMint,
+  SolendDeposableAndWithdrawableSupportedMint,
   SOLEND_ADDRESSES_PER_TOKEN,
   SOLEND_LENDING_MARKET,
   SOLEND_LENDING_MARKET_AUTHORITY,
@@ -18,7 +18,7 @@ export async function withdrawObligationCollateralAndRedeemReserveLiquidity({
 }: {
   obligationOwner: PublicKey
   liquidityAmount: number | BN
-  mintName: SolendDepositableAndWithdrawableSupportedMint
+  mintName: SolendDeposableAndWithdrawableSupportedMint
 }) {
   const {
     relatedCollateralMint,

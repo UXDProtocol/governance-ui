@@ -52,6 +52,7 @@ import InitObligationAccount from './components/instructions/solend/InitObligati
 import DepositReserveLiquidityAndObligationCollateral from './components/instructions/solend/DepositReserveLiquidityAndObligationCollateral'
 import WithdrawObligationCollateralAndRedeemReserveLiquidity from './components/instructions/solend/WithdrawObligationCollateralAndRedeemReserveLiquidity'
 import CreateAssociatedTokenAccount from './components/instructions/CreateAssociatedTokenAccount'
+import RefreshObligation from './components/instructions/solend/RefreshObligation'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -317,6 +318,8 @@ const New = () => {
             governance={governance}
           />
         )
+      case Instructions.RefreshObligation:
+        return <RefreshObligation index={idx} governance={governance} />
       case Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity:
         return (
           <WithdrawObligationCollateralAndRedeemReserveLiquidity

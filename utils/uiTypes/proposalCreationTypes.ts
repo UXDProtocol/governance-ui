@@ -4,7 +4,7 @@ import { ProgramAccount } from '@solana/spl-governance'
 import { RpcContext } from '@solana/spl-governance'
 import { MintInfo } from '@solana/spl-token'
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import { SolendDepositableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
+import { SolendDeposableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
 import { SplTokenUIName } from '@utils/splTokens'
 import {
   GovernedMintInfoAccount,
@@ -94,13 +94,18 @@ export interface InitSolendObligationAccountForm {
 export interface DepositReserveLiquidityAndObligationCollateralForm {
   governedAccount?: GovernedMultiTypeAccount
   amount: number
-  mintName?: SolendDepositableAndWithdrawableSupportedMint
+  mintName?: SolendDeposableAndWithdrawableSupportedMint
 }
 
 export interface WithdrawObligationCollateralAndRedeemReserveLiquidityForm {
   governedAccount?: GovernedMultiTypeAccount
   amount: number
-  mintName?: SolendDepositableAndWithdrawableSupportedMint
+  mintName?: SolendDeposableAndWithdrawableSupportedMint
+}
+
+export interface RefreshObligationForm {
+  governedAccount?: GovernedMultiTypeAccount
+  mintName?: SolendDeposableAndWithdrawableSupportedMint
 }
 
 export enum Instructions {
@@ -123,6 +128,7 @@ export enum Instructions {
   InitSolendObligationAccount,
   DepositReserveLiquidityAndObligationCollateral,
   WithdrawObligationCollateralAndRedeemReserveLiquidity,
+  RefreshObligation,
 }
 
 export interface InitializeControllerForm {

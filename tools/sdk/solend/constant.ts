@@ -53,8 +53,8 @@ export const SOLEND_LENDING_MARKET_AUTHORITY = new PublicKey(
 export type SolendSplToken = keyof typeof SOLEND_SPL_TOKENS
 export type SolendSplTokenUIName = typeof SOLEND_SPL_TOKENS[keyof typeof SOLEND_SPL_TOKENS]['name']
 
-export type SolendDepositableAndWithdrawableSupportedMint = keyof typeof SOLEND_ADDRESSES_PER_TOKEN
+export type SolendDeposableAndWithdrawableSupportedMint = keyof typeof SOLEND_ADDRESSES_PER_TOKEN
 
-export function getSolendDepositableAndWithdrawableSupportedMint() {
+export function getSolendDeposableAndWithdrawableSupportedMint() {
   return Object.keys(SOLEND_ADDRESSES_PER_TOKEN)
 }

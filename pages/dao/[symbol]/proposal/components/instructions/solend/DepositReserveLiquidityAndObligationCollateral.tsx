@@ -21,7 +21,7 @@ import GovernedAccountSelect from '../../GovernedAccountSelect'
 import Input from '@components/inputs/Input'
 import { depositReserveLiquidityAndObligationCollateral } from '@tools/sdk/solend/depositReserveLiquidityAndObligationCollateral'
 import Select from '@components/inputs/Select'
-import { getSolendDepositableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
+import { getSolendDeposableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
 
 const DepositReserveLiquidityAndObligationCollateral = ({
   index,
@@ -175,8 +175,8 @@ const DepositReserveLiquidityAndObligationCollateral = ({
         onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
         error={formErrors['baseTokenName']}
       >
-        {getSolendDepositableAndWithdrawableSupportedMint().map((value, i) => (
-          <Select.Option key={value + i} value={value}>
+        {getSolendDeposableAndWithdrawableSupportedMint().map((value) => (
+          <Select.Option key={value} value={value}>
             {value}
           </Select.Option>
         ))}

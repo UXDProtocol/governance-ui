@@ -6,7 +6,7 @@ import * as yup from 'yup'
 import { isFormValid } from '@utils/formValidation'
 import {
   UiInstruction,
-  WithdrawObligationCollateralAndRedeemReserveLiquidityForm,
+  RefreshObligationForm,
 } from '@utils/uiTypes/proposalCreationTypes'
 import { NewProposalContext } from '../../../new'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
@@ -18,12 +18,11 @@ import {
   Governance,
 } from '@solana/spl-governance'
 import GovernedAccountSelect from '../../GovernedAccountSelect'
-import Input from '@components/inputs/Input'
 import Select from '@components/inputs/Select'
 import { getSolendDeposableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
-import { withdrawObligationCollateralAndRedeemReserveLiquidity } from '@tools/sdk/solend/withdrawObligationCollateralAndRedeemReserveLiquidity'
+import { refreshObligation } from '@tools/sdk/solend/refreshObligation'
 
-const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
+const RefreshObligation = ({
   index,
   governance,
 }: {
@@ -74,12 +73,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
-  const [
-    form,
-    setForm,
-  ] = useState<WithdrawObligationCollateralAndRedeemReserveLiquidityForm>({
-    amount: 0,
-  })
+  const [form, setForm] = useState<RefreshObligationForm>({})
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
 
@@ -102,8 +96,8 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       !isValid ||
       !programId ||
       !form.governedAccount?.governance?.account ||
-      !wallet?.publicKey ||
-      !form.mintName
+      !form.mintName ||
+      !wallet?.publicKey
     ) {
       return {
         serializedInstruction: '',
@@ -112,10 +106,9 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       }
     }
 
-    const tx = await withdrawObligationCollateralAndRedeemReserveLiquidity({
+    const tx = await refreshObligation({
       obligationOwner: form.governedAccount.governance.pubkey,
-      liquidityAmount: form.amount,
-      mintName: form.mintName,
+      mintNames: [form.mintName],
     })
 
     return {
@@ -148,10 +141,6 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       .nullable()
       .required('Governed account is required'),
     mintName: yup.string().required('Token Name is required'),
-    amount: yup
-      .number()
-      .moreThan(0, 'Amount should be more than 0')
-      .required('Amount is required'),
   })
 
   return (
@@ -169,7 +158,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       ></GovernedAccountSelect>
 
       <Select
-        label="Token Name"
+        label="Token Name to refresh obligation for"
         value={form.mintName}
         placeholder="Please select..."
         onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
@@ -181,23 +170,8 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
           </Select.Option>
         ))}
       </Select>
-
-      <Input
-        label="Amount to deposit"
-        value={form.amount}
-        type="number"
-        min={0}
-        max={10 ** 12}
-        onChange={(evt) =>
-          handleSetForm({
-            value: evt.target.value,
-            propertyName: 'amount',
-          })
-        }
-        error={formErrors['amount']}
-      />
     </>
   )
 }
 
-export default WithdrawObligationCollateralAndRedeemReserveLiquidity
+export default RefreshObligation
