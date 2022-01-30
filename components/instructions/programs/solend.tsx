@@ -2,7 +2,6 @@ import {
   getTokenNameByReservePublicKey,
   SOLEND_PROGRAM_ID,
 } from '@tools/sdk/solend/constant'
-import { struct, u8 } from 'buffer-layout'
 import { LendingInstruction } from '@solendprotocol/solend-sdk/dist/instructions/instruction'
 import { Connection } from '@solana/web3.js'
 import { AccountMetaData } from '@solana/spl-governance'
@@ -96,6 +95,7 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
       },
     },
 
+    /*
     [LendingInstruction.DepositReserveLiquidityAndObligationCollateral]: {
       name: '',
       accounts: [],
@@ -127,5 +127,6 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         )
       },
     },
+    */
   },
 }

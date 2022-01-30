@@ -36,6 +36,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   const [governedAccounts, setGovernedAccounts] = useState<
     GovernedMultiTypeAccount[]
   >([])
+
   const {
     governancesArray,
     governedTokenAccounts,

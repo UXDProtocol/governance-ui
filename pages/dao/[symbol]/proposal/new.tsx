@@ -444,6 +444,7 @@ const New = () => {
               }}
             >
               <h2>Instructions</h2>
+
               {instructionsData.map((instruction, idx) => {
                 const availableInstructionsForIdx = getAvailableInstructionsForIndex(
                   idx

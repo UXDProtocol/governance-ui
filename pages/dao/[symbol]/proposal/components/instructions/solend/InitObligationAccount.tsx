@@ -33,6 +33,7 @@ const InitObligationAccount = ({
   const [governedAccounts, setGovernedAccounts] = useState<
     GovernedMultiTypeAccount[]
   >([])
+
   const {
     governancesArray,
     governedTokenAccounts,
