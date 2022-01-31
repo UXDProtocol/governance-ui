@@ -274,11 +274,21 @@ const New = () => {
   }, [instructionsData[0].governedAccount?.pubkey])
 
   useEffect(() => {
-    const firstInstruction = instructionsData[0]
-    if (firstInstruction && firstInstruction.governedAccount) {
-      setGovernance(firstInstruction.governedAccount)
-    }
-  }, [instructionsData[0]])
+    const governedAccount = instructionsData.reduce((tmp, x) => {
+      if (tmp) {
+        return tmp
+      }
+
+      if (x.governedAccount) {
+        return x.governedAccount
+      }
+
+      return tmp
+    }, null)
+
+    setGovernance(governedAccount)
+  }, [instructionsData])
+
   useEffect(() => {
     //fetch to be up to date with amounts
     fetchTokenAccountsForSelectedRealmGovernances()

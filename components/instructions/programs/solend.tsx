@@ -1,3 +1,4 @@
+import { nu64, struct, u8 } from 'buffer-layout'
 import {
   getTokenNameByReservePublicKey,
   SOLEND_PROGRAM_ID,
@@ -75,12 +76,6 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         _data: Uint8Array,
         accounts: AccountMetaData[]
       ) => {
-        console.log(
-          'accounts',
-          accounts,
-          accounts.map((x) => x.pubkey.toString())
-        )
-
         const reserve = accounts[0]
 
         const tokenName =
@@ -111,6 +106,7 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         )
       },
     },
+    */
 
     [LendingInstruction.WithdrawObligationCollateralAndRedeemReserveLiquidity]: {
       name: '',
@@ -118,15 +114,37 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
       getDataUI: (
         _connection: Connection,
         data: Uint8Array,
-        _accounts: AccountMetaData[]
+        accounts: AccountMetaData[]
       ) => {
+        console.log(
+          'accounts',
+          accounts.map((x) => x.pubkey.toString())
+        )
+
+        const dataLayout = struct([u8('instruction'), nu64('collateralAmount')])
+
+        const args = dataLayout.decode(Buffer.from(data)) as any
+
+        const reserve = accounts[2]
+
+        const tokenName =
+          getTokenNameByReservePublicKey(reserve.pubkey) ?? 'unknown'
+
+        console.log('args', args)
+
         return (
-          <>
-            <p>Hello</p>
-          </>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>Token</span>
+              <span>{tokenName}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>Amount</span>
+              <span>{args.collateralAmount}</span>
+            </div>
+          </div>
         )
       },
     },
-    */
   },
 }
