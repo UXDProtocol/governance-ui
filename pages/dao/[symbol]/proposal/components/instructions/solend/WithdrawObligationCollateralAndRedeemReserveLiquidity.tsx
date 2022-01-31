@@ -184,7 +184,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       </Select>
 
       <Input
-        label="Amount to deposit"
+        label="Amount to withdraw"
         value={form.amount}
         type="number"
         min={0}
