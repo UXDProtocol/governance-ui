@@ -2,13 +2,10 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { depositReserveLiquidityAndObligationCollateralInstruction } from '@solendprotocol/solend-sdk'
 import { findATAAddrSync } from '@uxdprotocol/uxd-client'
-import {
-  SolendDeposableAndWithdrawableSupportedMint,
-  SOLEND_ADDRESSES_PER_TOKEN,
-  SOLEND_LENDING_MARKET,
-  SOLEND_LENDING_MARKET_AUTHORITY,
-  SOLEND_PROGRAM_ID,
-} from './constant'
+import { SupportedMintName } from './configuration'
+
+import SolendConfiguration from './configuration'
+
 import { deriveObligationAddressFromWalletAndSeed } from './utils'
 
 export async function depositReserveLiquidityAndObligationCollateral({
@@ -18,7 +15,7 @@ export async function depositReserveLiquidityAndObligationCollateral({
 }: {
   obligationOwner: PublicKey
   liquidityAmount: number | BN
-  mintName: SolendDeposableAndWithdrawableSupportedMint
+  mintName: SupportedMintName
 }) {
   const {
     relatedCollateralMint,
@@ -28,14 +25,14 @@ export async function depositReserveLiquidityAndObligationCollateral({
     pythOracle,
     switchboardFeedAddress,
     reserveCollateralSupplySplTokenAccount,
-  } = SOLEND_ADDRESSES_PER_TOKEN[mintName]
+  } = SolendConfiguration.getSupportedMintInformation(mintName)
 
-  const reserveCollateralMint = relatedCollateralMint
+  const reserveCollateralMint = relatedCollateralMint.mint
 
   const [usdcTokenAccount] = findATAAddrSync(obligationOwner, mint)
   const [cusdcTokenAccount] = findATAAddrSync(
     obligationOwner,
-    relatedCollateralMint
+    relatedCollateralMint.mint
   )
 
   const sourceLiquidity = usdcTokenAccount
@@ -70,8 +67,8 @@ export async function depositReserveLiquidityAndObligationCollateral({
     // Example: cUSDC mint (must be related to sourceLiquidity)
     reserveCollateralMint,
 
-    SOLEND_LENDING_MARKET,
-    SOLEND_LENDING_MARKET_AUTHORITY,
+    SolendConfiguration.lendingMarket,
+    SolendConfiguration.lendingMarketAuthority,
 
     destinationCollateral,
     obligation,
@@ -81,6 +78,6 @@ export async function depositReserveLiquidityAndObligationCollateral({
 
     // Wallet address of the one creating the proposal
     transferAuthority,
-    SOLEND_PROGRAM_ID
+    SolendConfiguration.programID
   )
 }

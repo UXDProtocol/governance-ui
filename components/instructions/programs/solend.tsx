@@ -1,14 +1,11 @@
 import { nu64, struct, u8 } from 'buffer-layout'
-import {
-  getTokenNameByReservePublicKey,
-  SOLEND_PROGRAM_ID,
-} from '@tools/sdk/solend/constant'
+import SolendConfiguration from '@tools/sdk/solend/configuration'
 import { LendingInstruction } from '@solendprotocol/solend-sdk/dist/instructions/instruction'
 import { Connection } from '@solana/web3.js'
 import { AccountMetaData } from '@solana/spl-governance'
 
 export const SOLEND_PROGRAM_INSTRUCTIONS = {
-  [SOLEND_PROGRAM_ID.toBase58()]: {
+  [SolendConfiguration.programID.toBase58()]: {
     [LendingInstruction.InitObligation]: {
       name: 'Solend - Init Obligation',
       accounts: [
@@ -54,7 +51,9 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         const reserveAccounts = accounts.slice(2)
 
         const reserveNames = reserveAccounts.map(
-          (x) => getTokenNameByReservePublicKey(x.pubkey) ?? 'unknown'
+          (x) =>
+            SolendConfiguration.getTokenNameByReservePublicKey(x.pubkey) ??
+            'unknown'
         )
 
         return (
@@ -84,7 +83,8 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         const reserve = accounts[0]
 
         const tokenName =
-          getTokenNameByReservePublicKey(reserve.pubkey) ?? 'unknown'
+          SolendConfiguration.getTokenNameByReservePublicKey(reserve.pubkey) ??
+          'unknown'
 
         return (
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -130,7 +130,8 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         const reserve = accounts[2]
 
         const tokenName =
-          getTokenNameByReservePublicKey(reserve.pubkey) ?? 'unknown'
+          SolendConfiguration.getTokenNameByReservePublicKey(reserve.pubkey) ??
+          'unknown'
 
         return (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -177,7 +178,8 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         const reserve = accounts[2]
 
         const tokenName =
-          getTokenNameByReservePublicKey(reserve.pubkey) ?? 'unknown'
+          SolendConfiguration.getTokenNameByReservePublicKey(reserve.pubkey) ??
+          'unknown'
 
         console.log('args', args)
 

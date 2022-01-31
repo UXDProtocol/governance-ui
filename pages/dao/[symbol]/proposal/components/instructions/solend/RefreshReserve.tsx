@@ -12,7 +12,7 @@ import { NewProposalContext } from '../../../new'
 import useWalletStore from 'stores/useWalletStore'
 import { serializeInstructionToBase64 } from '@solana/spl-governance'
 import Select from '@components/inputs/Select'
-import { getSolendDeposableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
+import SolendConfiguration from '@tools/sdk/solend/configuration'
 import { refreshReserve } from '@tools/sdk/solend/refreshReserve'
 
 const RefreshReserve = ({ index }: { index: number }) => {
@@ -93,7 +93,7 @@ const RefreshReserve = ({ index }: { index: number }) => {
         onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
         error={formErrors['baseTokenName']}
       >
-        {getSolendDeposableAndWithdrawableSupportedMint().map((value) => (
+        {SolendConfiguration.getSupportedMintNames().map((value) => (
           <Select.Option key={value} value={value}>
             {value}
           </Select.Option>

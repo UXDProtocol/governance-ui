@@ -1,10 +1,8 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { refreshObligationInstruction } from '@solendprotocol/solend-sdk'
-import {
-  SolendDeposableAndWithdrawableSupportedMint as SolendDeposableAndWithdrawableSupportedMint,
-  SOLEND_ADDRESSES_PER_TOKEN,
-  SOLEND_PROGRAM_ID,
-} from './constant'
+
+import SolendConfiguration, { SupportedMintName } from './configuration'
+
 import { deriveObligationAddressFromWalletAndSeed } from './utils'
 
 // Would be nice if we could automatically detect which reserves needs to be refreshed
@@ -14,15 +12,13 @@ export async function refreshObligation({
   mintNames,
 }: {
   obligationOwner: PublicKey
-  mintNames: SolendDeposableAndWithdrawableSupportedMint[]
+  mintNames: SupportedMintName[]
 }): Promise<TransactionInstruction> {
   const obligationAddress = await deriveObligationAddressFromWalletAndSeed(
     obligationOwner
   )
 
-  const depositReserves = mintNames.map(
-    (x) => SOLEND_ADDRESSES_PER_TOKEN[x].reserve
-  )
+  const depositReserves = SolendConfiguration.getReserveOfGivenMints(mintNames)
 
   return refreshObligationInstruction(
     obligationAddress,
@@ -30,6 +26,6 @@ export async function refreshObligation({
     // they are concatenate
     depositReserves,
     [],
-    SOLEND_PROGRAM_ID
+    SolendConfiguration.programID
   )
 }

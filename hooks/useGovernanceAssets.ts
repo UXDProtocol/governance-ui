@@ -154,32 +154,32 @@ export default function useGovernanceAssets() {
     },
     {
       id: Instructions.CreateSolendObligationAccount,
-      name: 'Create Solend Obligation Account',
+      name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.InitSolendObligationAccount,
-      name: 'Init Solend Obligation Account',
+      name: 'Solend: Init Obligation Account',
       isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.DepositReserveLiquidityAndObligationCollateral,
-      name: 'Deposit funds in Solend',
+      name: 'Solend: Deposit Funds',
       isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.RefreshSolendReserve,
-      name: 'Refresh Solend Reserve',
+      name: 'Solend: Refresh Reserve',
       isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.RefreshSolendObligation,
-      name: 'Refresh Solend Obligation',
+      name: 'Solend: Refresh Obligation',
       isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity,
-      name: 'Withdraw funds from Solend',
+      name: 'Solend: Withdraw Funds',
       isVisible: canUseAnyInstruction,
     },
     {

@@ -19,7 +19,7 @@ import {
 } from '@solana/spl-governance'
 import GovernedAccountSelect from '../../GovernedAccountSelect'
 import Select from '@components/inputs/Select'
-import { getSolendDeposableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
+import SolendConfiguration from '@tools/sdk/solend/configuration'
 import { refreshObligation } from '@tools/sdk/solend/refreshObligation'
 
 const RefreshObligation = ({
@@ -164,7 +164,7 @@ const RefreshObligation = ({
         onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
         error={formErrors['baseTokenName']}
       >
-        {getSolendDeposableAndWithdrawableSupportedMint().map((value) => (
+        {SolendConfiguration.getSupportedMintNames().map((value) => (
           <Select.Option key={value} value={value}>
             {value}
           </Select.Option>

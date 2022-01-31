@@ -21,10 +21,9 @@ import GovernedAccountSelect from '../../GovernedAccountSelect'
 import Input from '@components/inputs/Input'
 import { depositReserveLiquidityAndObligationCollateral } from '@tools/sdk/solend/depositReserveLiquidityAndObligationCollateral'
 import Select from '@components/inputs/Select'
-import {
-  getSolendDeposableAndWithdrawableSupportedMint,
-  SOLEND_ADDRESSES_PER_TOKEN,
-} from '@tools/sdk/solend/constant'
+
+import SolendConfiguration from '@tools/sdk/solend/configuration'
+
 import BigNumber from 'bignumber.js'
 import { BN } from '@project-serum/anchor'
 
@@ -121,7 +120,10 @@ const DepositReserveLiquidityAndObligationCollateral = ({
       obligationOwner: form.governedAccount.governance.pubkey,
       liquidityAmount: new BN(
         new BigNumber(form.uiAmount)
-          .shiftedBy(SOLEND_ADDRESSES_PER_TOKEN[form.mintName].decimals)
+          .shiftedBy(
+            SolendConfiguration.getSupportedMintInformation(form.mintName)
+              .decimals
+          )
           .toString()
       ),
       mintName: form.mintName,
@@ -184,7 +186,7 @@ const DepositReserveLiquidityAndObligationCollateral = ({
         onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
         error={formErrors['baseTokenName']}
       >
-        {getSolendDeposableAndWithdrawableSupportedMint().map((value) => (
+        {SolendConfiguration.getSupportedMintNames().map((value) => (
           <Select.Option key={value} value={value}>
             {value}
           </Select.Option>

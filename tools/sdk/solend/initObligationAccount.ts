@@ -1,6 +1,6 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { initObligationInstruction } from '@solendprotocol/solend-sdk'
-import { SOLEND_LENDING_MARKET, SOLEND_PROGRAM_ID } from './constant'
+import SolendConfiguration from './configuration'
 import { deriveObligationAddressFromWalletAndSeed } from './utils'
 
 export async function initObligationAccount({
@@ -14,8 +14,8 @@ export async function initObligationAccount({
 
   return initObligationInstruction(
     obligationAddress,
-    SOLEND_LENDING_MARKET,
+    SolendConfiguration.lendingMarket,
     obligationOwner,
-    SOLEND_PROGRAM_ID
+    SolendConfiguration.programID
   )
 }

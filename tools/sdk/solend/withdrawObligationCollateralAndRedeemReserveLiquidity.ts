@@ -2,13 +2,8 @@ import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { withdrawObligationCollateralAndRedeemReserveLiquidity as originalWithdrawFunction } from '@solendprotocol/solend-sdk'
 import { findATAAddrSync } from '@uxdprotocol/uxd-client'
-import {
-  SolendDeposableAndWithdrawableSupportedMint,
-  SOLEND_ADDRESSES_PER_TOKEN,
-  SOLEND_LENDING_MARKET,
-  SOLEND_LENDING_MARKET_AUTHORITY,
-  SOLEND_PROGRAM_ID,
-} from './constant'
+import SolendConfiguration, { SupportedMintName } from './configuration'
+
 import { deriveObligationAddressFromWalletAndSeed } from './utils'
 
 export async function withdrawObligationCollateralAndRedeemReserveLiquidity({
@@ -18,7 +13,7 @@ export async function withdrawObligationCollateralAndRedeemReserveLiquidity({
 }: {
   obligationOwner: PublicKey
   liquidityAmount: number | BN
-  mintName: SolendDeposableAndWithdrawableSupportedMint
+  mintName: SupportedMintName
 }) {
   const {
     relatedCollateralMint,
@@ -26,14 +21,14 @@ export async function withdrawObligationCollateralAndRedeemReserveLiquidity({
     reserve,
     reserveLiquiditySupply,
     reserveCollateralSupplySplTokenAccount,
-  } = SOLEND_ADDRESSES_PER_TOKEN[mintName]
+  } = SolendConfiguration.getSupportedMintInformation(mintName)
 
-  const reserveCollateralMint = relatedCollateralMint
+  const reserveCollateralMint = relatedCollateralMint.mint
 
   const [usdcTokenAccount] = findATAAddrSync(obligationOwner, mint)
   const [cusdcTokenAccount] = findATAAddrSync(
     obligationOwner,
-    relatedCollateralMint
+    relatedCollateralMint.mint
   )
 
   const obligation = await deriveObligationAddressFromWalletAndSeed(
@@ -52,13 +47,13 @@ export async function withdrawObligationCollateralAndRedeemReserveLiquidity({
     destinationCollateral,
     withdrawReserve,
     obligation,
-    SOLEND_LENDING_MARKET,
-    SOLEND_LENDING_MARKET_AUTHORITY,
+    SolendConfiguration.lendingMarket,
+    SolendConfiguration.lendingMarketAuthority,
     destinationLiquidity,
     reserveCollateralMint,
     reserveLiquiditySupply,
     obligationOwner,
     transferAuthority,
-    SOLEND_PROGRAM_ID
+    SolendConfiguration.programID
   )
 }
