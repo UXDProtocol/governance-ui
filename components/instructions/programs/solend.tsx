@@ -38,8 +38,13 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
     },
 
     [LendingInstruction.RefreshObligation]: {
-      name: '',
-      accounts: [],
+      name: 'Solend - Refresh Obligation',
+      accounts: [
+        'Obligation',
+        'Sysvar: Clock',
+        '... Deposit Reserve',
+        '... Borrow Reserve',
+      ],
       getDataUI: (
         _connection: Connection,
         _data: Uint8Array,
@@ -69,8 +74,8 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
     },
 
     [LendingInstruction.RefreshReserve]: {
-      name: '',
-      accounts: [],
+      name: 'Solend - Refresh Reserve',
+      accounts: ['Reserve'],
       getDataUI: (
         _connection: Connection,
         _data: Uint8Array,
@@ -90,27 +95,24 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
       },
     },
 
-    /*
     [LendingInstruction.DepositReserveLiquidityAndObligationCollateral]: {
-      name: '',
-      accounts: [],
-      getDataUI: (
-        _connection: Connection,
-        data: Uint8Array,
-        _accounts: AccountMetaData[]
-      ) => {
-        return (
-          <>
-            <p>Hello</p>
-          </>
-        )
-      },
-    },
-    */
-
-    [LendingInstruction.WithdrawObligationCollateralAndRedeemReserveLiquidity]: {
-      name: '',
-      accounts: [],
+      name: 'Solend - Deposit Reserve Liquidity And Obligation Collateral',
+      accounts: [
+        'Source Liquidity',
+        'Source Collateral',
+        'Reserve',
+        'Reserve Liquidity Supply',
+        'Reserve Collateral Mint',
+        'Lending Market',
+        'Destination Collateral',
+        'Obligation',
+        'Obligation Owner',
+        'Pyth Oracle',
+        'Switchboard Feed Address',
+        'Transfer Authority',
+        'Sysvar: Clock',
+        'Token Program',
+      ],
       getDataUI: (
         _connection: Connection,
         data: Uint8Array,
@@ -121,6 +123,53 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
           accounts.map((x) => x.pubkey.toString())
         )
 
+        const dataLayout = struct([u8('instruction'), nu64('liquidityAmount')])
+
+        const args = dataLayout.decode(Buffer.from(data)) as any
+
+        const reserve = accounts[2]
+
+        const tokenName =
+          getTokenNameByReservePublicKey(reserve.pubkey) ?? 'unknown'
+
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>Token</span>
+              <span>{tokenName}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>Amount</span>
+              <span>{args.liquidityAmount}</span>
+            </div>
+          </div>
+        )
+      },
+    },
+
+    [LendingInstruction.WithdrawObligationCollateralAndRedeemReserveLiquidity]: {
+      name:
+        'Solend - Withdraw Obligation Collateral And Redeem Reserve Liquidity',
+      accounts: [
+        'Source Collateral',
+        'Destination Collateral',
+        'Withdraw Reserve',
+        'Obligation',
+        'Lending Market',
+        'Lending Market Authority',
+        'Destination Liquidity',
+        'Reserve Collateral Mint',
+        'Reserve Liquidity Supply',
+        'Obligation Owner',
+        'Transfer Authority',
+        'Sysvar: Clock',
+        'Token Program',
+      ],
+      getDataUI: (
+        _connection: Connection,
+        data: Uint8Array,
+        accounts: AccountMetaData[]
+      ) => {
         const dataLayout = struct([u8('instruction'), nu64('collateralAmount')])
 
         const args = dataLayout.decode(Buffer.from(data)) as any

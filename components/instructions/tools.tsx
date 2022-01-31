@@ -165,28 +165,14 @@ export async function getInstructionDescriptor(
     descriptors =
       GOVERNANCE_INSTRUCTIONS['GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw']
   } else {
-    console.log(
-      '>>>>> INSTRUCTION_DESCRIPTORS[instruction.programId.toBase58()]',
-      instruction.programId.toBase58(),
-      instruction.programId.toString()
-    )
     descriptors = INSTRUCTION_DESCRIPTORS[instruction.programId.toBase58()]
   }
-
-  console.log(
-    '>>>>> getInstructionDescriptor',
-    instruction,
-    instruction.data[0],
-    descriptors
-  )
 
   // Make it work for program with one instruction like ATA program
   // and for the one with multiple instructions
   const descriptor = !instruction.data.length
     ? descriptors
     : descriptors && descriptors[instruction.data[0]]
-
-  console.log('descriptor', descriptor)
 
   const dataUI = (descriptor?.getDataUI &&
     (await descriptor?.getDataUI(
