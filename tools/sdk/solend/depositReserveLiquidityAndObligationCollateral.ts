@@ -38,15 +38,6 @@ export async function depositReserveLiquidityAndObligationCollateral({
     relatedCollateralMint
   )
 
-  console.log(
-    'find mint token account from obligationOwner (1)',
-    usdcTokenAccount.toString()
-  )
-  console.log(
-    'find collateral mint token account from obligationOwner (2)',
-    cusdcTokenAccount.toString()
-  )
-
   const sourceLiquidity = usdcTokenAccount
   const sourceCollateral = cusdcTokenAccount
   const destinationCollateral = reserveCollateralSupplySplTokenAccount
@@ -54,28 +45,8 @@ export async function depositReserveLiquidityAndObligationCollateral({
   const obligation = await deriveObligationAddressFromWalletAndSeed(
     obligationOwner
   )
-  const transferAuthority = obligationOwner
 
-  console.log(
-    'depositReserveLiquidityAndObligationCollateral tx building detail',
-    {
-      liquidityAmount,
-      sourceLiquidity,
-      sourceCollateral,
-      reserve,
-      reserveLiquiditySupply,
-      reserveCollateralMint,
-      lendingMarket: SOLEND_LENDING_MARKET,
-      lendingMarketAuthority: SOLEND_LENDING_MARKET_AUTHORITY,
-      destinationCollateral,
-      obligation,
-      obligationOwner,
-      pythOracle,
-      switchboardFeedAddress,
-      transferAuthority,
-      programId: SOLEND_PROGRAM_ID,
-    }
-  )
+  const transferAuthority = obligationOwner
 
   return depositReserveLiquidityAndObligationCollateralInstruction(
     liquidityAmount,

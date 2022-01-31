@@ -15,6 +15,7 @@ export const SOLEND_ADDRESSES_PER_TOKEN = {
   USDC: {
     relatedCollateralMint: SOLEND_SPL_TOKENS.SOLEND_CUSDC.mint,
     mint: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    decimals: 6,
     reserve: new PublicKey('BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw'),
     reserveLiquiditySupply: new PublicKey(
       '8SheGtsopRUDzdiD6v6BR9a6bqZ9QwywYQY99Fp5meNf'

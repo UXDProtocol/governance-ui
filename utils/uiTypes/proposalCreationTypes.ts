@@ -93,13 +93,13 @@ export interface InitSolendObligationAccountForm {
 
 export interface DepositReserveLiquidityAndObligationCollateralForm {
   governedAccount?: GovernedMultiTypeAccount
-  amount: number
+  uiAmount: string
   mintName?: SolendDeposableAndWithdrawableSupportedMint
 }
 
 export interface WithdrawObligationCollateralAndRedeemReserveLiquidityForm {
   governedAccount?: GovernedMultiTypeAccount
-  amount: number
+  uiAmount: string
   mintName?: SolendDeposableAndWithdrawableSupportedMint
 }
 

@@ -36,42 +36,15 @@ export async function withdrawObligationCollateralAndRedeemReserveLiquidity({
     relatedCollateralMint
   )
 
-  console.log(
-    'find mint token account from obligationOwner (1)',
-    usdcTokenAccount.toString()
-  )
-  console.log(
-    'find collateral mint token account from obligationOwner (2)',
-    cusdcTokenAccount.toString()
-  )
-
   const obligation = await deriveObligationAddressFromWalletAndSeed(
     obligationOwner
   )
+
   const transferAuthority = obligationOwner
   const sourceCollateral = reserveCollateralSupplySplTokenAccount
   const destinationCollateral = cusdcTokenAccount
   const withdrawReserve = reserve
   const destinationLiquidity = usdcTokenAccount
-
-  console.log(
-    'withdrawObligationCollateralAndRedeemReserveLiquidity tx building detail',
-    {
-      liquidityAmount,
-      sourceCollateral,
-      destinationCollateral,
-      withdrawReserve,
-      obligation,
-      lendingMarket: SOLEND_LENDING_MARKET,
-      lendingMarketAuthority: SOLEND_LENDING_MARKET_AUTHORITY,
-      destinationLiquidity,
-      reserveCollateralMint,
-      reserveLiquiditySupply,
-      obligationOwner,
-      transferAuthority,
-      solendProgramId: SOLEND_PROGRAM_ID,
-    }
-  )
 
   return originalWithdrawFunction(
     liquidityAmount,

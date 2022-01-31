@@ -7,12 +7,9 @@ import {
 export async function deriveObligationAddressFromWalletAndSeed(
   walletAddress: PublicKey
 ) {
-  const seed = SOLEND_CREATE_OBLIGATION_ACCOUNT_SEED
-  const solendProgramId = SOLEND_PROGRAM_ID
-
   return PublicKey.createWithSeed(
     walletAddress,
-    seed,
-    new PublicKey(solendProgramId)
+    SOLEND_CREATE_OBLIGATION_ACCOUNT_SEED,
+    new PublicKey(SOLEND_PROGRAM_ID)
   )
 }

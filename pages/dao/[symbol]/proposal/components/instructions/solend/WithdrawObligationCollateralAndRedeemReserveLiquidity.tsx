@@ -20,8 +20,13 @@ import {
 import GovernedAccountSelect from '../../GovernedAccountSelect'
 import Input from '@components/inputs/Input'
 import Select from '@components/inputs/Select'
-import { getSolendDeposableAndWithdrawableSupportedMint } from '@tools/sdk/solend/constant'
+import {
+  getSolendDeposableAndWithdrawableSupportedMint,
+  SOLEND_ADDRESSES_PER_TOKEN,
+} from '@tools/sdk/solend/constant'
 import { withdrawObligationCollateralAndRedeemReserveLiquidity } from '@tools/sdk/solend/withdrawObligationCollateralAndRedeemReserveLiquidity'
+import BigNumber from 'bignumber.js'
+import { BN } from '@project-serum/anchor'
 
 const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   index,
@@ -79,7 +84,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
     form,
     setForm,
   ] = useState<WithdrawObligationCollateralAndRedeemReserveLiquidityForm>({
-    amount: 0,
+    uiAmount: '0',
   })
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
@@ -115,7 +120,11 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
 
     const tx = await withdrawObligationCollateralAndRedeemReserveLiquidity({
       obligationOwner: form.governedAccount.governance.pubkey,
-      liquidityAmount: form.amount,
+      liquidityAmount: new BN(
+        new BigNumber(form.uiAmount)
+          .shiftedBy(SOLEND_ADDRESSES_PER_TOKEN[form.mintName].decimals)
+          .toString()
+      ),
       mintName: form.mintName,
     })
 
@@ -149,7 +158,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       .nullable()
       .required('Governed account is required'),
     mintName: yup.string().required('Token Name is required'),
-    amount: yup
+    uiAmount: yup
       .number()
       .moreThan(0, 'Amount should be more than 0')
       .required('Amount is required'),
@@ -185,17 +194,16 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
 
       <Input
         label="Amount to withdraw"
-        value={form.amount}
-        type="number"
-        min={0}
-        max={10 ** 12}
+        value={form.uiAmount}
+        type="string"
+        min="0"
         onChange={(evt) =>
           handleSetForm({
             value: evt.target.value,
-            propertyName: 'amount',
+            propertyName: 'uiAmount',
           })
         }
-        error={formErrors['amount']}
+        error={formErrors['uiAmount']}
       />
     </>
   )
