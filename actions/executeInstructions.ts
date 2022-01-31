@@ -5,22 +5,22 @@ import { RpcContext } from '@solana/spl-governance'
 import { ProgramAccount } from '@solana/spl-governance'
 import { sendSignedTransaction, signTransaction } from '@utils/send'
 
-import { Keypair, Transaction, TransactionInstruction } from '@solana/web3.js'
+import { Transaction, TransactionInstruction } from '@solana/web3.js'
 
-const DEFAULT_TIMEOUT = 31000
+// Magic number (?)
+const DEFAULT_TIMEOUT = 31_000
 
+// Merge instructions within one Transaction, sign it and execute it
 export const executeInstructions = async (
   { connection, wallet, programId }: RpcContext,
   proposal: ProgramAccount<Proposal>,
   proposalInstructions: ProgramAccount<ProposalInstruction>[]
 ) => {
-  const signers: Keypair[] = []
   const instructions: TransactionInstruction[] = []
 
-  // Merge proposal instructions altogether
-  // -- withExecuteInstruction mutate given 'instructions' parameter
   await Promise.all(
     proposalInstructions.map((instruction) =>
+      // withExecuteInstruction function mutate the given 'instructions' parameter
       withExecuteInstruction(
         instructions,
         programId,
@@ -36,12 +36,11 @@ export const executeInstructions = async (
 
   transaction.add(...instructions)
 
-  // Prepare transactions
   const signedTransaction = await signTransaction({
     transaction,
     wallet,
-    signers,
     connection,
+    signers: [],
   })
 
   await sendSignedTransaction({

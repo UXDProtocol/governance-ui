@@ -68,6 +68,23 @@ export const NewProposalContext = createContext<InstructionsContext>(
   defaultGovernanceCtx
 )
 
+// Takes the first encountered governance account
+function extractGovernanceAccountFromInstructionsData(
+  instructionsData: ComponentInstructionData[]
+): ProgramAccount<Governance> | null {
+  return instructionsData.reduce((tmp, x) => {
+    if (tmp) {
+      return tmp
+    }
+
+    if (x.governedAccount) {
+      return x.governedAccount
+    }
+
+    return tmp
+  }, null)
+}
+
 const New = () => {
   const router = useRouter()
   const { client } = useVoteRegistry()
@@ -274,17 +291,9 @@ const New = () => {
   }, [instructionsData[0].governedAccount?.pubkey])
 
   useEffect(() => {
-    const governedAccount = instructionsData.reduce((tmp, x) => {
-      if (tmp) {
-        return tmp
-      }
-
-      if (x.governedAccount) {
-        return x.governedAccount
-      }
-
-      return tmp
-    }, null)
+    const governedAccount = extractGovernanceAccountFromInstructionsData(
+      instructionsData
+    )
 
     setGovernance(governedAccount)
   }, [instructionsData])
