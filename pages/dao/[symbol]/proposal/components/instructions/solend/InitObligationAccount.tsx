@@ -40,6 +40,11 @@ const InitObligationAccount = ({
     getMintWithGovernances,
   } = useGovernanceAssets()
 
+  // Hardcoded gate used to be clear about what cluster is supported for now
+  if (connection.cluster !== 'mainnet') {
+    return <>This instruction does not support {connection.cluster}</>
+  }
+
   useEffect(() => {
     async function prepGovernances() {
       const mintWithGovernances = await getMintWithGovernances()
