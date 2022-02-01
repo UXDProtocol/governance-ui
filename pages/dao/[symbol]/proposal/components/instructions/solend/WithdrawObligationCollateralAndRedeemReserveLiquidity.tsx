@@ -39,11 +39,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
     GovernedMultiTypeAccount[]
   >([])
 
-  const {
-    governancesArray,
-    governedTokenAccounts,
-    getMintWithGovernances,
-  } = useGovernanceAssets()
+  const { getGovernedMultiTypeAccounts } = useGovernanceAssets()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
@@ -51,33 +47,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   }
 
   useEffect(() => {
-    async function prepGovernances() {
-      const mintWithGovernances = await getMintWithGovernances()
-
-      const matchedGovernances = governancesArray.map((gov) => {
-        const governedTokenAccount = governedTokenAccounts.find(
-          (x) => x.governance?.pubkey.toBase58() === gov.pubkey.toBase58()
-        )
-        if (governedTokenAccount) {
-          return governedTokenAccount as GovernedMultiTypeAccount
-        }
-
-        const mintGovernance = mintWithGovernances.find(
-          (x) => x.governance?.pubkey.toBase58() === gov.pubkey.toBase58()
-        )
-        if (mintGovernance) {
-          return mintGovernance as GovernedMultiTypeAccount
-        }
-
-        return {
-          governance: gov,
-        }
-      })
-
-      setGovernedAccounts(matchedGovernances)
-    }
-
-    prepGovernances()
+    getGovernedMultiTypeAccounts().then(setGovernedAccounts)
   }, [])
 
   const shouldBeGoverned = index !== 0 && governance

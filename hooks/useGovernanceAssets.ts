@@ -7,6 +7,7 @@ import { MintInfo } from '@solana/spl-token'
 import {
   getMultipleAccountInfoChunked,
   GovernedMintInfoAccount,
+  GovernedMultiTypeAccount,
   GovernedTokenAccount,
   parseMintAccountData,
 } from '@utils/tokens'
@@ -84,6 +85,7 @@ export default function useGovernanceAssets() {
   const getAvailableInstructions = () => {
     return availableInstructions.filter((x) => x.isVisible)
   }
+
   function prepareTokenGovernances() {
     const tokenGovernances = getGovernancesByAccountType(
       GovernanceAccountType.TokenGovernance
@@ -107,6 +109,7 @@ export default function useGovernanceAssets() {
     }
     return governedTokenAccounts
   }
+
   async function getMintWithGovernances() {
     const mintGovernances = getGovernancesByAccountType(
       GovernanceAccountType.MintGovernance
@@ -133,6 +136,7 @@ export default function useGovernanceAssets() {
     })
     return governedMintInfoAccounts
   }
+
   const governedTokenAccounts = prepareTokenGovernances()
   const governedTokenAccountsWithoutNfts = governedTokenAccounts.filter(
     (x) => x.mint?.publicKey.toBase58() !== DEFAULT_NFT_TREASURY_MINT
@@ -145,6 +149,32 @@ export default function useGovernanceAssets() {
       g.governance &&
       ownVoterWeight.canCreateProposal(g.governance?.account?.config)
   )
+
+  const getGovernedMultiTypeAccounts = async (): Promise<
+    GovernedMultiTypeAccount[]
+  > => {
+    const mintWithGovernances = await getMintWithGovernances()
+
+    return governancesArray.map((gov) => {
+      const governedTokenAccount = governedTokenAccounts.find(
+        (x) => x.governance?.pubkey.toBase58() === gov.pubkey.toBase58()
+      )
+      if (governedTokenAccount) {
+        return governedTokenAccount as GovernedMultiTypeAccount
+      }
+
+      const mintGovernance = mintWithGovernances.find(
+        (x) => x.governance?.pubkey.toBase58() === gov.pubkey.toBase58()
+      )
+      if (mintGovernance) {
+        return mintGovernance as GovernedMultiTypeAccount
+      }
+
+      return {
+        governance: gov,
+      }
+    })
+  }
 
   const availableInstructions = [
     {
@@ -260,6 +290,7 @@ export default function useGovernanceAssets() {
 
   return {
     governancesArray,
+    getGovernedMultiTypeAccounts,
     getGovernancesByAccountType,
     availableInstructions,
     getAvailableInstructions,
