@@ -53,7 +53,7 @@ export default function useGovernedMultiTypeAccounts() {
     return () => {
       abort = true
     }
-  }, [JSON.stringify(governedTokenAccounts), JSON.stringify(governancesArray)])
+  }, [getGovernedMultiTypeAccounts])
 
   return {
     governedMultiTypeAccounts,
