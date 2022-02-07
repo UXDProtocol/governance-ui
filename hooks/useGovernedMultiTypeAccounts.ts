@@ -13,10 +13,12 @@ export default function useGovernedMultiTypeAccounts() {
     GovernedMultiTypeAccount[]
   >([])
 
-  const getGovernedMultiTypeAccounts = useCallback(async () => {
+  const getGovernedMultiTypeAccounts = useCallback(async (): Promise<
+    GovernedMultiTypeAccount[]
+  > => {
     const mintWithGovernances = await getMintWithGovernances()
 
-    const governedMultiTypeAccounts = governancesArray.map((gov) => {
+    return governancesArray.map((gov) => {
       const governedTokenAccount = governedTokenAccounts.find(
         (x) => x.governance?.pubkey.toBase58() === gov.pubkey.toBase58()
       )
@@ -35,12 +37,22 @@ export default function useGovernedMultiTypeAccounts() {
         governance: gov,
       }
     })
-
-    setGovernedMultiTypeAccounts(governedMultiTypeAccounts)
   }, [JSON.stringify(governedTokenAccounts), JSON.stringify(governancesArray)])
 
   useEffect(() => {
-    getGovernedMultiTypeAccounts()
+    let abort = false
+
+    ;(async () => {
+      const governedMultiTypeAccounts = await getGovernedMultiTypeAccounts()
+
+      if (abort) return
+
+      setGovernedMultiTypeAccounts(governedMultiTypeAccounts)
+    })()
+
+    return () => {
+      abort = true
+    }
   }, [JSON.stringify(governedTokenAccounts), JSON.stringify(governancesArray)])
 
   return {
