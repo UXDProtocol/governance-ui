@@ -37,9 +37,16 @@ export default function useGovernedMultiTypeAccounts() {
         governance: gov,
       }
     })
+
+    // FIXME: `governedTokenAccounts` & `governancesArray` should have stable references.
+    // These should respect immutability principles & only change if their content changes.
+    // Working around this by stringifying both objects & using the resulting string
+    // representation as hook dependency, so the hook only runs when either of these changes,
+    // but with a performance tax unfortunately
   }, [JSON.stringify(governedTokenAccounts), JSON.stringify(governancesArray)])
 
   useEffect(() => {
+    // Ignore obsolete results created by race calls
     let abort = false
 
     ;(async () => {
