@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { createContext, useEffect, useState } from 'react'
-import Button, { LinkButton, SecondaryButton } from '@components/Button'
 import * as yup from 'yup'
 import {
   ArrowLeftIcon,
@@ -16,6 +15,7 @@ import {
   RpcContext,
 } from '@solana/spl-governance'
 import { PublicKey } from '@solana/web3.js'
+import Button, { LinkButton, SecondaryButton } from '@components/Button'
 import Input from '@components/inputs/Input'
 import Select from '@components/inputs/Select'
 import Textarea from '@components/inputs/Textarea'
@@ -35,13 +35,11 @@ import {
 } from '@utils/uiTypes/proposalCreationTypes'
 
 import { createProposal } from 'actions/createProposal'
-
 import useWalletStore from 'stores/useWalletStore'
 import { notify } from 'utils/notifications'
 import Clawback from 'VoteStakeRegistry/components/instructions/Clawback'
 import Grant from 'VoteStakeRegistry/components/instructions/Grant'
 import useVoteStakeRegistryClientStore from 'VoteStakeRegistry/stores/voteStakeRegistryClientStore'
-
 import InstructionContentContainer from './components/InstructionContentContainer'
 import ProgramUpgrade from './components/instructions/bpfUpgradeableLoader/ProgramUpgrade'
 import CreateAssociatedTokenAccount from './components/instructions/CreateAssociatedTokenAccount'
@@ -76,17 +74,9 @@ export const NewProposalContext = createContext<InstructionsContext>(
 function extractGovernanceAccountFromInstructionsData(
   instructionsData: ComponentInstructionData[]
 ): ProgramAccount<Governance> | null {
-  return instructionsData.reduce((tmp, x) => {
-    if (tmp) {
-      return tmp
-    }
-
-    if (x.governedAccount) {
-      return x.governedAccount
-    }
-
-    return tmp
-  }, null)
+  return (
+    instructionsData.find((itx) => itx.governedAccount)?.governedAccount ?? null
+  )
 }
 
 const New = () => {

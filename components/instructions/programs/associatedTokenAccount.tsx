@@ -1,13 +1,9 @@
-import { Connection, PublicKey } from '@solana/web3.js'
-import { AccountMetaData } from '@solana/spl-governance'
+import { Connection } from '@solana/web3.js'
+import { AccountMetaData, TOKEN_PROGRAM_ID } from '@solana/spl-governance'
 import { SPL_TOKENS } from '@utils/splTokens'
 
-const ATA_PROGRAM_ID = new PublicKey(
-  'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-)
-
 export const ATA_PROGRAM_INSTRUCTIONS = {
-  [ATA_PROGRAM_ID.toBase58()]: {
+  [TOKEN_PROGRAM_ID.toBase58()]: {
     name: 'Associated Token Account Program - Create Associated Token Account',
     accounts: [
       'Authority',
@@ -22,19 +18,15 @@ export const ATA_PROGRAM_INSTRUCTIONS = {
     ) => {
       const ata = accounts[1].pubkey.toString()
       const tokenMint = accounts[3].pubkey.toString()
-
-      const tokenName = Object.keys(SPL_TOKENS).reduce((tmp, x) => {
-        const { mint, name } = SPL_TOKENS[x]
-
-        if (mint.toString() === tokenMint) {
-          return name
-        }
-
-        return tmp
-      }, 'unknown')
+      const tokenName =
+        SPL_TOKENS[
+          Object.keys(SPL_TOKENS).find(
+            (name) => SPL_TOKENS[name].mint?.toString() === tokenMint
+          )!
+        ].name ?? 'unknown'
 
       return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="flex flex-column">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>New Associated Token Amount Address:</span>
             <span>{ata}</span>

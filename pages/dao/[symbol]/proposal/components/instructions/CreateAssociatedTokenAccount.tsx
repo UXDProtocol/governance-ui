@@ -1,26 +1,28 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
 import * as yup from 'yup'
-import { isFormValid } from '@utils/formValidation'
-import {
-  UiInstruction,
-  CreateAssociatedTokenAccountForm,
-} from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../new'
-import useGovernanceAssets from '@hooks/useGovernanceAssets'
-import useWalletStore from 'stores/useWalletStore'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
 import Select from '@components/inputs/Select'
+import useGovernanceAssets from '@hooks/useGovernanceAssets'
+import useRealm from '@hooks/useRealm'
 import {
+  Governance,
   ProgramAccount,
   serializeInstructionToBase64,
-  Governance,
 } from '@solana/spl-governance'
-import GovernedAccountSelect from '../GovernedAccountSelect'
+import { PublicKey } from '@solana/web3.js'
 import { createAssociatedTokenAccount } from '@utils/associated'
+import { isFormValid } from '@utils/formValidation'
 import { getSplTokenMintAddressByUIName, SPL_TOKENS } from '@utils/splTokens'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
+import {
+  CreateAssociatedTokenAccountForm,
+  UiInstruction,
+} from '@utils/uiTypes/proposalCreationTypes'
+
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import useWalletStore from 'stores/useWalletStore'
+
+import { NewProposalContext } from '../../new'
+import GovernedAccountSelect from '../GovernedAccountSelect'
 
 const CreateAssociatedTokenAccount = ({
   index,
@@ -98,8 +100,6 @@ const CreateAssociatedTokenAccount = ({
       ).toString(),
     })
 
-    console.log('tx', tx)
-
     return {
       serializedInstruction: serializeInstructionToBase64(tx),
       isValid: true,
@@ -136,7 +136,7 @@ const CreateAssociatedTokenAccount = ({
     <>
       <GovernedAccountSelect
         label="Governance"
-        governedAccounts={governedAccounts as GovernedMultiTypeAccount[]}
+        governedAccounts={governedAccounts}
         onChange={(value) => {
           handleSetForm({ value, propertyName: 'governedAccount' })
         }}
@@ -144,7 +144,7 @@ const CreateAssociatedTokenAccount = ({
         error={formErrors['governedAccount']}
         shouldBeGoverned={shouldBeGoverned}
         governance={governance}
-      ></GovernedAccountSelect>
+      />
 
       <Select
         label="SPL Token Mint"

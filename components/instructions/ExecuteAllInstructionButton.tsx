@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   InstructionExecutionStatus,
+  ProgramAccount,
   Proposal,
-  ProposalTransaction,
   ProposalState,
+  ProposalTransaction,
+  RpcContext,
 } from '@solana/spl-governance'
-import React from 'react'
+import { PublicKey } from '@solana/web3.js'
 import { CheckCircleIcon, PlayIcon, RefreshIcon } from '@heroicons/react/solid'
 import Button from '@components/Button'
-import { RpcContext } from '@solana/spl-governance'
-import useRealm from '@hooks/useRealm'
-import useWalletStore from 'stores/useWalletStore'
-import { ProgramAccount } from '@solana/spl-governance'
-import { PublicKey } from '@solana/web3.js'
 import Tooltip from '@components/Tooltip'
+import useRealm from '@hooks/useRealm'
 import { getProgramVersionForRealm } from '@models/registry/api'
 import { executeInstructions } from 'actions/executeInstructions'
+import useWalletStore from 'stores/useWalletStore'
 
 export enum PlayState {
   Played,
@@ -47,7 +46,7 @@ export function ExecuteAllInstructionButton({
     ? proposal.account.votingCompletedAt.toNumber() + 1
     : 0
 
-  const ineligibleToSee = currentSlot - canExecuteAt >= 0
+  const isPassedExecutionSlot = currentSlot - canExecuteAt >= 0
 
   const rpcContext = new RpcContext(
     new PublicKey(proposal.owner.toString()),
@@ -58,7 +57,7 @@ export function ExecuteAllInstructionButton({
   )
 
   useEffect(() => {
-    if (ineligibleToSee && proposal) {
+    if (isPassedExecutionSlot && proposal) {
       const timer = setTimeout(() => {
         rpcContext.connection.getSlot().then(setCurrentSlot)
       }, 5000)
@@ -67,7 +66,7 @@ export function ExecuteAllInstructionButton({
         clearTimeout(timer)
       }
     }
-  }, [ineligibleToSee, rpcContext.connection, currentSlot])
+  }, [isPassedExecutionSlot, rpcContext.connection, currentSlot])
 
   const onExecuteInstructions = async () => {
     setPlaying(PlayState.Playing)
@@ -106,14 +105,14 @@ export function ExecuteAllInstructionButton({
     return null
   }
 
-  if (ineligibleToSee) {
+  if (isPassedExecutionSlot) {
     return null
   }
 
   if (
     playing === PlayState.Unplayed &&
     proposalInstructions.every(
-      (x) => x.account.executionStatus !== InstructionExecutionStatus.Error
+      (itx) => itx.account.executionStatus !== InstructionExecutionStatus.Error
     )
   ) {
     return (
@@ -130,7 +129,7 @@ export function ExecuteAllInstructionButton({
   if (
     playing === PlayState.Error ||
     proposalInstructions.every(
-      (x) => x.account.executionStatus !== InstructionExecutionStatus.Error
+      (itx) => itx.account.executionStatus !== InstructionExecutionStatus.Error
     )
   ) {
     return (
@@ -143,5 +142,5 @@ export function ExecuteAllInstructionButton({
     )
   }
 
-  return <CheckCircleIcon className="h-5 ml-2 text-green w-5" key="played" />
+  return <CheckCircleIcon className="h-5 ml-2 text-green w-5" />
 }

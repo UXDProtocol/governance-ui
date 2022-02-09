@@ -1,24 +1,26 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
 import * as yup from 'yup'
-import { isFormValid } from '@utils/formValidation'
-import {
-  UiInstruction,
-  CreateSolendObligationAccountForm,
-} from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../../new'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
-import useWalletStore from 'stores/useWalletStore'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
+import useRealm from '@hooks/useRealm'
 import {
+  Governance,
   ProgramAccount,
   serializeInstructionToBase64,
-  Governance,
 } from '@solana/spl-governance'
-import GovernedAccountSelect from '../../GovernedAccountSelect'
+import { PublicKey } from '@solana/web3.js'
 import { createObligationAccount } from '@tools/sdk/solend/createObligationAccount'
+import { isFormValid } from '@utils/formValidation'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
+import {
+  CreateSolendObligationAccountForm,
+  UiInstruction,
+} from '@utils/uiTypes/proposalCreationTypes'
+
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import useWalletStore from 'stores/useWalletStore'
+
+import { NewProposalContext } from '../../../new'
+import GovernedAccountSelect from '../../GovernedAccountSelect'
 
 const CreateObligationAccount = ({
   index,
@@ -115,19 +117,17 @@ const CreateObligationAccount = ({
   })
 
   return (
-    <>
-      <GovernedAccountSelect
-        label="Governance"
-        governedAccounts={governedAccounts}
-        onChange={(value) => {
-          handleSetForm({ value, propertyName: 'governedAccount' })
-        }}
-        value={form.governedAccount}
-        error={formErrors['governedAccount']}
-        shouldBeGoverned={shouldBeGoverned}
-        governance={governance}
-      ></GovernedAccountSelect>
-    </>
+    <GovernedAccountSelect
+      label="Governance"
+      governedAccounts={governedAccounts}
+      onChange={(value) => {
+        handleSetForm({ value, propertyName: 'governedAccount' })
+      }}
+      value={form.governedAccount}
+      error={formErrors['governedAccount']}
+      shouldBeGoverned={shouldBeGoverned}
+      governance={governance}
+    />
   )
 }
 
