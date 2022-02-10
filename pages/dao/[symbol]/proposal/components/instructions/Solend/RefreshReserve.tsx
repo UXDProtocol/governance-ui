@@ -1,26 +1,27 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
+import Select from '@components/inputs/Select'
 import * as yup from 'yup'
-import { isFormValid } from '@utils/formValidation'
-import {
-  UiInstruction,
-  RefreshReserveForm,
-} from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../../new'
-import useWalletStore from 'stores/useWalletStore'
 import {
   Governance,
   ProgramAccount,
   serializeInstructionToBase64,
 } from '@solana/spl-governance'
-import Select from '@components/inputs/Select'
+import { PublicKey } from '@solana/web3.js'
+import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
+import useRealm from '@hooks/useRealm'
 import SolendConfiguration from '@tools/sdk/solend/configuration'
 import { refreshReserve } from '@tools/sdk/solend/refreshReserve'
+import { isFormValid } from '@utils/formValidation'
+import {
+  RefreshReserveForm,
+  UiInstruction,
+} from '@utils/uiTypes/proposalCreationTypes'
+
+import useWalletStore from 'stores/useWalletStore'
+
+import { NewProposalContext } from '../../../new'
 import GovernedAccountSelect from '../../GovernedAccountSelect'
-import useGovernanceAssets from '@hooks/useGovernanceAssets'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
 
 const RefreshReserve = ({
   index,
@@ -32,10 +33,8 @@ const RefreshReserve = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
-  const [governedAccounts, setGovernedAccounts] = useState<
-    GovernedMultiTypeAccount[]
-  >([])
-  const { getGovernedMultiTypeAccounts } = useGovernanceAssets()
+
+  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
   const shouldBeGoverned = index !== 0 && governance
 
   const programId: PublicKey | undefined = realmInfo?.programId
@@ -47,10 +46,6 @@ const RefreshReserve = ({
   if (connection.cluster !== 'mainnet') {
     return <>This instruction does not support {connection.cluster}</>
   }
-
-  useEffect(() => {
-    getGovernedMultiTypeAccounts().then(setGovernedAccounts)
-  }, [])
 
   const handleSetForm = ({ propertyName, value }) => {
     setFormErrors({})
@@ -121,7 +116,7 @@ const RefreshReserve = ({
     <>
       <GovernedAccountSelect
         label="Governance"
-        governedAccounts={governedAccounts}
+        governedAccounts={governedMultiTypeAccounts}
         onChange={(value) => {
           handleSetForm({ value, propertyName: 'governedAccount' })
         }}

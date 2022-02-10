@@ -1,29 +1,30 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
+import Input from '@components/inputs/Input'
+import BigNumber from 'bignumber.js'
 import * as yup from 'yup'
+import { BN } from '@project-serum/anchor'
+import {
+  Governance,
+  ProgramAccount,
+  serializeInstructionToBase64,
+} from '@solana/spl-governance'
+import { PublicKey } from '@solana/web3.js'
+import Select from '@components/inputs/Select'
+import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
+import useRealm from '@hooks/useRealm'
+import SolendConfiguration from '@tools/sdk/solend/configuration'
+import { withdrawObligationCollateralAndRedeemReserveLiquidity } from '@tools/sdk/solend/withdrawObligationCollateralAndRedeemReserveLiquidity'
 import { isFormValid } from '@utils/formValidation'
 import {
   UiInstruction,
   WithdrawObligationCollateralAndRedeemReserveLiquidityForm,
 } from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../../new'
-import useGovernanceAssets from '@hooks/useGovernanceAssets'
+
 import useWalletStore from 'stores/useWalletStore'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
-import {
-  ProgramAccount,
-  serializeInstructionToBase64,
-  Governance,
-} from '@solana/spl-governance'
+
+import { NewProposalContext } from '../../../new'
 import GovernedAccountSelect from '../../GovernedAccountSelect'
-import Input from '@components/inputs/Input'
-import Select from '@components/inputs/Select'
-import SolendConfiguration from '@tools/sdk/solend/configuration'
-import { withdrawObligationCollateralAndRedeemReserveLiquidity } from '@tools/sdk/solend/withdrawObligationCollateralAndRedeemReserveLiquidity'
-import BigNumber from 'bignumber.js'
-import { BN } from '@project-serum/anchor'
 
 const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   index,
@@ -35,20 +36,12 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
-  const [governedAccounts, setGovernedAccounts] = useState<
-    GovernedMultiTypeAccount[]
-  >([])
-
-  const { getGovernedMultiTypeAccounts } = useGovernanceAssets()
+  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
     return <>This instruction does not support {connection.cluster}</>
   }
-
-  useEffect(() => {
-    getGovernedMultiTypeAccounts().then(setGovernedAccounts)
-  }, [])
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
@@ -143,7 +136,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
     <>
       <GovernedAccountSelect
         label="Governance"
-        governedAccounts={governedAccounts}
+        governedAccounts={governedMultiTypeAccounts}
         onChange={(value) => {
           handleSetForm({ value, propertyName: 'governedAccount' })
         }}

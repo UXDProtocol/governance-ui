@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import * as yup from 'yup'
-import Select from '@components/inputs/Select'
-import useGovernanceAssets from '@hooks/useGovernanceAssets'
-import useRealm from '@hooks/useRealm'
+
 import {
   Governance,
   ProgramAccount,
   serializeInstructionToBase64,
 } from '@solana/spl-governance'
 import { PublicKey } from '@solana/web3.js'
+import Select from '@components/inputs/Select'
+import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
+import useRealm from '@hooks/useRealm'
 import { createAssociatedTokenAccount } from '@utils/associated'
 import { isFormValid } from '@utils/formValidation'
 import { getSplTokenMintAddressByUIName, SPL_TOKENS } from '@utils/splTokens'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
 import {
   CreateAssociatedTokenAccountForm,
   UiInstruction,
@@ -34,14 +34,8 @@ const CreateAssociatedTokenAccount = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
-  const [governedAccounts, setGovernedAccounts] = useState<
-    GovernedMultiTypeAccount[]
-  >([])
-  const { getGovernedMultiTypeAccounts } = useGovernanceAssets()
 
-  useEffect(() => {
-    getGovernedMultiTypeAccounts().then(setGovernedAccounts)
-  }, [])
+  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
@@ -136,7 +130,7 @@ const CreateAssociatedTokenAccount = ({
     <>
       <GovernedAccountSelect
         label="Governance"
-        governedAccounts={governedAccounts}
+        governedAccounts={governedMultiTypeAccounts}
         onChange={(value) => {
           handleSetForm({ value, propertyName: 'governedAccount' })
         }}

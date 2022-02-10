@@ -1,24 +1,25 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
+import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import * as yup from 'yup'
-import { isFormValid } from '@utils/formValidation'
 import {
-  UiInstruction,
-  InitSolendObligationAccountForm,
-} from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../../new'
-import useGovernanceAssets from '@hooks/useGovernanceAssets'
-import useWalletStore from 'stores/useWalletStore'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
-import {
+  Governance,
   ProgramAccount,
   serializeInstructionToBase64,
-  Governance,
 } from '@solana/spl-governance'
-import GovernedAccountSelect from '../../GovernedAccountSelect'
+import { PublicKey } from '@solana/web3.js'
+import useRealm from '@hooks/useRealm'
 import { initObligationAccount } from '@tools/sdk/solend/initObligationAccount'
+import { isFormValid } from '@utils/formValidation'
+import {
+  InitSolendObligationAccountForm,
+  UiInstruction,
+} from '@utils/uiTypes/proposalCreationTypes'
+
+import useWalletStore from 'stores/useWalletStore'
+
+import { NewProposalContext } from '../../../new'
+import GovernedAccountSelect from '../../GovernedAccountSelect'
 
 const InitObligationAccount = ({
   index,
@@ -30,20 +31,13 @@ const InitObligationAccount = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
-  const [governedAccounts, setGovernedAccounts] = useState<
-    GovernedMultiTypeAccount[]
-  >([])
 
-  const { getGovernedMultiTypeAccounts } = useGovernanceAssets()
+  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
     return <>This instruction does not support {connection.cluster}</>
   }
-
-  useEffect(() => {
-    getGovernedMultiTypeAccounts().then(setGovernedAccounts)
-  }, [])
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
@@ -117,7 +111,7 @@ const InitObligationAccount = ({
   return (
     <GovernedAccountSelect
       label="Governance"
-      governedAccounts={governedAccounts}
+      governedAccounts={governedMultiTypeAccounts}
       onChange={(value) => {
         handleSetForm({ value, propertyName: 'governedAccount' })
       }}
