@@ -164,6 +164,20 @@ export interface TokenTransferBetweenInternalGovernanceAccountsForm {
   uiAmount?: number
 }
 
+export interface SaberTribecaNewEscrowForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface SaberTribecaLockForm {
+  governedAccount?: GovernedMultiTypeAccount
+  uiAmount?: number
+  durationSeconds?: number
+}
+
+export interface SaberTribecaCreateEscrowSbrATAForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -191,6 +205,9 @@ export enum Instructions {
   Grant,
   Clawback,
   TokenTransferBetweenInternalGovernanceAccounts,
+  SaberTribecaNewEscrow,
+  SaberTribecaLock,
+  SaberTribecaCreateEscrowSbrATA,
 }
 
 export interface InitializeControllerForm {

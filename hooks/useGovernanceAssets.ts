@@ -164,6 +164,21 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.SaberTribecaNewEscrow,
+      name: 'Saber Tribeca: New Escrow',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SaberTribecaCreateEscrowSbrATA,
+      name: 'Saber Tribeca: Create Escrow SBR ATA',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SaberTribecaLock,
+      name: 'Saber Tribeca: Lock Tokens',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.CreateSolendObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,

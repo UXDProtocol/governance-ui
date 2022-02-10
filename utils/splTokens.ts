@@ -1,7 +1,9 @@
 import { PublicKey } from '@solana/web3.js'
-import SolendConfiguration, {
+import solendConfiguration, {
   SupportedCollateralMintNames as SolendSupportedCollateralMintNames,
 } from '@tools/sdk/solend/configuration'
+
+import saberTribecaConfiguration from '../tools/sdk/saberTribeca/configuration'
 
 export type SplTokenInformation = {
   name: string
@@ -31,19 +33,15 @@ export const SPL_TOKENS: {
     decimals: 9,
   },
 
-  SBR: {
-    name: 'Saber SBR',
-    mint: new PublicKey('Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1'),
-    decimals: 6,
-  },
-
   UXP: {
     name: 'UXP',
     mint: new PublicKey('UXPhBoR3qG4UCiGNJfV7MqhHyFqKN68g45GoYvAeL2M'),
     decimals: 9,
   },
 
-  ...SolendConfiguration.getSupportedCollateralMintsInformation(),
+  SBR: saberTribecaConfiguration.saberToken,
+
+  ...solendConfiguration.getSupportedCollateralMintsInformation(),
 } as const
 
 export type SplTokenUIName = typeof SPL_TOKENS[keyof typeof SPL_TOKENS]['name']
