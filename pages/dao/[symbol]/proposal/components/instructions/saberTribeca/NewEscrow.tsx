@@ -30,7 +30,7 @@ const NewEscrow = ({
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-  const { lockerProgram } = useSaberTribeca()
+  const { programs } = useSaberTribeca()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
@@ -63,7 +63,7 @@ const NewEscrow = ({
       !programId ||
       !form.governedAccount?.governance?.account ||
       !wallet?.publicKey ||
-      !lockerProgram
+      !programs
     ) {
       return {
         serializedInstruction: '',
@@ -73,7 +73,7 @@ const NewEscrow = ({
     }
 
     const tx = await newEscrowInstruction({
-      lockerProgram,
+      programs,
       payer: wallet.publicKey,
       authority: form.governedAccount.governance.pubkey,
     })

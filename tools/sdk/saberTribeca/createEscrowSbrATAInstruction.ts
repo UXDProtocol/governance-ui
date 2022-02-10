@@ -1,7 +1,7 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
 import saberTribecaConfiguration from './configuration'
-import { LockerData } from './lockerProgram'
 import { createAssociatedTokenAccount } from '@utils/associated'
+import { LockerData } from './programs/lockedVoter'
 
 export async function createEscrowATAInstruction({
   lockerData,

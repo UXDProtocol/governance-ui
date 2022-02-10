@@ -1,9 +1,22 @@
 import { utils } from '@project-serum/anchor'
+import { newProgramMap } from '@saberhq/anchor-contrib'
+import { SolanaAugmentedProvider } from '@saberhq/solana-contrib'
 import { PublicKey } from '@solana/web3.js'
+import { GovernTypes, UgovernJSON } from './programs/govern'
+import { LockedVoterProgram, UlockedUvoterJSON } from './programs/lockedVoter'
+
+export type SaberTribecaPrograms = {
+  LockedVoter: LockedVoterProgram
+  Govern: GovernTypes
+}
 
 class SaberTribecaConfiguration {
   public get lockedVoterProgramId(): PublicKey {
     return new PublicKey('LocktDzaV1W2Bm9DeZeiyz4J9zs4fRqNiYqQyracRXw')
+  }
+
+  public get governProgramId(): PublicKey {
+    return new PublicKey('Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw')
   }
 
   public get saberToken() {
@@ -29,6 +42,24 @@ class SaberTribecaConfiguration {
       ],
 
       this.lockedVoterProgramId
+    )
+  }
+
+  public loadPrograms(provider: SolanaAugmentedProvider): SaberTribecaPrograms {
+    return newProgramMap<SaberTribecaPrograms>(
+      provider,
+
+      {
+        // IDLs
+        LockedVoter: UlockedUvoterJSON,
+        Govern: UgovernJSON,
+      },
+
+      {
+        // Addresses
+        LockedVoter: this.lockedVoterProgramId,
+        Govern: this.governProgramId,
+      }
     )
   }
 }

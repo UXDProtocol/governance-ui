@@ -3,15 +3,16 @@ import {
   SystemProgram,
   TransactionInstruction,
 } from '@solana/web3.js'
-import saberTribecaConfiguration from './configuration'
-import LockerProgram from './lockerProgram'
+import saberTribecaConfiguration, {
+  SaberTribecaPrograms,
+} from './configuration'
 
 export async function newEscrowInstruction({
-  lockerProgram,
+  programs,
   authority,
   payer,
 }: {
-  lockerProgram: LockerProgram
+  programs: SaberTribecaPrograms
   authority: PublicKey
   payer: PublicKey
 }): Promise<TransactionInstruction> {
@@ -19,7 +20,7 @@ export async function newEscrowInstruction({
     authority
   )
 
-  return lockerProgram.program.instruction.newEscrow(bump, {
+  return programs.LockedVoter.instruction.newEscrow(bump, {
     accounts: {
       escrow,
       payer,

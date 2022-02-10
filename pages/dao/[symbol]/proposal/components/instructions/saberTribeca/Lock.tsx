@@ -36,7 +36,7 @@ const Lock = ({
 
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-  const { lockerProgram, lockerData } = useSaberTribeca()
+  const { programs, lockerData } = useSaberTribeca()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
@@ -71,7 +71,7 @@ const Lock = ({
       !wallet?.publicKey ||
       !form.uiAmount ||
       !form.durationSeconds ||
-      !lockerProgram ||
+      !programs ||
       !lockerData
     ) {
       return {
@@ -82,7 +82,7 @@ const Lock = ({
     }
 
     const tx = await lockInstruction({
-      lockerProgram,
+      programs,
       lockerData,
       authority: form.governedAccount.governance.pubkey,
       amount: new BN(

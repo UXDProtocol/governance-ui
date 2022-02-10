@@ -7,17 +7,19 @@ import {
 } from '@solana/web3.js'
 import { getATAAddress } from '@saberhq/token-utils'
 
-import saberTribecaConfiguration from './configuration'
-import LockerProgram, { LockerData } from './lockerProgram'
+import saberTribecaConfiguration, {
+  SaberTribecaPrograms,
+} from './configuration'
+import { LockerData } from './programs'
 
 export async function lockInstruction({
-  lockerProgram,
+  programs,
   lockerData,
   authority,
   amount,
   durationSeconds,
 }: {
-  lockerProgram: LockerProgram
+  programs: SaberTribecaPrograms
   lockerData: LockerData
   authority: PublicKey
   amount: BN
@@ -28,14 +30,14 @@ export async function lockInstruction({
   const {
     tokens: escrowTokens,
     owner: escrowOwner,
-  } = await lockerProgram.program.account.escrow.fetch(escrow)
+  } = await programs.LockedVoter.account.escrow.fetch(escrow)
 
   const sourceTokens = await getATAAddress({
     mint: saberTribecaConfiguration.saberToken.mint,
     owner: escrowOwner,
   })
 
-  return lockerProgram.program.instruction.lock(amount, durationSeconds, {
+  return programs.LockedVoter.instruction.lock(amount, durationSeconds, {
     accounts: {
       locker: saberTribecaConfiguration.locker,
       escrow,
