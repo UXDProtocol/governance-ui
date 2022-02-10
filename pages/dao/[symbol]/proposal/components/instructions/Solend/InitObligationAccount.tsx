@@ -115,19 +115,17 @@ const InitObligationAccount = ({
   })
 
   return (
-    <>
-      <GovernedAccountSelect
-        label="Governance"
-        governedAccounts={governedAccounts}
-        onChange={(value) => {
-          handleSetForm({ value, propertyName: 'governedAccount' })
-        }}
-        value={form.governedAccount}
-        error={formErrors['governedAccount']}
-        shouldBeGoverned={shouldBeGoverned}
-        governance={governance}
-      ></GovernedAccountSelect>
-    </>
+    <GovernedAccountSelect
+      label="Governance"
+      governedAccounts={governedAccounts}
+      onChange={(value) => {
+        handleSetForm({ value, propertyName: 'governedAccount' })
+      }}
+      value={form.governedAccount}
+      error={formErrors['governedAccount']}
+      shouldBeGoverned={shouldBeGoverned}
+      governance={governance}
+    />
   )
 }
 

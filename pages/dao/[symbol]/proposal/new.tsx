@@ -330,7 +330,7 @@ const New = () => {
       case Instructions.RefreshSolendObligation:
         return <RefreshObligation index={idx} governance={governance} />
       case Instructions.RefreshSolendReserve:
-        return <RefreshReserve index={idx} />
+        return <RefreshReserve index={idx} governance={governance} />
       case Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity:
         return (
           <WithdrawObligationCollateralAndRedeemReserveLiquidity

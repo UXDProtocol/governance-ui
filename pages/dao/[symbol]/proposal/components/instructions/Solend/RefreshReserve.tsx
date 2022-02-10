@@ -10,15 +10,33 @@ import {
 } from '@utils/uiTypes/proposalCreationTypes'
 import { NewProposalContext } from '../../../new'
 import useWalletStore from 'stores/useWalletStore'
-import { serializeInstructionToBase64 } from '@solana/spl-governance'
+import {
+  Governance,
+  ProgramAccount,
+  serializeInstructionToBase64,
+} from '@solana/spl-governance'
 import Select from '@components/inputs/Select'
 import SolendConfiguration from '@tools/sdk/solend/configuration'
 import { refreshReserve } from '@tools/sdk/solend/refreshReserve'
+import GovernedAccountSelect from '../../GovernedAccountSelect'
+import useGovernanceAssets from '@hooks/useGovernanceAssets'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
 
-const RefreshReserve = ({ index }: { index: number }) => {
+const RefreshReserve = ({
+  index,
+  governance,
+}: {
+  index: number
+  governance: ProgramAccount<Governance> | null
+}) => {
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
+  const [governedAccounts, setGovernedAccounts] = useState<
+    GovernedMultiTypeAccount[]
+  >([])
+  const { getGovernedMultiTypeAccounts } = useGovernanceAssets()
+  const shouldBeGoverned = index !== 0 && governance
 
   const programId: PublicKey | undefined = realmInfo?.programId
   const [form, setForm] = useState<RefreshReserveForm>({})
@@ -29,6 +47,10 @@ const RefreshReserve = ({ index }: { index: number }) => {
   if (connection.cluster !== 'mainnet') {
     return <>This instruction does not support {connection.cluster}</>
   }
+
+  useEffect(() => {
+    getGovernedMultiTypeAccounts().then(setGovernedAccounts)
+  }, [])
 
   const handleSetForm = ({ propertyName, value }) => {
     setFormErrors({})
@@ -49,12 +71,13 @@ const RefreshReserve = ({ index }: { index: number }) => {
       !isValid ||
       !programId ||
       !form.mintName ||
+      !form.governedAccount?.governance.account ||
       !wallet?.publicKey
     ) {
       return {
         serializedInstruction: '',
         isValid: false,
-        governance: undefined,
+        governance: form.governedAccount?.governance,
       }
     }
 
@@ -65,7 +88,7 @@ const RefreshReserve = ({ index }: { index: number }) => {
     return {
       serializedInstruction: serializeInstructionToBase64(tx),
       isValid: true,
-      governance: undefined,
+      governance: form.governedAccount?.governance,
     }
   }
 
@@ -79,6 +102,7 @@ const RefreshReserve = ({ index }: { index: number }) => {
   useEffect(() => {
     handleSetInstructions(
       {
+        governedAccount: form.governedAccount?.governance,
         getInstruction,
       },
       index
@@ -86,11 +110,26 @@ const RefreshReserve = ({ index }: { index: number }) => {
   }, [form])
 
   const schema = yup.object().shape({
+    governedAccount: yup
+      .object()
+      .nullable()
+      .required('Governed account is required'),
     mintName: yup.string().required('Token Name is required'),
   })
 
   return (
     <>
+      <GovernedAccountSelect
+        label="Governance"
+        governedAccounts={governedAccounts}
+        onChange={(value) => {
+          handleSetForm({ value, propertyName: 'governedAccount' })
+        }}
+        value={form.governedAccount}
+        error={formErrors['governedAccount']}
+        shouldBeGoverned={shouldBeGoverned}
+        governance={governance}
+      />
       <Select
         label="Token Name to refresh reserve for"
         value={form.mintName}

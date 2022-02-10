@@ -152,7 +152,7 @@ const DepositReserveLiquidityAndObligationCollateral = ({
         error={formErrors['governedAccount']}
         shouldBeGoverned={shouldBeGoverned}
         governance={governance}
-      ></GovernedAccountSelect>
+      />
 
       <Select
         label="Token Name"

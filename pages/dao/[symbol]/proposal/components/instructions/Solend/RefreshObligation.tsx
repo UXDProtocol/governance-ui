@@ -130,7 +130,7 @@ const RefreshObligation = ({
         error={formErrors['governedAccount']}
         shouldBeGoverned={shouldBeGoverned}
         governance={governance}
-      ></GovernedAccountSelect>
+      />
 
       <Select
         label="Token Name to refresh obligation for"
