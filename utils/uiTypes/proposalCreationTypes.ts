@@ -178,6 +178,20 @@ export interface SaberTribecaCreateEscrowSbrATAForm {
   governedAccount?: GovernedMultiTypeAccount
 }
 
+export interface SaberTribecaCreateGaugeVoterForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface SaberTribecaCreateGaugeVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
+export interface SaberTribecaGaugeSetVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -208,6 +222,9 @@ export enum Instructions {
   SaberTribecaNewEscrow,
   SaberTribecaLock,
   SaberTribecaCreateEscrowSbrATA,
+  SaberTribecaCreateGaugeVoter,
+  SaberTribecaCreateGaugeVote,
+  SaberTribecaGaugeSetVote,
 }
 
 export interface InitializeControllerForm {

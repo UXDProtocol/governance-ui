@@ -70,6 +70,8 @@ import TokenTransferBetweenInternalGovernanceAccounts from './components/instruc
 import SaberTribecaNewEscrow from './components/instructions/saberTribeca/NewEscrow'
 import SaberTribecaLock from './components/instructions/saberTribeca/Lock'
 import SaberTribecaCreateEscrowSbrATA from './components/instructions/saberTribeca/CreateEscrowSbrATA'
+import SaberTribecaCreateGaugeVoter from './components/instructions/saberTribeca/CreateGaugeVoter'
+import SaberTribecaCreateGaugeVote from './components/instructions/saberTribeca/CreateGaugeVote'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -367,6 +369,14 @@ const New = () => {
       case Instructions.SaberTribecaCreateEscrowSbrATA:
         return (
           <SaberTribecaCreateEscrowSbrATA index={idx} governance={governance} />
+        )
+      case Instructions.SaberTribecaCreateGaugeVoter:
+        return (
+          <SaberTribecaCreateGaugeVoter index={idx} governance={governance} />
+        )
+      case Instructions.SaberTribecaCreateGaugeVote:
+        return (
+          <SaberTribecaCreateGaugeVote index={idx} governance={governance} />
         )
       case Instructions.AddLiquidityRaydium:
         return <AddLiquidityRaydium index={idx} governance={governance} />
