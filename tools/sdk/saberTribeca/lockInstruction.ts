@@ -11,6 +11,7 @@ import saberTribecaConfiguration, {
   SaberTribecaPrograms,
 } from './configuration'
 import { LockerData } from './programs'
+import { DEFAULT_GOVERNANCE_PROGRAM_ID } from '@components/instructions/tools'
 
 export async function lockInstruction({
   programs,
@@ -37,6 +38,11 @@ export async function lockInstruction({
     owner: escrowOwner,
   })
 
+  const [whitelistEntry] = await saberTribecaConfiguration.findWhitelistAddress(
+    this.locker,
+    new PublicKey(DEFAULT_GOVERNANCE_PROGRAM_ID)
+  )
+
   return programs.LockedVoter.instruction.lock(amount, durationSeconds, {
     accounts: {
       locker: saberTribecaConfiguration.locker,
@@ -54,7 +60,7 @@ export async function lockInstruction({
             isWritable: false,
           },
           {
-            pubkey: PublicKey.default,
+            pubkey: whitelistEntry,
             isSigner: false,
             isWritable: false,
           },

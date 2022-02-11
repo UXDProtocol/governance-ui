@@ -18,6 +18,8 @@ export default function useSaberTribeca() {
   const [programs, setPrograms] = useState<SaberTribecaPrograms | null>(null)
   const [lockerData, setLockerData] = useState<LockerData | null>(null)
 
+  console.log('LockerData', lockerData)
+
   useEffect(() => {
     if (!connection || !wallet) {
       return

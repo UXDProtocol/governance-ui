@@ -192,6 +192,20 @@ export interface SaberTribecaGaugeSetVoteForm {
   gaugeName?: string
 }
 
+export interface SaberTribecaPrepareEpochGaugeVoterForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface SaberTribecaCreateEpochGaugeForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
+export interface SaberTribecaGaugeCommitVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -225,6 +239,9 @@ export enum Instructions {
   SaberTribecaCreateGaugeVoter,
   SaberTribecaCreateGaugeVote,
   SaberTribecaGaugeSetVote,
+  SaberTribecaPrepareEpochGaugeVoter,
+  SaberTribecaCreateEpochGauge,
+  SaberTribecaGaugeCommitVote,
 }
 
 export interface InitializeControllerForm {

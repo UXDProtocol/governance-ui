@@ -154,6 +154,20 @@ class SaberTribecaConfiguration {
     )
   }
 
+  public async findWhitelistAddress(
+    locker: PublicKey,
+    programId: PublicKey
+  ): Promise<[PublicKey, number]> {
+    return PublicKey.findProgramAddress(
+      [
+        utils.bytes.utf8.encode('LockerWhitelistEntry'),
+        locker.toBuffer(),
+        programId.toBuffer(),
+      ],
+      this.lockedVoterProgramId
+    )
+  }
+
   public async fetchAllGauge(
     programs: SaberTribecaPrograms
   ): Promise<GaugeInfos> {

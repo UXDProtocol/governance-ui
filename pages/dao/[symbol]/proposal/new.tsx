@@ -72,6 +72,10 @@ import SaberTribecaLock from './components/instructions/saberTribeca/Lock'
 import SaberTribecaCreateEscrowSbrATA from './components/instructions/saberTribeca/CreateEscrowSbrATA'
 import SaberTribecaCreateGaugeVoter from './components/instructions/saberTribeca/CreateGaugeVoter'
 import SaberTribecaCreateGaugeVote from './components/instructions/saberTribeca/CreateGaugeVote'
+import SaberTribecaSetGaugeVote from './components/instructions/saberTribeca/SetGaugeVote'
+import SaberTribecaPrepareEpochGaugeVoter from './components/instructions/saberTribeca/PrepareEpochGaugeVoter'
+import SaberTribecaCreateEpochGauge from './components/instructions/saberTribeca/CreateEpochGauge'
+import SaberTribecaGaugeCommitVote from './components/instructions/saberTribeca/GaugeCommitVote'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -377,6 +381,23 @@ const New = () => {
       case Instructions.SaberTribecaCreateGaugeVote:
         return (
           <SaberTribecaCreateGaugeVote index={idx} governance={governance} />
+        )
+      case Instructions.SaberTribecaGaugeSetVote:
+        return <SaberTribecaSetGaugeVote index={idx} governance={governance} />
+      case Instructions.SaberTribecaPrepareEpochGaugeVoter:
+        return (
+          <SaberTribecaPrepareEpochGaugeVoter
+            index={idx}
+            governance={governance}
+          />
+        )
+      case Instructions.SaberTribecaCreateEpochGauge:
+        return (
+          <SaberTribecaCreateEpochGauge index={idx} governance={governance} />
+        )
+      case Instructions.SaberTribecaGaugeCommitVote:
+        return (
+          <SaberTribecaGaugeCommitVote index={idx} governance={governance} />
         )
       case Instructions.AddLiquidityRaydium:
         return <AddLiquidityRaydium index={idx} governance={governance} />

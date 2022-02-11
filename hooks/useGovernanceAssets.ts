@@ -194,6 +194,21 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.SaberTribecaPrepareEpochGaugeVoter,
+      name: 'Saber Tribeca: Prepare Epoch Gauge Voter',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SaberTribecaCreateEpochGauge,
+      name: 'Saber Tribeca: Create Epoch Gauge',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SaberTribecaGaugeCommitVote,
+      name: 'Saber Tribeca: Gauge Commit Vote',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.CreateSolendObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,
