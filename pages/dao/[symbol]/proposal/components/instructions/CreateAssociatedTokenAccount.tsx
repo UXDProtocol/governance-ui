@@ -83,17 +83,6 @@ const CreateAssociatedTokenAccount = ({
       getSplTokenMintAddressByUIName(form.splTokenMintUIName)
     )
 
-    console.log('infos', {
-      governanceAccount: form.governedAccount.governance.account,
-      governanceOwner: form.governedAccount.governance.owner.toString(),
-      fundingAddress: wallet.publicKey.toString(),
-      walletAddress: form.governedAccount.governance.pubkey.toString(),
-      splTokenMintName: form.splTokenMintUIName,
-      splTokenMintAddress: getSplTokenMintAddressByUIName(
-        form.splTokenMintUIName
-      ).toString(),
-    })
-
     return {
       serializedInstruction: serializeInstructionToBase64(tx),
       isValid: true,
@@ -106,7 +95,7 @@ const CreateAssociatedTokenAccount = ({
       propertyName: 'programId',
       value: programId?.toString(),
     })
-  }, [realmInfo?.programId])
+  }, [programId])
 
   useEffect(() => {
     handleSetInstructions(
@@ -151,12 +140,10 @@ const CreateAssociatedTokenAccount = ({
       >
         {Object.entries(SPL_TOKENS).map(([key, { name, mint }]) => (
           <Select.Option key={key} value={name}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="flex flex-col">
               <span>{name}</span>
 
-              <span style={{ color: 'grey', fontSize: '0.8em' }}>
-                {mint.toString()}
-              </span>
+              <span className="text-gray-500 text-sm">{mint.toString()}</span>
             </div>
           </Select.Option>
         ))}

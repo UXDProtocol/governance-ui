@@ -25,8 +25,8 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         const mint = accounts[2].pubkey.toString()
 
         return (
-          <div className="flex flex-column">
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex flex-col">
+            <div className="flex justify-between">
               <span>Init obligation for:</span>
               <span>{mint}</span>
             </div>
@@ -59,12 +59,9 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
         )
 
         return (
-          <div className="flex flex-column">
+          <div className="flex flex-col">
             {reserveNames.map((reserveName, reserveNameIdx) => (
-              <div
-                key={reserveName}
-                style={{ display: 'flex', justifyContent: 'space-between' }}
-              >
+              <div key={reserveName} className="flex justify-between">
                 <span>Reserve #{reserveNameIdx + 1}</span>
                 <span>{reserveName}</span>
               </div>
@@ -89,7 +86,7 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
           'unknown'
 
         return (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex justify-between">
             <span>Reserve</span>
             <span>{tokenName}</span>
           </div>
@@ -131,12 +128,12 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
           'unknown'
 
         return (
-          <div className="flex flex-column">
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex flex-col">
+            <div className="flex justify-between">
               <span>Token</span>
               <span>{tokenName}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex justify-between">
               <span>Amount</span>
               <span>{liquidityAmount}</span>
             </div>
@@ -179,12 +176,12 @@ export const SOLEND_PROGRAM_INSTRUCTIONS = {
           'unknown'
 
         return (
-          <div className="flex flex-column">
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex flex-col">
+            <div className="flex justify-between">
               <span>Token</span>
               <span>{tokenName}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="flex justify-between">
               <span>Amount</span>
               <span>{collateralAmount}</span>
             </div>

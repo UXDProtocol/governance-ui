@@ -99,12 +99,12 @@ export function InstructionPanel() {
                       proposal={proposal}
                       index={idx + 1}
                       proposalInstruction={pi}
-                    ></InstructionCard>
+                    />
                   )}
                 </div>
               ))}
 
-              {proposal && (
+              {proposal && proposalInstructions.length > 1 && (
                 <div className="flex justify-end">
                   <ExecuteAllInstructionButton
                     proposal={proposal}

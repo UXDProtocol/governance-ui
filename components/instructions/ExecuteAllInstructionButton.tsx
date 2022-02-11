@@ -55,7 +55,8 @@ export function ExecuteAllInstructionButton({
     connection.current,
     connection.endpoint
   )
-
+  // update the current slot every 5 seconds
+  // if current slot > slot available to execute the transaction
   useEffect(() => {
     if (isPassedExecutionSlot && proposal) {
       const timer = setTimeout(() => {
@@ -75,7 +76,7 @@ export function ExecuteAllInstructionButton({
       await executeInstructions(rpcContext, proposal, proposalInstructions)
       await fetchRealm(realmInfo?.programId, realmInfo?.realmId)
     } catch (error) {
-      console.log('error executing instruction', error)
+      console.error('error executing instruction', error)
 
       setPlaying(PlayState.Error)
 
@@ -98,9 +99,11 @@ export function ExecuteAllInstructionButton({
   }
 
   if (
-    proposal.account.state !== ProposalState.Executing &&
-    proposal.account.state !== ProposalState.ExecutingWithErrors &&
-    proposal.account.state !== ProposalState.Succeeded
+    ![
+      ProposalState.Executing,
+      ProposalState.ExecutingWithErrors,
+      ProposalState.Succeeded,
+    ].includes(proposal.account.state)
   ) {
     return null
   }

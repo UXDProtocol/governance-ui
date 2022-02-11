@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import Select from '@components/inputs/Select'
 import * as yup from 'yup'
 import {
   Governance,
@@ -8,6 +7,7 @@ import {
   serializeInstructionToBase64,
 } from '@solana/spl-governance'
 import { PublicKey } from '@solana/web3.js'
+import Select from '@components/inputs/Select'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import useRealm from '@hooks/useRealm'
 import SolendConfiguration from '@tools/sdk/solend/configuration'
@@ -92,7 +92,7 @@ const RefreshReserve = ({
       propertyName: 'programId',
       value: programId?.toString(),
     })
-  }, [realmInfo?.programId])
+  }, [programId])
 
   useEffect(() => {
     handleSetInstructions(

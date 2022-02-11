@@ -111,7 +111,9 @@ class SolendConfiguration implements ASolendConfiguration {
   }
 
   public getReserveOfGivenMints(mintNames: SupportedMintName[]): PublicKey[] {
-    return mintNames.map((x) => this.supportedMintsInformation[x].reserve)
+    return mintNames.map(
+      (mintName) => this.supportedMintsInformation[mintName].reserve
+    )
   }
 
   public getSupportedMintNames(): SupportedMintName[] {
@@ -129,7 +131,7 @@ class SolendConfiguration implements ASolendConfiguration {
 
         return tmp
       },
-      void 0
+      undefined
     )
   }
 }

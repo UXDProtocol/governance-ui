@@ -26,12 +26,12 @@ export const ATA_PROGRAM_INSTRUCTIONS = {
         ].name ?? 'unknown'
 
       return (
-        <div className="flex flex-column">
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="flex flex-col">
+          <div className="flex justify-between">
             <span>New Associated Token Amount Address:</span>
             <span>{ata}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="flex justify-between">
             <span>Token Name</span>
             <span>{tokenName}</span>
           </div>

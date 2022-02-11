@@ -107,7 +107,7 @@ const DepositReserveLiquidityAndObligationCollateral = ({
       propertyName: 'programId',
       value: programId?.toString(),
     })
-  }, [realmInfo?.programId])
+  }, [programId])
 
   useEffect(() => {
     handleSetInstructions(
