@@ -40,6 +40,7 @@ import { notify } from 'utils/notifications'
 import Clawback from 'VoteStakeRegistry/components/instructions/Clawback'
 import Grant from 'VoteStakeRegistry/components/instructions/Grant'
 import useVoteStakeRegistryClientStore from 'VoteStakeRegistry/stores/voteStakeRegistryClientStore'
+
 import InstructionContentContainer from './components/InstructionContentContainer'
 import ProgramUpgrade from './components/instructions/bpfUpgradeableLoader/ProgramUpgrade'
 import CreateAssociatedTokenAccount from './components/instructions/CreateAssociatedTokenAccount'
