@@ -29,6 +29,14 @@ export async function createGaugeVoteInstruction({
     bump,
   ] = await saberTribecaConfiguration.findGaugeVoteAddress(gaugeVoter, gauge)
 
+  console.log('create gauge vote', {
+    gaugeVoter: gaugeVoter.toString(),
+    gaugeVote: gaugeVote.toString(),
+    gauge: gauge.toString(),
+    payer: payer.toString(),
+    systemProgram: SystemProgram.programId.toString(),
+  })
+
   return programs.Gauge.instruction.createGaugeVote(bump, {
     accounts: {
       gaugeVoter,
