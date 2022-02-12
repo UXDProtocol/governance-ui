@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import * as yup from 'yup'
 import {
   Governance,
@@ -8,6 +7,8 @@ import {
   serializeInstructionToBase64,
 } from '@solana/spl-governance'
 import { PublicKey } from '@solana/web3.js'
+import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
+
 import useRealm from '@hooks/useRealm'
 import { initObligationAccount } from '@tools/sdk/solend/initObligationAccount'
 import { isFormValid } from '@utils/formValidation'

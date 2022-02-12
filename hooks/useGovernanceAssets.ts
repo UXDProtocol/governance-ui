@@ -104,7 +104,7 @@ export default function useGovernanceAssets() {
     )
 
   const getAvailableInstructions = () => {
-    return availableInstructions.filter((txx) => txx.isVisible)
+    return availableInstructions.filter((itx) => itx.isVisible)
   }
   async function getMintWithGovernances() {
     const mintGovernances = getGovernancesByAccountTypes([

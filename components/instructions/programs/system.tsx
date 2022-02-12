@@ -62,11 +62,7 @@ export const SYSTEM_INSTRUCTIONS = {
         _data: Uint8Array,
         _accounts: AccountMetaData[]
       ) => {
-        return (
-          <>
-            <p>No data</p>
-          </>
-        )
+        return <p>No Instruction data</p>
       },
     },
   },
