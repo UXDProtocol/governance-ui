@@ -4,11 +4,13 @@ import saberTribecaConfiguration, {
 } from './configuration'
 
 export async function gaugeSetVoteInstruction({
+  weight,
   programs,
   gauge,
   authority,
   payer,
 }: {
+  weight: number
   programs: SaberTribecaPrograms
   gauge: PublicKey
   authority: PublicKey
@@ -20,12 +22,12 @@ export async function gaugeSetVoteInstruction({
     escrow
   )
 
-  const [
-    gaugeVote,
-    bump,
-  ] = await saberTribecaConfiguration.findGaugeVoteAddress(gaugeVoter, gauge)
+  const [gaugeVote] = await saberTribecaConfiguration.findGaugeVoteAddress(
+    gaugeVoter,
+    gauge
+  )
 
-  return programs.Gauge.instruction.gaugeSetVote(bump, {
+  return programs.Gauge.instruction.gaugeSetVote(weight, {
     accounts: {
       escrow,
       gaugemeister: saberTribecaConfiguration.gaugemeister,

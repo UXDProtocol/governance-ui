@@ -115,6 +115,7 @@ const CreateEpochGauge = ({
       .object()
       .nullable()
       .required('Governed account is required'),
+    gauge: yup.string().required('Gauge is required'),
   })
 
   return (

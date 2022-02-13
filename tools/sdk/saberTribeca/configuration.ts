@@ -172,10 +172,11 @@ class SaberTribecaConfiguration {
     programs: SaberTribecaPrograms
   ): Promise<GaugeInfos> {
     const gauges = (await programs.Gauge.account.gauge.all()).filter(
-      ({ account: { gaugemeister, isDisabled } }) =>
-        gaugemeister.toString() !== this.gaugemeister.toString() || isDisabled
+      ({ account: { isDisabled, gaugemeister } }) =>
+        !isDisabled || gaugemeister.toString() !== this.gaugemeister.toString()
     )
 
+    // Fetch the info of the quarry behind the gauge to get name + logo behind the gauge
     const quarryInfos = await programs.Mine.account.quarry.fetchMultiple(
       gauges.map((x) => x.account.quarry)
     )
@@ -187,7 +188,7 @@ class SaberTribecaConfiguration {
     const mints = quarryInfos.map((x) => (x as any).tokenMintKey)
 
     const infosInArray = await Promise.all(
-      mints.map((x) =>
+      mints.map((x, xi) =>
         (async () => {
           try {
             const response = await fetch(
@@ -203,7 +204,7 @@ class SaberTribecaConfiguration {
             const { name, logoURI } = await response.json()
 
             return {
-              mint: x,
+              mint: gauges[xi].publicKey,
               logoURI,
               name,
             }

@@ -39,9 +39,20 @@ export async function lockInstruction({
   })
 
   const [whitelistEntry] = await saberTribecaConfiguration.findWhitelistAddress(
-    this.locker,
+    saberTribecaConfiguration.locker,
     new PublicKey(DEFAULT_GOVERNANCE_PROGRAM_ID)
   )
+
+  console.log({
+    locker: saberTribecaConfiguration.locker.toString(),
+    escrow: escrow.toString(),
+    escrowOwner: escrowOwner.toString(),
+    escrowTokens: escrowTokens.toString(),
+    sourceTokens: sourceTokens.toString(),
+    tokenProgram: TOKEN_PROGRAM_ID.toString(),
+    whitelistEntry: whitelistEntry.toString(),
+    SYSVAR_INSTRUCTIONS_PUBKEY: SYSVAR_INSTRUCTIONS_PUBKEY.toString(),
+  })
 
   return programs.LockedVoter.instruction.lock(amount, durationSeconds, {
     accounts: {

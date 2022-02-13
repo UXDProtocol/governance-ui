@@ -20,6 +20,7 @@ import useSaberTribeca from '@hooks/useSaberTribeca'
 import useSaberTribecaGauge from '@hooks/useSaberTribecaGauge'
 import Select from '@components/inputs/Select'
 import { gaugeSetVoteInstruction } from '@tools/sdk/saberTribeca/gaugeSetVoteInstruction'
+import Input from '@components/inputs/Input'
 
 const SetGaugeVote = ({
   index,
@@ -70,7 +71,8 @@ const SetGaugeVote = ({
       !programs ||
       !form.gaugeName ||
       !gauges ||
-      !gauges[form.gaugeName]
+      !gauges[form.gaugeName] ||
+      form.weight === void 0
     ) {
       return {
         serializedInstruction: '',
@@ -80,6 +82,7 @@ const SetGaugeVote = ({
     }
 
     const tx = await gaugeSetVoteInstruction({
+      weight: form.weight,
       programs,
       gauge: gauges[form.gaugeName].mint,
       payer: wallet.publicKey,
@@ -115,6 +118,11 @@ const SetGaugeVote = ({
       .object()
       .nullable()
       .required('Governed account is required'),
+    gauge: yup.string().required('Gauge is required'),
+    weight: yup
+      .number()
+      .min(0, 'Weight should be equals or more than 0')
+      .required('Weight is required'),
   })
 
   return (
@@ -153,6 +161,20 @@ const SetGaugeVote = ({
           </Select.Option>
         ))}
       </Select>
+
+      <Input
+        label="Weight (nb of token)"
+        value={form.weight}
+        type="number"
+        min="0"
+        onChange={(evt) =>
+          handleSetForm({
+            value: evt.target.value,
+            propertyName: 'weight',
+          })
+        }
+        error={formErrors['weight']}
+      />
     </>
   )
 }
