@@ -65,6 +65,20 @@ class SaberTribecaConfiguration {
     return new PublicKey('8erad8kmNrLJDJPe9UkmTHomrMV3EW48sjGeECyVjbYX')
   }
 
+  public get gaugeInstructions() {
+    return {
+      createGaugeVoter: 135,
+      createGaugeVote: 109,
+    }
+  }
+
+  public get lockedVoterInstructions() {
+    return {
+      newEscrow: 216,
+      lock: 21,
+    }
+  }
+
   public async findEscrowAddress(
     authority: PublicKey
   ): Promise<[PublicKey, number]> {
