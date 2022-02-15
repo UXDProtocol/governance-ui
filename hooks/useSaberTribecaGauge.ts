@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from 'react'
 import saberTribecaConfiguration, {
   GaugeInfos,
 } from '@tools/sdk/saberTribeca/configuration'
-import useSaberTribeca from './useSaberTribeca'
+import useSaberTribecaPrograms from './useSaberTribecaPrograms'
 
 export default function useSaberTribecaGauge() {
-  const { programs } = useSaberTribeca()
+  const { programs } = useSaberTribecaPrograms()
 
   const [gauges, setGauges] = useState<GaugeInfos | null>(null)
 
@@ -18,12 +18,11 @@ export default function useSaberTribecaGauge() {
   }, [saberTribecaConfiguration, programs])
 
   useEffect(() => {
-    ;(async () => {
-      setGauges(await loadGauges())
-    })()
+    loadGauges().then(setGauges)
   }, [loadGauges])
 
   return {
     gauges,
+    programs,
   }
 }

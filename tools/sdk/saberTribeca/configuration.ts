@@ -29,54 +29,49 @@ export type GaugeInfos = {
 }
 
 class SaberTribecaConfiguration {
-  public get mintInfoEndpoint(): string {
-    return 'https://cdn.jsdelivr.net/gh/CLBExchange/certified-token-list/101'
+  protected encodeU32(num: number): Buffer {
+    const buf = Buffer.alloc(4)
+    buf.writeUInt32LE(num)
+    return buf
   }
 
-  public get lockedVoterProgramId(): PublicKey {
-    return new PublicKey('LocktDzaV1W2Bm9DeZeiyz4J9zs4fRqNiYqQyracRXw')
+  public readonly mintInfoEndpoint =
+    'https://cdn.jsdelivr.net/gh/CLBExchange/certified-token-list/101'
+
+  public readonly lockedVoterProgramId = new PublicKey(
+    'LocktDzaV1W2Bm9DeZeiyz4J9zs4fRqNiYqQyracRXw'
+  )
+  public readonly governProgramId = new PublicKey(
+    'Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw'
+  )
+  public readonly gaugeProgramId = new PublicKey(
+    'GaugesLJrnVjNNWLReiw3Q7xQhycSBRgeHGTMDUaX231'
+  )
+  public readonly quarryMineProgramId = new PublicKey(
+    'QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB'
+  )
+
+  public readonly gaugemeister = new PublicKey(
+    '28ZDtf6d2wsYhBvabTxUHTRT6MDxqjmqR7RMCp348tyU'
+  )
+  public readonly locker = new PublicKey(
+    '8erad8kmNrLJDJPe9UkmTHomrMV3EW48sjGeECyVjbYX'
+  )
+
+  public readonly saberToken = {
+    name: 'SBR - Saber Protocol Token',
+    mint: new PublicKey('Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1'),
+    decimals: 6,
   }
 
-  public get governProgramId(): PublicKey {
-    return new PublicKey('Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw')
+  public readonly gaugeInstructions = {
+    createGaugeVoter: 135,
+    createGaugeVote: 109,
   }
 
-  public get gaugeProgramId(): PublicKey {
-    return new PublicKey('GaugesLJrnVjNNWLReiw3Q7xQhycSBRgeHGTMDUaX231')
-  }
-
-  public get gaugemeister(): PublicKey {
-    return new PublicKey('28ZDtf6d2wsYhBvabTxUHTRT6MDxqjmqR7RMCp348tyU')
-  }
-
-  public get quarryMineProgramId(): PublicKey {
-    return new PublicKey('QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB')
-  }
-
-  public get saberToken() {
-    return {
-      name: 'SBR - Saber Protocol Token',
-      mint: new PublicKey('Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1'),
-      decimals: 6,
-    }
-  }
-
-  public get locker(): PublicKey {
-    return new PublicKey('8erad8kmNrLJDJPe9UkmTHomrMV3EW48sjGeECyVjbYX')
-  }
-
-  public get gaugeInstructions() {
-    return {
-      createGaugeVoter: 135,
-      createGaugeVote: 109,
-    }
-  }
-
-  public get lockedVoterInstructions() {
-    return {
-      newEscrow: 216,
-      lock: 21,
-    }
+  public readonly lockedVoterInstructions = {
+    newEscrow: 216,
+    lock: 21,
   }
 
   public async findEscrowAddress(
@@ -110,7 +105,7 @@ class SaberTribecaConfiguration {
     gaugeVoter: PublicKey,
     gauge: PublicKey
   ): Promise<[PublicKey, number]> {
-    return await PublicKey.findProgramAddress(
+    return PublicKey.findProgramAddress(
       [
         utils.bytes.utf8.encode('GaugeVote'),
         gaugeVoter.toBuffer(),
@@ -120,17 +115,11 @@ class SaberTribecaConfiguration {
     )
   }
 
-  protected encodeU32(num: number): Buffer {
-    const buf = Buffer.alloc(4)
-    buf.writeUInt32LE(num)
-    return buf
-  }
-
   public async findEpochGaugeVoterAddress(
     gaugeVoter: PublicKey,
     votingEpoch: number
   ): Promise<[PublicKey, number]> {
-    return await PublicKey.findProgramAddress(
+    return PublicKey.findProgramAddress(
       [
         utils.bytes.utf8.encode('EpochGaugeVoter'),
         gaugeVoter.toBuffer(),
@@ -158,7 +147,7 @@ class SaberTribecaConfiguration {
     gaugeVote: PublicKey,
     votingEpoch: number
   ): Promise<[PublicKey, number]> {
-    return await PublicKey.findProgramAddress(
+    return PublicKey.findProgramAddress(
       [
         utils.bytes.utf8.encode('EpochGaugeVote'),
         gaugeVote.toBuffer(),

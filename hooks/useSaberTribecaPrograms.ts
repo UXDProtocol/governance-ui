@@ -3,20 +3,18 @@ import {
   SolanaAugmentedProvider,
   SolanaProvider,
 } from '@saberhq/solana-contrib'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import saberTribecaConfiguration, {
   SaberTribecaPrograms,
 } from '@tools/sdk/saberTribeca/configuration'
 
 import useWalletStore from 'stores/useWalletStore'
-import { LockerData } from '@tools/sdk/saberTribeca/programs'
 
-export default function useSaberTribeca() {
+export default function useSaberTribecaPrograms() {
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
 
   const [programs, setPrograms] = useState<SaberTribecaPrograms | null>(null)
-  const [lockerData, setLockerData] = useState<LockerData | null>(null)
 
   useEffect(() => {
     if (!connection || !wallet) {
@@ -36,24 +34,7 @@ export default function useSaberTribeca() {
     )
   }, [connection, wallet])
 
-  const loadLockerData = useCallback(async (): Promise<LockerData | null> => {
-    if (!programs || !saberTribecaConfiguration) {
-      return null
-    }
-
-    return programs.LockedVoter.account.locker.fetch(
-      saberTribecaConfiguration.locker
-    )
-  }, [programs, saberTribecaConfiguration])
-
-  useEffect(() => {
-    ;(async () => {
-      setLockerData(await loadLockerData())
-    })()
-  }, [loadLockerData])
-
   return {
     programs,
-    lockerData,
   }
 }

@@ -22,7 +22,7 @@ import Input from '@components/inputs/Input'
 import { lockInstruction } from '@tools/sdk/saberTribeca/lockInstruction'
 import { BigNumber } from 'bignumber.js'
 import { BN } from '@project-serum/anchor'
-import useSaberTribeca from '@hooks/useSaberTribeca'
+import useSaberTribecaLockerData from '@hooks/useSaberTribecaLockerData'
 
 const Lock = ({
   index,
@@ -36,7 +36,7 @@ const Lock = ({
 
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-  const { programs, lockerData } = useSaberTribeca()
+  const { programs, lockerData } = useSaberTribecaLockerData()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {

@@ -17,7 +17,7 @@ import {
 import GovernedAccountSelect from '../../GovernedAccountSelect'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import { createGaugeVoterInstruction } from '@tools/sdk/saberTribeca/createGaugeVoterInstruction'
-import useSaberTribeca from '@hooks/useSaberTribeca'
+import useSaberTribecaPrograms from '@hooks/useSaberTribecaPrograms'
 
 const CreateGaugeVoter = ({
   index,
@@ -31,7 +31,7 @@ const CreateGaugeVoter = ({
 
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-  const { programs } = useSaberTribeca()
+  const { programs } = useSaberTribecaPrograms()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {

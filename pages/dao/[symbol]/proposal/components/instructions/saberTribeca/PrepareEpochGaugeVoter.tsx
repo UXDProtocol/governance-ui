@@ -16,7 +16,7 @@ import {
 } from '@solana/spl-governance'
 import GovernedAccountSelect from '../../GovernedAccountSelect'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
-import useSaberTribeca from '@hooks/useSaberTribeca'
+import useSaberTribecaPrograms from '@hooks/useSaberTribecaPrograms'
 import { prepareEpochGaugeVoterInstruction } from '@tools/sdk/saberTribeca/prepareEpochGaugeVoterInstruction'
 
 const PrepareEpochGaugeVoter = ({
@@ -31,7 +31,7 @@ const PrepareEpochGaugeVoter = ({
 
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-  const { programs } = useSaberTribeca()
+  const { programs } = useSaberTribecaPrograms()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {

@@ -16,7 +16,6 @@ import {
 } from '@solana/spl-governance'
 import GovernedAccountSelect from '../../GovernedAccountSelect'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
-import useSaberTribeca from '@hooks/useSaberTribeca'
 import useSaberTribecaGauge from '@hooks/useSaberTribecaGauge'
 import Select from '@components/inputs/Select'
 import { gaugeCommitVoteInstruction } from '@tools/sdk/saberTribeca/gaugeCommitVoteInstruction'
@@ -33,8 +32,7 @@ const GaugeCommitVote = ({
 
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-  const { programs } = useSaberTribeca()
-  const { gauges } = useSaberTribecaGauge()
+  const { gauges, programs } = useSaberTribecaGauge()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {

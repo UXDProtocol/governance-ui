@@ -17,7 +17,7 @@ import {
 import GovernedAccountSelect from '../../GovernedAccountSelect'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import { newEscrowInstruction } from '@tools/sdk/saberTribeca/newEscrowInstruction'
-import useSaberTribeca from '@hooks/useSaberTribeca'
+import useSaberTribecaPrograms from '@hooks/useSaberTribecaPrograms'
 
 const NewEscrow = ({
   index,
@@ -30,7 +30,7 @@ const NewEscrow = ({
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-  const { programs } = useSaberTribeca()
+  const { programs } = useSaberTribecaPrograms()
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
