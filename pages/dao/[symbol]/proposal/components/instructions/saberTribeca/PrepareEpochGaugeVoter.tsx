@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
 import * as yup from 'yup'
 import { isFormValid } from '@utils/formValidation'
 import {
@@ -29,7 +27,6 @@ const PrepareEpochGaugeVoter = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
 
-  const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
   const { programs } = useSaberTribecaPrograms()
 
@@ -39,7 +36,6 @@ const PrepareEpochGaugeVoter = ({
   }
 
   const shouldBeGoverned = index !== 0 && governance
-  const programId: PublicKey | undefined = realmInfo?.programId
   const [form, setForm] = useState<SaberTribecaPrepareEpochGaugeVoterForm>({})
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
@@ -61,7 +57,6 @@ const PrepareEpochGaugeVoter = ({
     if (
       !connection ||
       !isValid ||
-      !programId ||
       !form.governedAccount?.governance?.account ||
       !wallet?.publicKey ||
       !programs
@@ -85,13 +80,6 @@ const PrepareEpochGaugeVoter = ({
       governance: form.governedAccount.governance,
     }
   }
-
-  useEffect(() => {
-    handleSetForm({
-      propertyName: 'programId',
-      value: programId?.toString(),
-    })
-  }, [realmInfo?.programId])
 
   useEffect(() => {
     handleSetInstructions(

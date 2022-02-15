@@ -52,17 +52,17 @@ export const SABER_TRIBECA_PROGRAM_INSTRUCTIONS = {
 
         return (
           <div className="flex flex-col">
-            <div className="flex">
+            <div>
               <span>Gauge Voter:</span>
               <span>{gaugeVoterMint}</span>
             </div>
 
-            <div className="flex">
+            <div>
               <span>Gauge Vote:</span>
               <span>{gaugeVoteMint}</span>
             </div>
 
-            <div className="flex">
+            <div>
               <span>Gauge:</span>
               <span>{gaugeMint}</span>
             </div>
@@ -85,7 +85,7 @@ export const SABER_TRIBECA_PROGRAM_INSTRUCTIONS = {
 
         return (
           <div className="flex flex-col">
-            <div className="flex">
+            <div>
               <span>Escrow:</span>
               <span>{escrowMint}</span>
             </div>
@@ -123,12 +123,12 @@ export const SABER_TRIBECA_PROGRAM_INSTRUCTIONS = {
 
         return (
           <div className="flex flex-col">
-            <div className="flex">
+            <div>
               <span>Native Amount:</span>
               <span>{amount}</span>
             </div>
 
-            <div className="flex">
+            <div>
               <span>Duration (seconds):</span>
               <span>{duration}</span>
             </div>

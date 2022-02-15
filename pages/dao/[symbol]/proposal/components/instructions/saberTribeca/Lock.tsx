@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
 import * as yup from 'yup'
 import { isFormValid } from '@utils/formValidation'
 import {
@@ -34,7 +32,6 @@ const Lock = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
 
-  const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
   const { programs, lockerData } = useSaberTribecaLockerData()
 
@@ -44,7 +41,6 @@ const Lock = ({
   }
 
   const shouldBeGoverned = index !== 0 && governance
-  const programId: PublicKey | undefined = realmInfo?.programId
   const [form, setForm] = useState<SaberTribecaLockForm>({})
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
@@ -66,7 +62,6 @@ const Lock = ({
     if (
       !connection ||
       !isValid ||
-      !programId ||
       !form.governedAccount?.governance?.account ||
       !wallet?.publicKey ||
       !form.uiAmount ||
@@ -99,13 +94,6 @@ const Lock = ({
       governance: form.governedAccount.governance,
     }
   }
-
-  useEffect(() => {
-    handleSetForm({
-      propertyName: 'programId',
-      value: programId?.toString(),
-    })
-  }, [realmInfo?.programId])
 
   useEffect(() => {
     handleSetInstructions(

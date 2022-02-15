@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import useRealm from '@hooks/useRealm'
-import { PublicKey } from '@solana/web3.js'
 import * as yup from 'yup'
 import { isFormValid } from '@utils/formValidation'
 import {
@@ -28,7 +26,6 @@ const NewEscrow = ({
 }) => {
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
-  const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
   const { programs } = useSaberTribecaPrograms()
 
@@ -38,7 +35,6 @@ const NewEscrow = ({
   }
 
   const shouldBeGoverned = index !== 0 && governance
-  const programId: PublicKey | undefined = realmInfo?.programId
   const [form, setForm] = useState<SaberTribecaNewEscrowForm>({})
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
@@ -60,7 +56,6 @@ const NewEscrow = ({
     if (
       !connection ||
       !isValid ||
-      !programId ||
       !form.governedAccount?.governance?.account ||
       !wallet?.publicKey ||
       !programs
@@ -84,13 +79,6 @@ const NewEscrow = ({
       governance: form.governedAccount.governance,
     }
   }
-
-  useEffect(() => {
-    handleSetForm({
-      propertyName: 'programId',
-      value: programId?.toString(),
-    })
-  }, [realmInfo?.programId])
 
   useEffect(() => {
     handleSetInstructions(
