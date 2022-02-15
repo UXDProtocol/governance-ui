@@ -1,28 +1,30 @@
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown/react-markdown.min'
 import { ArrowLeftIcon, ExternalLinkIcon } from '@heroicons/react/outline'
-import useProposal from 'hooks/useProposal'
-import ProposalStateBadge from 'components/ProposalStatusBadge'
-import { InstructionPanel } from 'components/instructions/instructionPanel'
-import DiscussionPanel from 'components/chat/DiscussionPanel'
-import VotePanel from 'components/VotePanel'
-import ApprovalQuorum from 'components/ApprovalQuorum'
-import useRealm from 'hooks/useRealm'
-import useProposalVotes from 'hooks/useProposalVotes'
-import VoteResultsBar from 'components/VoteResultsBar'
-import ProposalTimeStatus from 'components/ProposalTimeStatus'
-import { option } from 'tools/core/option'
-import useQueryContext from 'hooks/useQueryContext'
-import React from 'react'
+import { ProposalState } from '@solana/spl-governance'
+
 import ProposalActionsPanel from '@components/ProposalActions'
-import { getRealmExplorerHost } from 'tools/routing'
 import TokenBalanceCardWrapper from '@components/TokenBalance/TokenBalanceCardWrapper'
+import useProposalSignature from '@hooks/useProposalSignature'
+
+import ApprovalQuorum from 'components/ApprovalQuorum'
+import DiscussionPanel from 'components/chat/DiscussionPanel'
+import { InstructionPanel } from 'components/instructions/instructionPanel'
+import ProposalStateBadge from 'components/ProposalStatusBadge'
+import ProposalTimeStatus from 'components/ProposalTimeStatus'
+import VotePanel from 'components/VotePanel'
+import VoteResultsBar from 'components/VoteResultsBar'
+import useProposal from 'hooks/useProposal'
+import useProposalVotes from 'hooks/useProposalVotes'
+import useQueryContext from 'hooks/useQueryContext'
+import useRealm from 'hooks/useRealm'
+import { option } from 'tools/core/option'
+import { getRealmExplorerHost } from 'tools/routing'
 
 const Proposal = () => {
   const { fmtUrlWithCluster } = useQueryContext()
   const { symbol, realmInfo } = useRealm()
   const { proposal, description } = useProposal()
-
   const {
     yesVoteProgress,
     yesVoteCount,
@@ -30,6 +32,7 @@ const Proposal = () => {
     relativeNoVotes,
     relativeYesVotes,
   } = useProposalVotes(proposal?.account)
+  const { proposalSignature } = useProposalSignature()
 
   return (
     <div className="grid grid-cols-12 gap-4">
@@ -61,11 +64,27 @@ const Proposal = () => {
             <div className="border-b border-fgd-4 py-4">
               <div className="flex items-center justify-between mb-1">
                 <h1 className="mr-2 break-all">{proposal?.account.name}</h1>
-                <ProposalStateBadge
-                  proposalPk={proposal.pubkey}
-                  proposal={proposal.account}
-                  open={true}
-                />
+                {proposal.account.state === ProposalState.Completed &&
+                proposalSignature ? (
+                  <a
+                    href={`https://explorer.solana.com/tx/${proposalSignature}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ProposalStateBadge
+                      proposalPk={proposal.pubkey}
+                      proposal={proposal.account}
+                      open={true}
+                    />
+                  </a>
+                ) : (
+                  <ProposalStateBadge
+                    proposalPk={proposal.pubkey}
+                    proposal={proposal.account}
+                    open={true}
+                  />
+                )}
               </div>
               <ProposalTimeStatus proposal={proposal?.account} />
             </div>
