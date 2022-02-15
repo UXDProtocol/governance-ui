@@ -40,7 +40,7 @@ export async function lockInstruction({
 
   const [whitelistEntry] = await saberTribecaConfiguration.findWhitelistAddress(
     saberTribecaConfiguration.locker,
-    new PublicKey(DEFAULT_GOVERNANCE_PROGRAM_ID)
+    authority
   )
 
   console.log({
