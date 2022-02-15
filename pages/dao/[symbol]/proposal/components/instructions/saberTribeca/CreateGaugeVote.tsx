@@ -16,7 +16,7 @@ import GovernedAccountSelect from '../../GovernedAccountSelect'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import { createGaugeVoteInstruction } from '@tools/sdk/saberTribeca/createGaugeVoteInstruction'
 import useSaberTribecaGauge from '@hooks/useSaberTribecaGauge'
-import Select from '@components/inputs/Select'
+import GaugeSelect from './GaugeSelect'
 
 const CreateGaugeVote = ({
   index,
@@ -101,7 +101,7 @@ const CreateGaugeVote = ({
       .object()
       .nullable()
       .required('Governed account is required'),
-    gauge: yup.string().required('Gauge is required'),
+    gaugeName: yup.string().required('Gauge is required'),
   })
 
   return (
@@ -118,10 +118,9 @@ const CreateGaugeVote = ({
         governance={governance}
       ></GovernedAccountSelect>
 
-      <Select
-        label="Gauge"
+      <GaugeSelect
+        gauges={gauges}
         value={form.gaugeName}
-        placeholder="Please select..."
         onChange={(value) =>
           handleSetForm({
             value,
@@ -129,17 +128,7 @@ const CreateGaugeVote = ({
           })
         }
         error={formErrors['gaugeName']}
-      >
-        {Object.entries(gauges || {}).map(([name, { logoURI }]) => (
-          <Select.Option key={name} value={name}>
-            <span className="flex flex-row items-center">
-              <img className="w-8" src={logoURI} />
-
-              <span className="relative left-2">{name}</span>
-            </span>
-          </Select.Option>
-        ))}
-      </Select>
+      />
     </>
   )
 }
