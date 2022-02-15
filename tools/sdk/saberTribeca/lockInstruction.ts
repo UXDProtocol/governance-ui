@@ -11,7 +11,6 @@ import saberTribecaConfiguration, {
   SaberTribecaPrograms,
 } from './configuration'
 import { LockerData } from './programs'
-import { DEFAULT_GOVERNANCE_PROGRAM_ID } from '@components/instructions/tools'
 
 export async function lockInstruction({
   programs,
