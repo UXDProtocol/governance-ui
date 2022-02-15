@@ -76,6 +76,7 @@ import SaberTribecaSetGaugeVote from './components/instructions/saberTribeca/Set
 import SaberTribecaPrepareEpochGaugeVoter from './components/instructions/saberTribeca/PrepareEpochGaugeVoter'
 import SaberTribecaCreateEpochGauge from './components/instructions/saberTribeca/CreateEpochGauge'
 import SaberTribecaGaugeCommitVote from './components/instructions/saberTribeca/GaugeCommitVote'
+import SetProgramAuthority from './components/instructions/SetProgramAuthority'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -327,143 +328,58 @@ const New = () => {
     fetchTokenAccountsForSelectedRealmGovernances()
   }, [])
 
+  const components: {
+    [key in Instructions]: (props: {
+      index: number
+      governance: ProgramAccount<Governance> | null
+    }) => JSX.Element
+  } = {
+    [Instructions.Transfer]: SplTokenTransfer,
+    [Instructions.ProgramUpgrade]: ProgramUpgrade,
+    [Instructions.SetProgramAuthority]: SetProgramAuthority,
+    [Instructions.CreateAssociatedTokenAccount]: CreateAssociatedTokenAccount,
+    [Instructions.CreateSolendObligationAccount]: CreateObligationAccount,
+    [Instructions.InitSolendObligationAccount]: InitObligationAccount,
+    [Instructions.DepositReserveLiquidityAndObligationCollateral]: DepositReserveLiquidityAndObligationCollateral,
+    [Instructions.RefreshSolendObligation]: RefreshObligation,
+    [Instructions.RefreshSolendReserve]: RefreshReserve,
+    [Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity]: WithdrawObligationCollateralAndRedeemReserveLiquidity,
+    [Instructions.SaberTribecaNewEscrow]: SaberTribecaNewEscrow,
+    [Instructions.SaberTribecaLock]: SaberTribecaLock,
+    [Instructions.SaberTribecaCreateEscrowSbrATA]: SaberTribecaCreateEscrowSbrATA,
+    [Instructions.SaberTribecaCreateGaugeVoter]: SaberTribecaCreateGaugeVoter,
+    [Instructions.SaberTribecaCreateGaugeVote]: SaberTribecaCreateGaugeVote,
+    [Instructions.SaberTribecaGaugeSetVote]: SaberTribecaSetGaugeVote,
+    [Instructions.SaberTribecaPrepareEpochGaugeVoter]: SaberTribecaPrepareEpochGaugeVoter,
+    [Instructions.SaberTribecaCreateEpochGauge]: SaberTribecaCreateEpochGauge,
+    [Instructions.SaberTribecaGaugeCommitVote]: SaberTribecaGaugeCommitVote,
+    [Instructions.AddLiquidityRaydium]: AddLiquidityRaydium,
+    [Instructions.RemoveLiquidityRaydium]: RemoveLiquidityRaydium,
+    [Instructions.InitializeController]: InitializeController,
+    [Instructions.SetRedeemableGlobalSupplyCap]: SetRedeemGlobalSupplyCap,
+    [Instructions.SetMangoDepositoriesRedeemableSoftCap]: SetMangoDepositoriesRedeemableSoftCap,
+    [Instructions.RegisterMangoDepository]: RegisterMangoDepository,
+    [Instructions.DepositInsuranceToMangoDepository]: DepositInsuranceToMangoDepository,
+    [Instructions.WithdrawInsuranceFromMangoDepository]: WithdrawInsuranceFromMangoDepository,
+    [Instructions.Mint]: Mint,
+    [Instructions.Base64]: CustomBase64,
+    [Instructions.None]: Empty,
+    [Instructions.MangoMakeChangeMaxAccounts]: MakeChangeMaxAccounts,
+    [Instructions.Grant]: Grant,
+    [Instructions.Clawback]: Clawback,
+    [Instructions.TokenTransferBetweenInternalGovernanceAccounts]: TokenTransferBetweenInternalGovernanceAccounts,
+    [Instructions.MangoChangeReferralFeeParams]: MakeChangeReferralFeeParams,
+  } as const
+
   const getCurrentInstruction = ({ typeId, idx }) => {
-    switch (typeId) {
-      case Instructions.Transfer:
-        return (
-          <SplTokenTransfer
-            index={idx}
-            governance={governance}
-          ></SplTokenTransfer>
-        )
-      case Instructions.ProgramUpgrade:
-        return (
-          <ProgramUpgrade index={idx} governance={governance}></ProgramUpgrade>
-        )
-      case Instructions.CreateAssociatedTokenAccount:
-        return (
-          <CreateAssociatedTokenAccount index={idx} governance={governance} />
-        )
-      case Instructions.CreateSolendObligationAccount:
-        return <CreateObligationAccount index={idx} governance={governance} />
-      case Instructions.InitSolendObligationAccount:
-        return <InitObligationAccount index={idx} governance={governance} />
-      case Instructions.DepositReserveLiquidityAndObligationCollateral:
-        return (
-          <DepositReserveLiquidityAndObligationCollateral
-            index={idx}
-            governance={governance}
-          />
-        )
-      case Instructions.RefreshSolendObligation:
-        return <RefreshObligation index={idx} governance={governance} />
-      case Instructions.RefreshSolendReserve:
-        return <RefreshReserve index={idx} />
-      case Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity:
-        return (
-          <WithdrawObligationCollateralAndRedeemReserveLiquidity
-            index={idx}
-            governance={governance}
-          />
-        )
-      case Instructions.SaberTribecaNewEscrow:
-        return <SaberTribecaNewEscrow index={idx} governance={governance} />
-      case Instructions.SaberTribecaLock:
-        return <SaberTribecaLock index={idx} governance={governance} />
-      case Instructions.SaberTribecaCreateEscrowSbrATA:
-        return (
-          <SaberTribecaCreateEscrowSbrATA index={idx} governance={governance} />
-        )
-      case Instructions.SaberTribecaCreateGaugeVoter:
-        return (
-          <SaberTribecaCreateGaugeVoter index={idx} governance={governance} />
-        )
-      case Instructions.SaberTribecaCreateGaugeVote:
-        return (
-          <SaberTribecaCreateGaugeVote index={idx} governance={governance} />
-        )
-      case Instructions.SaberTribecaGaugeSetVote:
-        return <SaberTribecaSetGaugeVote index={idx} governance={governance} />
-      case Instructions.SaberTribecaPrepareEpochGaugeVoter:
-        return (
-          <SaberTribecaPrepareEpochGaugeVoter
-            index={idx}
-            governance={governance}
-          />
-        )
-      case Instructions.SaberTribecaCreateEpochGauge:
-        return (
-          <SaberTribecaCreateEpochGauge index={idx} governance={governance} />
-        )
-      case Instructions.SaberTribecaGaugeCommitVote:
-        return (
-          <SaberTribecaGaugeCommitVote index={idx} governance={governance} />
-        )
-      case Instructions.AddLiquidityRaydium:
-        return <AddLiquidityRaydium index={idx} governance={governance} />
-      case Instructions.RemoveLiquidityRaydium:
-        return <RemoveLiquidityRaydium index={idx} governance={governance} />
-      case Instructions.InitializeController:
-        return <InitializeController index={idx} governance={governance} />
-      case Instructions.SetRedeemableGlobalSupplyCap:
-        return <SetRedeemGlobalSupplyCap index={idx} governance={governance} />
-      case Instructions.TokenTransferBetweenInternalGovernanceAccounts:
-        return (
-          <TokenTransferBetweenInternalGovernanceAccounts
-            index={idx}
-            governance={governance}
-          />
-        )
-      case Instructions.SetMangoDepositoriesRedeemableSoftCap:
-        return (
-          <SetMangoDepositoriesRedeemableSoftCap
-            index={idx}
-            governance={governance}
-          />
-        )
-      case Instructions.RegisterMangoDepository:
-        return <RegisterMangoDepository index={idx} governance={governance} />
-      case Instructions.DepositInsuranceToMangoDepository:
-        return (
-          <DepositInsuranceToMangoDepository
-            index={idx}
-            governance={governance}
-          />
-        )
-      case Instructions.WithdrawInsuranceFromMangoDepository:
-        return (
-          <WithdrawInsuranceFromMangoDepository
-            index={idx}
-            governance={governance}
-          />
-        )
-      case Instructions.Mint:
-        return <Mint index={idx} governance={governance}></Mint>
-      case Instructions.Base64:
-        return <CustomBase64 index={idx} governance={governance}></CustomBase64>
-      case Instructions.None:
-        return <Empty index={idx} governance={governance}></Empty>
-      case Instructions.MangoMakeChangeMaxAccounts:
-        return (
-          <MakeChangeMaxAccounts
-            index={idx}
-            governance={governance}
-          ></MakeChangeMaxAccounts>
-        )
-      case Instructions.MangoChangeReferralFeeParams:
-        return (
-          <MakeChangeReferralFeeParams
-            index={idx}
-            governance={governance}
-          ></MakeChangeReferralFeeParams>
-        )
-      case Instructions.Grant:
-        return <Grant index={idx} governance={governance}></Grant>
-      case Instructions.Clawback:
-        return <Clawback index={idx} governance={governance}></Clawback>
-      default:
-        null
-    }
+    const component = components[typeId]
+
+    if (!component) return null
+
+    return component({
+      index: idx,
+      governance,
+    })
   }
 
   return (
