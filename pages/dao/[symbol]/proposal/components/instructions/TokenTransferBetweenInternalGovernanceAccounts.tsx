@@ -129,7 +129,6 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
           return new yup.ValidationError('source and destination are the same')
         }
 
-        // Check that the mint match the sourceAccount mint
         const { mint: mintReceiver } = ownedTokenAccounts!.find(
           ({ pubkey }) => pubkey.toString() === value
         )!
