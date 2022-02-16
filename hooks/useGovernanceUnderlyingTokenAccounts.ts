@@ -79,8 +79,8 @@ export default function useGovernanceUnderlyingTokenAccounts(
   const connection = useWalletStore((state) => state.connection)
 
   const [
-    ownedTokenAccounts,
-    setOwnedTokenAccounts,
+    ownedTokenAccountsInfo,
+    setOwnedTokenAccountsInfo,
   ] = useState<OwnedTokenAccountsInfo | null>(null)
 
   const getOwnedTokenAccountsFn = useCallback(async () => {
@@ -150,10 +150,10 @@ export default function useGovernanceUnderlyingTokenAccounts(
   }, [connection, governancePk])
 
   useEffect(() => {
-    getOwnedTokenAccountsFn().then(setOwnedTokenAccounts)
+    getOwnedTokenAccountsFn().then(setOwnedTokenAccountsInfo)
   }, [getOwnedTokenAccountsFn])
 
   return {
-    ownedTokenAccounts,
+    ownedTokenAccountsInfo,
   }
 }
