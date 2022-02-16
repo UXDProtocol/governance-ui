@@ -41,7 +41,7 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
   const { handleSetInstructions } = useContext(NewProposalContext)
 
   const { ownedTokenAccounts } = useGovernanceUnderlyingTokenAccounts(
-    form.governedAccount?.governance.pubkey ?? null
+    form.governedAccount?.governance.pubkey
   )
 
   const handleSetForm = ({ propertyName, value }) => {
@@ -65,7 +65,8 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
       !wallet?.publicKey ||
       !form.uiAmount ||
       !form.sourceAccount ||
-      !form.receiverAccount
+      !form.receiverAccount ||
+      !ownedTokenAccounts
     ) {
       return {
         serializedInstruction: '',
@@ -74,9 +75,7 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
       }
     }
 
-    const { mintDecimals } = ownedTokenAccounts!.find(({ pubkey }) =>
-      pubkey.equals(form.sourceAccount!)
-    )!
+    const { mintDecimals } = ownedTokenAccounts[form.sourceAccount.toString()]!
 
     const amount = new BigNumber(form.uiAmount)
       .shiftedBy(mintDecimals)
@@ -118,19 +117,16 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
       .string()
       .required('Receiver Account is required')
       .test((value?: string) => {
-        if (!value || !form.sourceAccount) return false
+        if (!value || !form.sourceAccount || !ownedTokenAccounts) return false
 
         if (value === form.sourceAccount.toString()) {
           return new yup.ValidationError('source and destination are the same')
         }
 
-        const { mint: mintReceiver } = ownedTokenAccounts!.find(
-          ({ pubkey }) => pubkey.toString() === value
-        )!
-
-        const { mint: mintSource } = ownedTokenAccounts!.find(({ pubkey }) =>
-          pubkey.equals(form.sourceAccount!)
-        )!
+        const { mint: mintReceiver } = ownedTokenAccounts[value]
+        const { mint: mintSource } = ownedTokenAccounts[
+          form.sourceAccount.toString()
+        ]
 
         const equals = mintSource.equals(mintReceiver)
 

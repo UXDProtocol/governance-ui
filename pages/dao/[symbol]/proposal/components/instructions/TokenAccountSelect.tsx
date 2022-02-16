@@ -1,5 +1,5 @@
 import Select from '@components/inputs/Select'
-import { OwnedTokenAccountInfos } from '@hooks/useGovernanceUnderlyingTokenAccounts'
+import { OwnedTokenAccountsInfo } from '@hooks/useGovernanceUnderlyingTokenAccounts'
 import { PublicKey } from '@solana/web3.js'
 
 const TokenAccountSelect = ({
@@ -13,17 +13,14 @@ const TokenAccountSelect = ({
   value?: string
   onChange: (value: PublicKey) => void
   error: string
-  ownedTokenAccounts: OwnedTokenAccountInfos
+  ownedTokenAccounts: OwnedTokenAccountsInfo
 }) => {
   const getAccountDisplay = (pubkey?: PublicKey) => {
     if (!pubkey) return <div></div>
 
-    const {
-      mint,
-      uiAmount,
-      mintName,
-      isATA,
-    } = ownedTokenAccounts!.find(({ pubkey: pk }) => pk.equals(pubkey!))!
+    const { mint, uiAmount, mintName, isATA } = ownedTokenAccounts[
+      pubkey.toString()
+    ]
 
     return (
       <div className="flex flex-col">
@@ -66,7 +63,7 @@ const TokenAccountSelect = ({
       onChange={onChange}
       error={error}
     >
-      {ownedTokenAccounts.map(({ pubkey }) => (
+      {Object.values(ownedTokenAccounts).map(({ pubkey }) => (
         <Select.Option key={pubkey.toString()} value={pubkey}>
           {getAccountDisplay(pubkey)}
         </Select.Option>

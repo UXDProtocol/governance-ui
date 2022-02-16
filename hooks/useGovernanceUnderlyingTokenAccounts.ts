@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
-import { PublicKey } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
 import { getOwnedTokenAccounts, tryGetMint } from '@utils/tokens'
 import useWalletStore from 'stores/useWalletStore'
 import { SPL_TOKENS } from '@utils/splTokens'
@@ -20,18 +20,68 @@ export type OwnedTokenAccountInfo = {
   isATA: boolean
 }
 
-export type OwnedTokenAccountInfos = OwnedTokenAccountInfo[]
+export type OwnedTokenAccountsInfo = {
+  [key: string]: OwnedTokenAccountInfo
+}
+
+function getSplTokenNameFromConstant(tokenMint: PublicKey): string {
+  return (
+    Object.values(SPL_TOKENS).find(({ mint }) => mint.equals(tokenMint))
+      ?.name ?? 'Unknown'
+  )
+}
+
+async function getMultipleMintsInfo(
+  mints: PublicKey[],
+  connection: Connection
+) {
+  const mintInfos = await Promise.all(
+    mints.map((mint) => tryGetMint(connection, mint))
+  )
+
+  return mintInfos.reduce(
+    (mintInfos, mintInfo, index) => {
+      if (!mintInfo) {
+        throw new Error(
+          `Cannot load mint info about ${mints[index].toString()}`
+        )
+      }
+
+      const {
+        publicKey,
+        account: { decimals },
+      } = mintInfo
+
+      return {
+        ...mintInfos,
+
+        [publicKey.toString()]: {
+          mint: publicKey,
+          decimals,
+          name: getSplTokenNameFromConstant(publicKey),
+        },
+      }
+    },
+    {} as {
+      [key: string]: {
+        mint: PublicKey
+        decimals: number
+        name: string
+      }
+    }
+  )
+}
 
 // Loads all the token accounts related to the governance public key
 export default function useGovernanceUnderlyingTokenAccounts(
-  governancePk: PublicKey | null
+  governancePk?: PublicKey
 ) {
   const connection = useWalletStore((state) => state.connection)
 
   const [
     ownedTokenAccounts,
     setOwnedTokenAccounts,
-  ] = useState<OwnedTokenAccountInfos | null>(null)
+  ] = useState<OwnedTokenAccountsInfo | null>(null)
 
   const getOwnedTokenAccountsFn = useCallback(async () => {
     if (!connection || !governancePk) return null
@@ -41,63 +91,62 @@ export default function useGovernanceUnderlyingTokenAccounts(
       governancePk
     )
 
-    const ownedTokenAccountInfos = accounts.map((x) => ({
-      pubkey: x.publicKey,
-      mint: x.account.mint,
-      amount: new BN(x.account.amount.toString()),
-    }))
+    // Create a map with all token accounts info
+    const ownedTokenAccountsInfo = accounts.reduce(
+      (ownedTokenAccountsInfo, { publicKey, account: { mint, amount } }) => ({
+        ...ownedTokenAccountsInfo,
 
-    // Compute a list of mints related to token accounts
-    const mints = Array.from(
-      ownedTokenAccountInfos.reduce((tmp, x) => tmp.add(x.mint), new Set())
+        [publicKey.toString()]: {
+          pubkey: publicKey,
+          amount: new BN(amount.toString()),
+          mint,
+        },
+      }),
+      {} as {
+        [key: string]: Pick<OwnedTokenAccountInfo, 'pubkey' | 'amount' | 'mint'>
+      }
+    )
+
+    const uniqueMintList = Array.from(
+      Object.values(ownedTokenAccountsInfo).reduce(
+        (tmp, { mint }) => tmp.add(mint),
+        new Set()
+      )
     ) as PublicKey[]
 
-    // load information about the mints
-    const mintInfos = (
-      await Promise.all(
-        mints.map((mint) => tryGetMint(connection.current, mint))
-      )
-    ).map((mintInfo, index) => {
-      if (!mintInfo) {
-        throw new Error(
-          `Cannot load mint info about ${mints[index].toString()}`
-        )
-      }
+    // Get decimal/name information about the mint
+    const mintsInfo = await getMultipleMintsInfo(
+      uniqueMintList,
+      connection.current
+    )
 
-      return {
-        mint: mintInfo.publicKey,
-        decimals: mintInfo.account.decimals,
-        name:
-          Object.values(SPL_TOKENS).find(({ mint }) =>
-            mint.equals(mintInfo.publicKey)
-          )?.name ?? 'Unknown',
-      }
-    })
+    // Merge mint info with ownedTokenAccountsInfo
+    return Object.entries(ownedTokenAccountsInfo).reduce(
+      (ownedTokenAccountsInfo, [pubkeyString, ownedTokenAccountInfo]) => {
+        const { decimals: mintDecimals, name: mintName } = mintsInfo[
+          ownedTokenAccountInfo.mint.toString()
+        ]
 
-    // format token account infos
-    return ownedTokenAccountInfos.map((accountInfo) => {
-      const mintDecimals = mintInfos.find(
-        ({ mint }) => accountInfo?.mint && mint.equals(accountInfo.mint)
-      )!.decimals
+        const [ata] = findATAAddrSync(governancePk, ownedTokenAccountInfo.mint)
 
-      const mintName =
-        Object.values(SPL_TOKENS).find(({ mint }) =>
-          mint.equals(accountInfo.mint)
-        )?.name ?? 'Unknown'
+        return {
+          ...ownedTokenAccountsInfo,
 
-      const [ata] = findATAAddrSync(governancePk, accountInfo.mint)
+          [pubkeyString]: {
+            ...ownedTokenAccountInfo,
 
-      return {
-        ...accountInfo,
-        mintDecimals,
-        mintName,
-        uiAmount: new BigNumber(accountInfo.amount.toString())
-          .shiftedBy(-mintDecimals)
-          .toNumber(),
+            mintDecimals,
+            mintName,
+            uiAmount: new BigNumber(ownedTokenAccountInfo.amount.toString())
+              .shiftedBy(-mintDecimals)
+              .toNumber(),
 
-        isATA: ata.equals(accountInfo.pubkey),
-      }
-    })
+            isATA: ata.equals(ownedTokenAccountInfo.pubkey),
+          },
+        }
+      },
+      {} as OwnedTokenAccountsInfo
+    )
   }, [connection, governancePk])
 
   useEffect(() => {
