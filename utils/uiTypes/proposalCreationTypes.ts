@@ -95,6 +95,7 @@ export interface RemoveLiquidityRaydiumForm {
   liquidityPool: string
   amountIn: number
 }
+
 export const programUpgradeFormNameOf = getNameOf<ProgramUpgradeForm>()
 
 export interface MangoMakeChangeMaxAccountsForm {
@@ -156,6 +157,13 @@ export interface RefreshReserveForm {
   mintName?: SupportedMintName
 }
 
+export interface TokenTransferBetweenInternalGovernanceAccountsForm {
+  governedAccount?: GovernedMultiTypeAccount
+  sourceAccount?: PublicKey
+  receiverAccount?: PublicKey
+  uiAmount?: number
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -182,6 +190,7 @@ export enum Instructions {
   RefreshSolendReserve,
   Grant,
   Clawback,
+  TokenTransferBetweenInternalGovernanceAccounts,
 }
 
 export interface InitializeControllerForm {

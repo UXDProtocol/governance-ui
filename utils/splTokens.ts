@@ -12,6 +12,7 @@ export type SplTokenInformation = {
 export type SupportedSplTokenNames =
   | 'USDC'
   | 'WSOL'
+  | 'SBR'
   | SolendSupportedCollateralMintNames
 
 export const SPL_TOKENS: {
@@ -27,6 +28,12 @@ export const SPL_TOKENS: {
     name: 'Wrapped SOL',
     mint: new PublicKey('So11111111111111111111111111111111111111112'),
     decimals: 9,
+  },
+
+  SBR: {
+    name: 'Saber SBR',
+    mint: new PublicKey('Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1'),
+    decimals: 6,
   },
 
   ...SolendConfiguration.getSupportedCollateralMintsInformation(),

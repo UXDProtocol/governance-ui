@@ -66,6 +66,7 @@ import SetMangoDepositoriesRedeemableSoftCap from './components/instructions/UXD
 import SetRedeemGlobalSupplyCap from './components/instructions/UXD/SetRedeemGlobalSupplyCap'
 import WithdrawInsuranceFromMangoDepository from './components/instructions/UXD/WithdrawInsuranceFromMangoDepository'
 import VoteBySwitch from './components/VoteBySwitch'
+import TokenTransferBetweenInternalGovernanceAccounts from './components/instructions/TokenTransferBetweenInternalGovernanceAccounts'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -364,6 +365,13 @@ const New = () => {
         return <InitializeController index={idx} governance={governance} />
       case Instructions.SetRedeemableGlobalSupplyCap:
         return <SetRedeemGlobalSupplyCap index={idx} governance={governance} />
+      case Instructions.TokenTransferBetweenInternalGovernanceAccounts:
+        return (
+          <TokenTransferBetweenInternalGovernanceAccounts
+            index={idx}
+            governance={governance}
+          />
+        )
       case Instructions.SetMangoDepositoriesRedeemableSoftCap:
         return (
           <SetMangoDepositoriesRedeemableSoftCap
