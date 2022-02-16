@@ -14,16 +14,19 @@ const TokenAccountSelect = ({
   onChange: (value: PublicKey) => void
   error: string
   ownedTokenAccounts: OwnedTokenAccountInfos
-}) => (
-  <Select
-    label={label}
-    value={value}
-    placeholder="Please select..."
-    onChange={onChange}
-    error={error}
-  >
-    {ownedTokenAccounts.map(({ pubkey, mint, uiAmount, mintName, isATA }) => (
-      <Select.Option key={pubkey.toString()} value={pubkey}>
+}) => {
+  const getAccountDisplay = (pubkey?: PublicKey) => {
+    if (!pubkey) return <div></div>
+
+    const {
+      mint,
+      uiAmount,
+      mintName,
+      isATA,
+    } = ownedTokenAccounts!.find(({ pubkey: pk }) => pk.equals(pubkey!))!
+
+    return (
+      <>
         <div className="flex flex-col">
           <div className="mb-0.5">{pubkey.toString()}</div>
 
@@ -50,9 +53,30 @@ const TokenAccountSelect = ({
             </div>
           </div>
         </div>
-      </Select.Option>
-    ))}
-  </Select>
-)
+      </>
+    )
+  }
+
+  // ,
+
+  return (
+    <Select
+      label={label}
+      value={value}
+      componentLabel={getAccountDisplay(
+        value ? new PublicKey(value) : undefined
+      )}
+      placeholder="Please select..."
+      onChange={onChange}
+      error={error}
+    >
+      {ownedTokenAccounts.map(({ pubkey }) => (
+        <Select.Option key={pubkey.toString()} value={pubkey}>
+          {getAccountDisplay(pubkey)}
+        </Select.Option>
+      ))}
+    </Select>
+  )
+}
 
 export default TokenAccountSelect
