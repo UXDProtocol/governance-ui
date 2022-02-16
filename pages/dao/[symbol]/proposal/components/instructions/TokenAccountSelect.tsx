@@ -26,38 +26,34 @@ const TokenAccountSelect = ({
     } = ownedTokenAccounts!.find(({ pubkey: pk }) => pk.equals(pubkey!))!
 
     return (
-      <>
-        <div className="flex flex-col">
-          <div className="mb-0.5">{pubkey.toString()}</div>
+      <div className="flex flex-col">
+        <div className="mb-0.5">{pubkey.toString()}</div>
 
-          <div className="flex flex-col">
-            <div className="space-y-0.5 text-xs text-fgd-3">
-              Mint Name: {mintName}
-            </div>
-            <div className="space-y-0.5 text-xs text-fgd-3">
-              UI Balance: {uiAmount}
-            </div>
-            <div className="space-y-0.5 text-xs text-fgd-3 mb-0.5">
-              Mint: {mint.toString()}
-            </div>
-            <div>
-              {isATA ? (
-                <span className="text-xs text-green">
-                  Associated Token Account
-                </span>
-              ) : (
-                <span className="text-xs text-red">
-                  Not an Associated Token Account
-                </span>
-              )}
-            </div>
+        <div className="flex flex-col">
+          <div className="space-y-0.5 text-xs text-fgd-3">
+            Mint Name: {mintName}
+          </div>
+          <div className="space-y-0.5 text-xs text-fgd-3">
+            UI Balance: {uiAmount}
+          </div>
+          <div className="space-y-0.5 text-xs text-fgd-3 mb-0.5">
+            Mint: {mint.toString()}
+          </div>
+          <div>
+            {isATA ? (
+              <span className="text-xs text-green">
+                Associated Token Account
+              </span>
+            ) : (
+              <span className="text-xs text-red">
+                Not an Associated Token Account
+              </span>
+            )}
           </div>
         </div>
-      </>
+      </div>
     )
   }
-
-  // ,
 
   return (
     <Select
