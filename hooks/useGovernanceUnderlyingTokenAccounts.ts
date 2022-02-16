@@ -47,18 +47,38 @@ export default function useGovernanceUnderlyingTokenAccounts(
       amount: new BN(x.account.amount.toString()),
     }))
 
+    // Compute a list of mints related to token accounts
     const mints = Array.from(
       ownedTokenAccountInfos.reduce((tmp, x) => tmp.add(x.mint), new Set())
     ) as PublicKey[]
 
-    const mintInfos = await Promise.all(
-      mints.map((mint) => tryGetMint(connection.current, mint))
-    )
+    // load information about the mints
+    const mintInfos = (
+      await Promise.all(
+        mints.map((mint) => tryGetMint(connection.current, mint))
+      )
+    ).map((mintInfo, index) => {
+      if (!mintInfo) {
+        throw new Error(
+          `Cannot load mint info about ${mints[index].toString()}`
+        )
+      }
 
+      return {
+        mint: mintInfo.publicKey,
+        decimals: mintInfo.account.decimals,
+        name:
+          Object.values(SPL_TOKENS).find(({ mint }) =>
+            mint.equals(mintInfo.publicKey)
+          )?.name ?? 'Unknown',
+      }
+    })
+
+    // format token account infos
     return ownedTokenAccountInfos.map((accountInfo) => {
-      const mintDecimals = mintInfos.find((mintInfo) =>
-        mintInfo?.publicKey.equals(accountInfo.mint)
-      )!.account.decimals
+      const mintDecimals = mintInfos.find(
+        ({ mint }) => accountInfo?.mint && mint.equals(accountInfo.mint)
+      )!.decimals
 
       const mintName =
         Object.values(SPL_TOKENS).find(({ mint }) =>
