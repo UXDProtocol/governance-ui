@@ -7,18 +7,22 @@ const TokenAccountSelect = ({
   value,
   onChange,
   error,
-  ownedTokenAccounts,
+  ownedTokenAccountsInfo,
 }: {
   label: string
   value?: string
   onChange: (value: PublicKey) => void
   error: string
-  ownedTokenAccounts: OwnedTokenAccountsInfo
+  ownedTokenAccountsInfo?: OwnedTokenAccountsInfo
 }) => {
+  if (!ownedTokenAccountsInfo) {
+    return <></>
+  }
+
   const getAccountDisplay = (pubkey?: PublicKey) => {
     if (!pubkey) return <div></div>
 
-    const { mint, uiAmount, mintName, isATA } = ownedTokenAccounts[
+    const { mint, uiAmount, mintName, isATA } = ownedTokenAccountsInfo[
       pubkey.toString()
     ]
 
@@ -63,7 +67,7 @@ const TokenAccountSelect = ({
       onChange={onChange}
       error={error}
     >
-      {Object.values(ownedTokenAccounts).map(({ pubkey }) => (
+      {Object.values(ownedTokenAccountsInfo).map(({ pubkey }) => (
         <Select.Option key={pubkey.toString()} value={pubkey}>
           {getAccountDisplay(pubkey)}
         </Select.Option>
