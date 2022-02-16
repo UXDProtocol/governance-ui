@@ -1,6 +1,7 @@
+import { PublicKey } from '@solana/web3.js'
+
 import Select from '@components/inputs/Select'
 import { OwnedTokenAccountsInfo } from '@hooks/useGovernanceUnderlyingTokenAccounts'
-import { PublicKey } from '@solana/web3.js'
 
 const TokenAccountSelect = ({
   label,

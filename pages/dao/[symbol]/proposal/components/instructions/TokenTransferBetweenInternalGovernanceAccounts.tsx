@@ -1,24 +1,24 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React, { useContext, useEffect, useState } from 'react'
 import * as yup from 'yup'
-import { isFormValid } from '@utils/formValidation'
-import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import BigNumber from 'bignumber.js'
-import {
-  UiInstruction,
-  TokenTransferBetweenInternalGovernanceAccountsForm,
-} from '@utils/uiTypes/proposalCreationTypes'
-import { NewProposalContext } from '../../new'
-import useWalletStore from 'stores/useWalletStore'
+import React, { useContext, useEffect, useState } from 'react'
+import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import {
   ProgramAccount,
   serializeInstructionToBase64,
   Governance,
 } from '@solana/spl-governance'
-import GovernedAccountSelect from '../GovernedAccountSelect'
+
+import { isFormValid } from '@utils/formValidation'
+import {
+  UiInstruction,
+  TokenTransferBetweenInternalGovernanceAccountsForm,
+} from '@utils/uiTypes/proposalCreationTypes'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import Input from '@components/inputs/Input'
 import useGovernanceUnderlyingTokenAccounts from '@hooks/useGovernanceUnderlyingTokenAccounts'
+import useWalletStore from 'stores/useWalletStore'
+import { NewProposalContext } from '../../new'
+import GovernedAccountSelect from '../GovernedAccountSelect'
 import TokenAccountSelect from './TokenAccountSelect'
 
 const TokenTransferBetweenInternalGovernanceAccounts = ({
