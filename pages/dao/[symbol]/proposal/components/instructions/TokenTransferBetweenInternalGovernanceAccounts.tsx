@@ -32,11 +32,6 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
   const wallet = useWalletStore((s) => s.current)
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
 
-  // Hardcoded gate used to be clear about what cluster is supported for now
-  if (connection.cluster !== 'mainnet') {
-    return <>This instruction does not support {connection.cluster}</>
-  }
-
   const shouldBeGoverned = index !== 0 && governance
   const [
     form,
