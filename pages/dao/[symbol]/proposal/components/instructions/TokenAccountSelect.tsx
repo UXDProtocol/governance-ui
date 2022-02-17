@@ -17,19 +17,21 @@ const TokenAccountSelect = ({
   ownedTokenAccountsInfo?: OwnedTokenAccountsInfo
 }) => {
   if (!ownedTokenAccountsInfo) {
-    return <></>
+    return null
   }
 
   const getAccountDisplay = (pubkey?: PublicKey) => {
-    if (!pubkey) return <div></div>
+    if (!pubkey) return null
+
+    const pubkeyString = pubkey.toString()
 
     const { mint, uiAmount, mintName, isATA } = ownedTokenAccountsInfo[
-      pubkey.toString()
+      pubkeyString
     ]
 
     return (
       <div className="flex flex-col">
-        <div className="mb-0.5">{pubkey.toString()}</div>
+        <div className="mb-0.5">{pubkeyString}</div>
 
         <div className="flex flex-col">
           <div className="space-y-0.5 text-xs text-fgd-3">
