@@ -1,11 +1,9 @@
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown/react-markdown.min'
 import { ArrowLeftIcon, ExternalLinkIcon } from '@heroicons/react/outline'
-import { ProposalState } from '@solana/spl-governance'
 
 import ProposalActionsPanel from '@components/ProposalActions'
 import TokenBalanceCardWrapper from '@components/TokenBalance/TokenBalanceCardWrapper'
-import useProposalSignature from '@hooks/useProposalSignature'
 
 import ApprovalQuorum from 'components/ApprovalQuorum'
 import DiscussionPanel from 'components/chat/DiscussionPanel'
@@ -32,7 +30,6 @@ const Proposal = () => {
     relativeNoVotes,
     relativeYesVotes,
   } = useProposalVotes(proposal?.account)
-  const { proposalSignature } = useProposalSignature()
 
   return (
     <div className="grid grid-cols-12 gap-4">
@@ -64,27 +61,11 @@ const Proposal = () => {
             <div className="border-b border-fgd-4 py-4">
               <div className="flex items-center justify-between mb-1">
                 <h1 className="mr-2 break-all">{proposal?.account.name}</h1>
-                {proposal.account.state === ProposalState.Completed &&
-                proposalSignature ? (
-                  <a
-                    href={`https://explorer.solana.com/tx/${proposalSignature}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ProposalStateBadge
-                      proposalPk={proposal.pubkey}
-                      proposal={proposal.account}
-                      open={true}
-                    />
-                  </a>
-                ) : (
-                  <ProposalStateBadge
-                    proposalPk={proposal.pubkey}
-                    proposal={proposal.account}
-                    open={true}
-                  />
-                )}
+                <ProposalStateBadge
+                  proposalPk={proposal.pubkey}
+                  proposal={proposal.account}
+                  open={true}
+                />
               </div>
               <ProposalTimeStatus proposal={proposal?.account} />
             </div>
