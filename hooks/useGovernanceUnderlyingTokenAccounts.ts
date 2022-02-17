@@ -107,12 +107,9 @@ export default function useGovernanceUnderlyingTokenAccounts(
       }
     )
 
-    const uniqueMintList = Array.from(
-      Object.values(ownedTokenAccountsInfo).reduce(
-        (tmp, { mint }) => tmp.add(mint),
-        new Set()
-      )
-    ) as PublicKey[]
+    const uniqueMintList = [
+      ...new Set(Object.values(ownedTokenAccountsInfo).map(({ mint }) => mint)),
+    ]
 
     // Get decimal/name information about the mint
     const mintsInfo = await getMultipleMintsInfo(
@@ -122,26 +119,26 @@ export default function useGovernanceUnderlyingTokenAccounts(
 
     // Merge mint info with ownedTokenAccountsInfo
     return Object.entries(ownedTokenAccountsInfo).reduce(
-      (ownedTokenAccountsInfo, [pubkeyString, ownedTokenAccountInfo]) => {
+      (accounts, [pubkeyString, account]) => {
         const { decimals: mintDecimals, name: mintName } = mintsInfo[
-          ownedTokenAccountInfo.mint.toString()
+          account.mint.toString()
         ]
 
-        const [ata] = findATAAddrSync(governancePk, ownedTokenAccountInfo.mint)
+        const [ata] = findATAAddrSync(governancePk, account.mint)
 
         return {
-          ...ownedTokenAccountsInfo,
+          ...accounts,
 
           [pubkeyString]: {
-            ...ownedTokenAccountInfo,
+            ...account,
 
             mintDecimals,
             mintName,
-            uiAmount: new BigNumber(ownedTokenAccountInfo.amount.toString())
+            uiAmount: new BigNumber(account.amount.toString())
               .shiftedBy(-mintDecimals)
               .toNumber(),
 
-            isATA: ata.equals(ownedTokenAccountInfo.pubkey),
+            isATA: ata.equals(account.pubkey),
           },
         }
       },
