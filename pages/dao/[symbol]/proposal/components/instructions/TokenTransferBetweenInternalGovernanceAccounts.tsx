@@ -43,8 +43,12 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
 
+  const pubkey = form.governedAccount
+    ? getGovernedAccountPublicKey(form.governedAccount)
+    : null
+
   const { ownedTokenAccountsInfo } = useGovernanceUnderlyingTokenAccounts(
-    form.governedAccount?.governance.pubkey
+    pubkey ?? undefined
   )
 
   const handleSetForm = ({ propertyName, value }) => {
@@ -79,8 +83,6 @@ const TokenTransferBetweenInternalGovernanceAccounts = ({
     ) {
       return invalid
     }
-
-    const pubkey = getGovernedAccountPublicKey(form.governedAccount)
 
     if (!pubkey) {
       return invalid

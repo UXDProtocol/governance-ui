@@ -78,7 +78,8 @@ export default function useGovernedMultiTypeAccounts() {
         case GovernanceAccountType.TokenGovernanceV2:
           return governedAccount.isSol
             ? governedAccount.transferAddress
-            : governedAccount.token?.publicKey
+            : // We deal with the owner of the account
+              governedAccount.governance.pubkey
         case GovernanceAccountType.ProgramGovernanceV1:
         case GovernanceAccountType.ProgramGovernanceV2:
           return governedAccount.governance.account.governedAccount
