@@ -41,13 +41,10 @@ export function ExecuteInstructionButton({
   const connection = useWalletStore((s) => s.connection)
   const fetchRealm = useWalletStore((s) => s.actions.fetchRealm)
   const connected = useWalletStore((s) => s.connected)
-  const [txLink, setTxLink] = useState('')
   const [currentSlot, setCurrentSlot] = useState(0)
-
   const { transactionSignature } = useTransactionSignature(
     proposalInstruction.pubkey
   )
-  console.log('transactionSignature ===', transactionSignature)
   const canExecuteAt = proposal?.account.votingCompletedAt
     ? proposal.account.votingCompletedAt.toNumber() + 1
     : 0
@@ -74,15 +71,6 @@ export function ExecuteInstructionButton({
     }
   }, [ineligibleToSee, rpcContext.connection, currentSlot])
 
-  useEffect(() => {
-    if (!transactionSignature) return
-    setTxLink(`https://explorer.solana.com/tx/${transactionSignature}`)
-  }, [transactionSignature, proposalInstruction.pubkey])
-
-  useEffect(() => {
-    //do nothing
-  }, [txLink])
-
   const onExecuteInstruction = async () => {
     setPlaying(PlayState.Playing)
 
@@ -99,16 +87,15 @@ export function ExecuteInstructionButton({
 
     setPlaying(PlayState.Played)
   }
-  console.debug('txLink', txLink)
   if (
     proposalInstruction.account.executionStatus ===
     InstructionExecutionStatus.Success
   ) {
     return (
       <Tooltip content="instruction executed successfully">
-        {txLink ? (
+        {transactionSignature ? (
           <a
-            href={txLink}
+            href={`https://explorer.solana.com/tx/${transactionSignature}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
@@ -165,14 +152,5 @@ export function ExecuteInstructionButton({
     )
   }
 
-  return (
-    <a
-      href={txLink}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <CheckCircleIcon className="h-5 ml-2 text-green w-5" key="played" />
-    </a>
-  )
+  return <CheckCircleIcon className="h-5 ml-2 text-green w-5" key="played" />
 }
