@@ -13,6 +13,7 @@ export type SupportedSplTokenNames =
   | 'USDC'
   | 'WSOL'
   | 'SBR'
+  | 'UXP'
   | SolendSupportedCollateralMintNames
 
 export const SPL_TOKENS: {
@@ -34,6 +35,12 @@ export const SPL_TOKENS: {
     name: 'Saber SBR',
     mint: new PublicKey('Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1'),
     decimals: 6,
+  },
+
+  UXP: {
+    name: 'UXP',
+    mint: new PublicKey('UXPhBoR3qG4UCiGNJfV7MqhHyFqKN68g45GoYvAeL2M'),
+    decimals: 9,
   },
 
   ...SolendConfiguration.getSupportedCollateralMintsInformation(),
