@@ -97,7 +97,7 @@ export function ExecuteInstructionButton({
           <a
             href={`https://explorer.solana.com/tx/${transactionSignature}`}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
           >
             <CheckCircleIcon className="h-5 ml-2 text-green w-5" />
