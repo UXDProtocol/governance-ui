@@ -8,24 +8,20 @@ const useTransactionSignature = (address?: PublicKey) => {
   useEffect(() => {
     async function getSignature() {
       if (!address) return
-      let transactions = await connection.current.getConfirmedSignaturesForAddress2(
+      const transactions = await connection.current.getConfirmedSignaturesForAddress2(
         address,
         { limit: 1 },
         'finalized'
       )
-      if (!transactions[0]?.signature) {
-        transactions = await connection.current.getConfirmedSignaturesForAddress2(
-          address,
-          { limit: 1 },
-          'finalized'
+
+      if (!transactions[0]?.signature)
+        throw new Error(
+          `could not find tx signature for proposal itx ${address.toBase58()}`
         )
-        if (!transactions[0]?.signature)
-          throw new Error(
-            `could not find tx signature for proposal itx ${address.toBase58()}`
-          )
-      }
+
       setTransactionSignature(transactions[0]?.signature)
     }
+
     getSignature().catch((e) => console.warn(e.message))
   }, [connection, address])
 
