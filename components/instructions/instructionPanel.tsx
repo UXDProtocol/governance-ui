@@ -56,10 +56,6 @@ export function InstructionPanel() {
     }
   }, [ineligibleToSee, connection, currentSlot])
 
-  if (Object.values(instructions).length === 0) {
-    return null
-  }
-
   const proposalInstructions = Object.values(instructions).sort(
     (i1, i2) => i1.account.instructionIndex - i2.account.instructionIndex
   )
@@ -69,6 +65,10 @@ export function InstructionPanel() {
       ? PlayState.Played
       : PlayState.Unplayed
   )
+
+  if (Object.values(instructions).length === 0) {
+    return null
+  }
 
   return (
     <div>

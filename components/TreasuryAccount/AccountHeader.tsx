@@ -9,11 +9,12 @@ const AccountHeader = () => {
   const currentAccount = useTreasuryAccountStore(
     (s) => s.compact.currentAccount
   )
+
+  const nfts = useTreasuryAccountStore((s) => s.governanceNfts)
+
   const nftsCount =
     currentAccount?.governance && currentAccount.isNft
-      ? useTreasuryAccountStore((s) => s.governanceNfts)[
-          currentAccount?.governance?.pubkey.toBase58()
-        ]?.length
+      ? nfts[currentAccount?.governance?.pubkey.toBase58()]?.length
       : 0
   const isNFT = currentAccount?.isNft
   const tokenInfo = useTreasuryAccountStore((s) => s.compact.tokenInfo)

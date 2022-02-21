@@ -2,7 +2,7 @@ import useRealm from '@hooks/useRealm'
 import { useRouter } from 'next/router'
 import LockTokensAccount from 'VoteStakeRegistry/components/Account/LockTokensAccount'
 
-const account = () => {
+const useAccount = () => {
   const router = useRouter()
   const { realm } = useRealm()
   const tokenOwnerRecordPk = router?.query?.tokenOwnerRecordPk
@@ -20,4 +20,4 @@ const account = () => {
   return getAccountView()
 }
 
-export default account
+export default useAccount

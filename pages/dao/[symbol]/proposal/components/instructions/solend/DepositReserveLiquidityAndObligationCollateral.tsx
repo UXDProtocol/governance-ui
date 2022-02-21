@@ -38,11 +38,6 @@ const DepositReserveLiquidityAndObligationCollateral = ({
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
 
-  // Hardcoded gate used to be clear about what cluster is supported for now
-  if (connection.cluster !== 'mainnet') {
-    return <>This instruction does not support {connection.cluster}</>
-  }
-
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
   const [
@@ -131,6 +126,11 @@ const DepositReserveLiquidityAndObligationCollateral = ({
       .moreThan(0, 'Amount should be more than 0')
       .required('Amount is required'),
   })
+
+  // Hardcoded gate used to be clear about what cluster is supported for now
+  if (connection.cluster !== 'mainnet') {
+    return <>This instruction does not support {connection.cluster}</>
+  }
 
   return (
     <>

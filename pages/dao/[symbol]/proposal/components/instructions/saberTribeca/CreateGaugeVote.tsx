@@ -31,11 +31,6 @@ const CreateGaugeVote = ({
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
   const { gauges, programs } = useSaberTribecaGauge()
 
-  // Hardcoded gate used to be clear about what cluster is supported for now
-  if (connection.cluster !== 'mainnet') {
-    return <>This instruction does not support {connection.cluster}</>
-  }
-
   const shouldBeGoverned = index !== 0 && governance
   const [form, setForm] = useState<SaberTribecaCreateGaugeVoteForm>({})
   const [formErrors, setFormErrors] = useState({})
@@ -95,6 +90,11 @@ const CreateGaugeVote = ({
       index
     )
   }, [form])
+
+  // Hardcoded gate used to be clear about what cluster is supported for now
+  if (connection.cluster !== 'mainnet') {
+    return <>This instruction does not support {connection.cluster}</>
+  }
 
   const schema = yup.object().shape({
     governedAccount: yup

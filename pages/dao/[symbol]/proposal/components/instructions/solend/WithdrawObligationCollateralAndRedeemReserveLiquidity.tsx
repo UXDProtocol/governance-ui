@@ -36,11 +36,6 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   const { realmInfo } = useRealm()
   const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
 
-  // Hardcoded gate used to be clear about what cluster is supported for now
-  if (connection.cluster !== 'mainnet') {
-    return <>This instruction does not support {connection.cluster}</>
-  }
-
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
   const [
@@ -117,6 +112,11 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       index
     )
   }, [form])
+
+  // Hardcoded gate used to be clear about what cluster is supported for now
+  if (connection.cluster !== 'mainnet') {
+    return <>This instruction does not support {connection.cluster}</>
+  }
 
   const schema = yup.object().shape({
     governedAccount: yup

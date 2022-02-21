@@ -22,7 +22,7 @@ import { accountsToPubkeyMap } from '@tools/sdk/accounts'
 import { fmtMintAmount } from '@tools/sdk/units'
 import { notify } from '@utils/notifications'
 import tokenService from '@utils/services/token'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import useMembersListStore from 'stores/useMembersStore'
 import useWalletStore from 'stores/useWalletStore'
 import { ViewState, WalletTokenRecordWithProposal } from './types'
@@ -52,18 +52,25 @@ const MemberOverview = () => {
     ? tokenService.getTokenInfo(realm?.account.communityMint.toBase58())?.symbol
     : ''
   const totalVotes = votesCasted
-  const communityAmount =
-    communityVotes && !communityVotes.isZero()
-      ? useMemo(() => fmtMintAmount(mint, communityVotes), [
-          member!.walletAddress,
-        ])
-      : null
-  const councilAmount =
-    councilVotes && !councilVotes.isZero()
-      ? useMemo(() => fmtMintAmount(councilMint, councilVotes), [
-          member!.walletAddress,
-        ])
-      : null
+
+  const getCommunityAmount = useCallback(() => {
+    if (communityVotes && !communityVotes.isZero()) {
+      return fmtMintAmount(mint, communityVotes)
+    }
+
+    return null
+  }, [communityVotes, mint])
+
+  const getCouncilAmount = useCallback(() => {
+    if (councilVotes && !councilVotes.isZero()) {
+      return fmtMintAmount(councilMint, councilVotes)
+    }
+
+    return null
+  }, [councilMint, councilVotes])
+
+  const communityAmount = getCommunityAmount()
+  const councilAmount = getCouncilAmount()
 
   const handleGoBackToMainView = async () => {
     setCurrentCompactView(ViewState.MainView)
