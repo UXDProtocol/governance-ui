@@ -20,6 +20,7 @@ import { ATA_PROGRAM_INSTRUCTIONS } from './programs/associatedTokenAccount'
 import { SYSTEM_INSTRUCTIONS } from './programs/system'
 import { VOTE_STAKE_REGISTRY_INSTRUCTIONS } from './programs/voteStakeRegistry'
 import { MARINADE_INSTRUCTIONS } from './programs/marinade'
+import { SABER_TRIBECA_PROGRAM_INSTRUCTIONS } from './programs/saberTribeca'
 /**
  * Default governance program id instance
  */
@@ -161,6 +162,7 @@ export const INSTRUCTION_DESCRIPTORS = {
   ...MARINADE_INSTRUCTIONS,
   ...SYSTEM_INSTRUCTIONS,
   ...VOTE_STAKE_REGISTRY_INSTRUCTIONS,
+  ...SABER_TRIBECA_PROGRAM_INSTRUCTIONS,
 }
 
 export async function getInstructionDescriptor(

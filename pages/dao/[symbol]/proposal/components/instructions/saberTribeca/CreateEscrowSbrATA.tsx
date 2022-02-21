@@ -27,7 +27,10 @@ const CreateEscrowSbrATA = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
 
-  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
+  const {
+    governedMultiTypeAccounts,
+    getGovernedAccountPublicKey,
+  } = useGovernedMultiTypeAccounts()
   const { lockerData } = useSaberTribecaLockerData()
 
   const shouldBeGoverned = index !== 0 && governance
@@ -49,6 +52,12 @@ const CreateEscrowSbrATA = ({
   async function getInstruction(): Promise<UiInstruction> {
     const isValid = await validateInstruction()
 
+    const invalid = {
+      serializedInstruction: '',
+      isValid: false,
+      governance: form.governedAccount?.governance,
+    }
+
     if (
       !connection ||
       !isValid ||
@@ -56,17 +65,17 @@ const CreateEscrowSbrATA = ({
       !wallet?.publicKey ||
       !lockerData
     ) {
-      return {
-        serializedInstruction: '',
-        isValid: false,
-        governance: form.governedAccount?.governance,
-      }
+      return invalid
     }
+
+    const pubkey = getGovernedAccountPublicKey(form.governedAccount)
+
+    if (!pubkey) return invalid
 
     const tx = await createEscrowATAInstruction({
       lockerData,
       payer: wallet.publicKey,
-      authority: form.governedAccount.governance.pubkey,
+      authority: pubkey,
     })
 
     return {

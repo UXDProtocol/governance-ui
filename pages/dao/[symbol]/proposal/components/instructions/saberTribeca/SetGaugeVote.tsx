@@ -29,7 +29,10 @@ const SetGaugeVote = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
 
-  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
+  const {
+    governedMultiTypeAccounts,
+    getGovernedAccountPublicKey,
+  } = useGovernedMultiTypeAccounts()
   const { gauges, programs } = useSaberTribecaGauge()
 
   const shouldBeGoverned = index !== 0 && governance
@@ -51,6 +54,12 @@ const SetGaugeVote = ({
   async function getInstruction(): Promise<UiInstruction> {
     const isValid = await validateInstruction()
 
+    const invalid = {
+      serializedInstruction: '',
+      isValid: false,
+      governance: form.governedAccount?.governance,
+    }
+
     if (
       !connection ||
       !isValid ||
@@ -62,19 +71,19 @@ const SetGaugeVote = ({
       !gauges[form.gaugeName] ||
       form.weight === void 0
     ) {
-      return {
-        serializedInstruction: '',
-        isValid: false,
-        governance: form.governedAccount?.governance,
-      }
+      return invalid
     }
+
+    const pubkey = getGovernedAccountPublicKey(form.governedAccount)
+
+    if (!pubkey) return invalid
 
     const tx = await gaugeSetVoteInstruction({
       weight: form.weight,
       programs,
       gauge: gauges[form.gaugeName].mint,
       payer: wallet.publicKey,
-      authority: form.governedAccount.governance.pubkey,
+      authority: pubkey,
     })
 
     return {
