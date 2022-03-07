@@ -36,12 +36,10 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
-  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
-
-  // Hardcoded gate used to be clear about what cluster is supported for now
-  if (connection.cluster !== 'mainnet') {
-    return <>This instruction does not support {connection.cluster}</>
-  }
+  const {
+    governedMultiTypeAccounts,
+    getGovernedAccountPublicKey,
+  } = useGovernedMultiTypeAccounts()
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
@@ -68,6 +66,12 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   async function getInstruction(): Promise<UiInstruction> {
     const isValid = await validateInstruction()
 
+    const invalid = {
+      serializedInstruction: '',
+      isValid: false,
+      governance: form.governedAccount?.governance,
+    }
+
     if (
       !connection ||
       !isValid ||
@@ -76,15 +80,15 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       !wallet?.publicKey ||
       !form.mintName
     ) {
-      return {
-        serializedInstruction: '',
-        isValid: false,
-        governance: form.governedAccount?.governance,
-      }
+      return invalid
     }
 
+    const pubkey = getGovernedAccountPublicKey(form.governedAccount)
+
+    if (!pubkey) return invalid
+
     const tx = await withdrawObligationCollateralAndRedeemReserveLiquidity({
-      obligationOwner: form.governedAccount.governance.pubkey,
+      obligationOwner: pubkey,
       liquidityAmount: new BN(
         new BigNumber(form.uiAmount)
           .shiftedBy(
@@ -122,6 +126,11 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
       index
     )
   }, [form])
+
+  // Hardcoded gate used to be clear about what cluster is supported for now
+  if (connection.cluster !== 'mainnet') {
+    return <>This instruction does not support {connection.cluster}</>
+  }
 
   const schema = yup.object().shape({
     governedAccount: yup

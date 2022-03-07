@@ -3,7 +3,7 @@ import { Governance, InstructionData } from '@solana/spl-governance'
 import { ProgramAccount } from '@solana/spl-governance'
 import { RpcContext } from '@solana/spl-governance'
 import { MintInfo } from '@solana/spl-token'
-import { PublicKey, TransactionInstruction } from '@solana/web3.js'
+import { Keypair, PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { SupportedMintName } from '@tools/sdk/solend/configuration'
 import { SplTokenUIName } from '@utils/splTokens'
 import { getNameOf } from '@tools/core/script'
@@ -15,6 +15,7 @@ import {
 } from '@utils/tokens'
 import { DepositWithMintAccount, Voter } from 'VoteStakeRegistry/sdk/accounts'
 import { LockupKind } from 'VoteStakeRegistry/tools/types'
+import { SupportedSaberPoolNames } from '@tools/sdk/saberPools/configuration'
 
 export interface UiInstruction {
   serializedInstruction: string
@@ -23,6 +24,7 @@ export interface UiInstruction {
   customHoldUpTime?: number
   prerequisiteInstructions?: TransactionInstruction[]
   chunkSplitByDefault?: boolean
+  additionalSigners?: Keypair[]
 }
 export interface SplTokenTransferForm {
   destinationAccount: string
@@ -95,6 +97,7 @@ export interface RemoveLiquidityRaydiumForm {
   liquidityPool: string
   amountIn: number
 }
+
 export const programUpgradeFormNameOf = getNameOf<ProgramUpgradeForm>()
 
 export interface MangoMakeChangeMaxAccountsForm {
@@ -123,7 +126,8 @@ export interface EmptyInstructionForm {
 
 export interface CreateAssociatedTokenAccountForm {
   governedAccount?: GovernedMultiTypeAccount
-  splTokenMintUIName?: SplTokenUIName
+  splTokenMintUIName?: SplTokenUIName | 'custom'
+  customMint?: PublicKey
 }
 
 export interface CreateSolendObligationAccountForm {
@@ -157,6 +161,135 @@ export interface RefreshReserveForm {
   mintName?: SupportedMintName
 }
 
+export interface TokenTransferBetweenInternalGovernanceAccountsForm {
+  governedAccount?: GovernedMultiTypeAccount
+  sourceAccount?: string
+  receiverAccount?: string
+  uiAmount?: number
+}
+
+export interface GovernanceUnderlyingTokenAccountTransferForm {
+  governedAccount?: GovernedMultiTypeAccount
+  sourceAccount?: string
+  receiverAccount?: string
+  uiAmount?: number
+}
+
+export interface TribecaNewEscrowForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface TribecaLockForm {
+  governedAccount?: GovernedMultiTypeAccount
+  uiAmount?: number
+  durationSeconds?: number
+}
+
+export interface TribecaCreateEscrowSbrATAForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface TribecaCreateGaugeVoterForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface TribecaCreateGaugeVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
+export interface TribecaGaugeSetVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+  weight?: number
+}
+
+export interface TribecaPrepareEpochGaugeVoterForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface TribecaCreateEpochGaugeForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
+export interface TribecaGaugeCommitVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
+export interface SoceanMintBondedTokensForm {
+  governedAccount?: GovernedMultiTypeAccount
+  uiAmount?: number
+  depositFrom?: string
+  bondPool?: string
+  bondedMint?: string
+  mintTo?: string
+}
+
+export interface SoceanDepositToAuctionPoolForm {
+  governedAccount?: GovernedMultiTypeAccount
+  uiDepositAmount?: number
+  auction?: string
+  sourceAccount?: string
+  bondedMint?: string
+}
+
+export interface SoceanCloseAuctionForm {
+  governedAccount?: GovernedMultiTypeAccount
+  auction?: string
+  bondedMint?: string
+  destinationAccount?: string
+}
+
+export interface SoceanPurchaseBondedTokensForm {
+  governedAccount?: GovernedMultiTypeAccount
+  auction?: string
+  bondedMint?: string
+  paymentDestination?: string
+  buyer?: string
+  paymentSource?: string
+  saleDestination?: string
+  uiPurchaseAmount?: number
+  uiExpectedPayment?: number
+  slippageTolerance?: number
+}
+
+export interface SoceanCancelVestForm {
+  governedAccount?: GovernedMultiTypeAccount
+  bondPool?: string
+  bondedMint?: string
+  userBondedAccount?: string
+  userTargetAccount?: string
+}
+
+export interface SoceanVestForm {
+  governedAccount?: GovernedMultiTypeAccount
+  bondPool?: string
+  bondedMint?: string
+  userBondedAccount?: string
+  uiAmount?: number
+}
+
+export interface SaberPoolsDepositForm {
+  governedAccount?: GovernedMultiTypeAccount
+  poolName?: SupportedSaberPoolNames
+  sourceA?: string
+  sourceB?: string
+  uiTokenAmountA?: number
+  uiTokenAmountB?: number
+  uiMinimumPoolTokenAmount?: number
+}
+
+export interface SaberPoolsWithdrawOneForm {
+  governedAccount?: GovernedMultiTypeAccount
+  poolName?: SupportedSaberPoolNames
+  destinationAccount?: PublicKey
+  baseTokenName?: string
+  uiPoolTokenAmount?: number
+  uiMinimumTokenAmount?: number
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -183,6 +316,25 @@ export enum Instructions {
   RefreshSolendReserve,
   Grant,
   Clawback,
+  TokenTransferBetweenInternalGovernanceAccounts,
+  GovernanceUnderlyingTokenAccountTransfer,
+  TribecaNewEscrow,
+  TribecaLock,
+  TribecaCreateEscrowSbrATA,
+  TribecaCreateGaugeVoter,
+  TribecaCreateGaugeVote,
+  TribecaGaugeSetVote,
+  TribecaPrepareEpochGaugeVoter,
+  TribecaCreateEpochGauge,
+  TribecaGaugeCommitVote,
+  SoceanMintBondedTokens,
+  SoceanDepositToAuctionPool,
+  SoceanCloseAuction,
+  SoceanPurchaseBondedTokens,
+  SoceanCancelVest,
+  SoceanVest,
+  SaberPoolsDeposit,
+  SaberPoolsWithdrawOne,
 }
 
 export interface InitializeControllerForm {

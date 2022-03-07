@@ -14,7 +14,7 @@ import useWalletStore from 'stores/useWalletStore'
 import useGovernanceAssets from './useGovernanceAssets'
 import useRealm from './useRealm'
 
-export default function handleGovernanceAssetsStore() {
+export default function useHandleGovernanceAssetsStore() {
   const { governances, tokenMints, realmTokenAccounts, realm } = useRealm()
   const connection = useWalletStore((s) => s.connection.current)
   const { getGovernancesByAccountTypes } = useGovernanceAssets()

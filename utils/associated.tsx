@@ -29,7 +29,8 @@ export async function findAssociatedTokenAddress(
 export async function createAssociatedTokenAccount(
   fundingAddress: PublicKey,
   walletAddress: PublicKey,
-  splTokenMintAddress: PublicKey
+  splTokenMintAddress: PublicKey,
+  owner?: PublicKey
 ): Promise<[TransactionInstruction, PublicKey]> {
   const associatedTokenAddress = await findAssociatedTokenAddress(
     walletAddress,
@@ -57,7 +58,7 @@ export async function createAssociatedTokenAccount(
       isWritable: false,
     },
     {
-      pubkey: SystemProgram.programId,
+      pubkey: owner ?? SystemProgram.programId,
       isSigner: false,
       isWritable: false,
     },

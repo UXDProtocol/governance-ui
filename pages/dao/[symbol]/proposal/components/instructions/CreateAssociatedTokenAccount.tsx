@@ -23,6 +23,7 @@ import useWalletStore from 'stores/useWalletStore'
 
 import { NewProposalContext } from '../../new'
 import GovernedAccountSelect from '../GovernedAccountSelect'
+import Input from '@components/inputs/Input'
 
 const CreateAssociatedTokenAccount = ({
   index,
@@ -34,7 +35,10 @@ const CreateAssociatedTokenAccount = ({
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
-  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
+  const {
+    governedMultiTypeAccounts,
+    getGovernedAccountPublicKey,
+  } = useGovernedMultiTypeAccounts()
 
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
@@ -56,6 +60,12 @@ const CreateAssociatedTokenAccount = ({
   async function getInstruction(): Promise<UiInstruction> {
     const isValid = await validateInstruction()
 
+    const invalid = {
+      serializedInstruction: '',
+      isValid: false,
+      governance: form.governedAccount?.governance,
+    }
+
     if (
       !connection ||
       !isValid ||
@@ -64,11 +74,23 @@ const CreateAssociatedTokenAccount = ({
       !form.splTokenMintUIName ||
       !wallet?.publicKey
     ) {
-      return {
-        serializedInstruction: '',
-        isValid: false,
-        governance: form.governedAccount?.governance,
-      }
+      return invalid
+    }
+
+    const pubkey = getGovernedAccountPublicKey(form.governedAccount, true)
+
+    if (!pubkey) {
+      return invalid
+    }
+
+    const mint =
+      form.splTokenMintUIName === 'custom'
+        ? form.customMint
+        : getSplTokenMintAddressByUIName(form.splTokenMintUIName)
+
+    if (!mint) {
+      console.log('Cannot find appropriate mint to create ATA for')
+      return invalid
     }
 
     const [tx] = await createAssociatedTokenAccount(
@@ -76,10 +98,10 @@ const CreateAssociatedTokenAccount = ({
       wallet.publicKey,
 
       // walletAddress
-      form.governedAccount.governance.pubkey,
+      pubkey,
 
       // splTokenMintAddress
-      getSplTokenMintAddressByUIName(form.splTokenMintUIName)
+      mint
     )
 
     return {
@@ -112,6 +134,15 @@ const CreateAssociatedTokenAccount = ({
       .nullable()
       .required('Governed account is required'),
     splTokenMintUIName: yup.string().required('SPL Token Mint is required'),
+    customMint: yup.string().test((value?: string) => {
+      if (form.splTokenMintUIName === 'custom' && !value) {
+        return new yup.ValidationError(
+          'custom mint must be set when custom is selected'
+        )
+      }
+
+      return true
+    }),
   })
 
   return (
@@ -146,7 +177,26 @@ const CreateAssociatedTokenAccount = ({
             </div>
           </Select.Option>
         ))}
+
+        <Select.Option key="custom" value="custom">
+          Custom
+        </Select.Option>
       </Select>
+
+      {form.splTokenMintUIName === 'custom' ? (
+        <Input
+          label="Custom Mint"
+          value={form.customMint}
+          type="string"
+          onChange={(evt) =>
+            handleSetForm({
+              value: new PublicKey(evt.target.value),
+              propertyName: 'customMint',
+            })
+          }
+          error={formErrors['customMint']}
+        />
+      ) : null}
     </>
   )
 }

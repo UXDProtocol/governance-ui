@@ -15,7 +15,7 @@ import useQueryContext from '@hooks/useQueryContext'
 import useTreasuryAccountStore from 'stores/useTreasuryAccountStore'
 import ImgWithLoader from '@components/ImgWithLoader'
 
-const gallery = () => {
+const useGallery = () => {
   const router = useRouter()
   const connection = useWalletStore((s) => s.connection)
   const { getNfts } = useTreasuryAccountStore()
@@ -135,4 +135,4 @@ const gallery = () => {
   )
 }
 
-export default gallery
+export default useGallery

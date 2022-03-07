@@ -1,7 +1,16 @@
 import { PublicKey } from '@solana/web3.js'
-import SolendConfiguration, {
+import solendConfiguration, {
   SupportedCollateralMintNames as SolendSupportedCollateralMintNames,
 } from '@tools/sdk/solend/configuration'
+
+import saberPoolsConfiguration, {
+  SupportedSaberPoolNames,
+} from '@tools/sdk/saberPools/configuration'
+
+import {
+  saberTribecaConfiguration,
+  sunnyTribecaConfiguration,
+} from '@tools/sdk/tribeca/configurations'
 
 export type SplTokenInformation = {
   name: string
@@ -12,7 +21,12 @@ export type SplTokenInformation = {
 export type SupportedSplTokenNames =
   | 'USDC'
   | 'WSOL'
+  | 'SBR'
+  | 'SUNNY'
+  | 'UXP'
+  | 'UXD'
   | SolendSupportedCollateralMintNames
+  | SupportedSaberPoolNames
 
 export const SPL_TOKENS: {
   [key in SupportedSplTokenNames]: SplTokenInformation
@@ -29,7 +43,24 @@ export const SPL_TOKENS: {
     decimals: 9,
   },
 
-  ...SolendConfiguration.getSupportedCollateralMintsInformation(),
+  UXP: {
+    name: 'UXP',
+    mint: new PublicKey('UXPhBoR3qG4UCiGNJfV7MqhHyFqKN68g45GoYvAeL2M'),
+    decimals: 9,
+  },
+
+  UXD: {
+    name: 'UXD',
+    mint: new PublicKey('7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT'),
+    decimals: 6,
+  },
+
+  SBR: saberTribecaConfiguration.token,
+
+  SUNNY: sunnyTribecaConfiguration.token,
+
+  ...solendConfiguration.getSupportedCollateralMintsInformation(),
+  ...saberPoolsConfiguration.getPoolsTokens(),
 } as const
 
 export type SplTokenUIName = typeof SPL_TOKENS[keyof typeof SPL_TOKENS]['name']

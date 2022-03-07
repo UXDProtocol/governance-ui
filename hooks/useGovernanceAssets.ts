@@ -143,33 +143,98 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.CreateSolendObligationAccount,
-      name: 'Solend: Create Obligation Account',
+      id: Instructions.GovernanceUnderlyingTokenAccountTransfer,
+      name: `Governance's Underlying Token Account Transfer`,
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.InitSolendObligationAccount,
-      name: 'Solend: Init Obligation Account',
+      id: Instructions.TokenTransferBetweenInternalGovernanceAccounts,
+      name: 'Transfer Token Between Internal Governance Accounts',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.DepositReserveLiquidityAndObligationCollateral,
-      name: 'Solend: Deposit Funds',
+      id: Instructions.SaberPoolsDeposit,
+      name: 'Saber Pools: Deposit',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.RefreshSolendReserve,
-      name: 'Solend: Refresh Reserve',
+      id: Instructions.SaberPoolsWithdrawOne,
+      name: 'Saber Pools: Withdraw One',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.RefreshSolendObligation,
-      name: 'Solend: Refresh Obligation',
+      id: Instructions.SoceanMintBondedTokens,
+      name: 'Socean: Mint Bonded Tokens',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity,
-      name: 'Solend: Withdraw Funds',
+      id: Instructions.SoceanDepositToAuctionPool,
+      name: 'Socean: Deposit to Auction',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SoceanPurchaseBondedTokens,
+      name: 'Socean: Purchase Bonded Tokens',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SoceanCloseAuction,
+      name: 'Socean: Close Auction',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SoceanVest,
+      name: 'Socean: Vest',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.SoceanCancelVest,
+      name: 'Socean: Cancel Vest',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaNewEscrow,
+      name: 'Tribeca: New Escrow',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaCreateEscrowSbrATA,
+      name: 'Tribeca: Create Escrow SBR ATA',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaLock,
+      name: 'Tribeca: Lock Tokens',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaCreateGaugeVoter,
+      name: 'Tribeca: Create Gauge Voter',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaCreateGaugeVote,
+      name: 'Tribeca: Create Gauge Vote',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaGaugeSetVote,
+      name: 'Tribeca: Set Gauge Vote',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaPrepareEpochGaugeVoter,
+      name: 'Tribeca: Prepare Epoch Gauge Voter',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaCreateEpochGauge,
+      name: 'Tribeca: Create Epoch Gauge',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaGaugeCommitVote,
+      name: 'Tribeca: Gauge Commit Vote',
       isVisible: canUseAnyInstruction,
     },
     {
@@ -232,11 +297,6 @@ export default function useGovernanceAssets() {
         realm?.account.config.useCommunityVoterWeightAddin,
     },
     {
-      id: Instructions.CreateAssociatedTokenAccount,
-      name: 'Create Associated Token Account',
-      isVisible: canUseAnyInstruction,
-    },
-    {
       id: Instructions.CreateSolendObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,
@@ -259,11 +319,6 @@ export default function useGovernanceAssets() {
     {
       id: Instructions.RefreshSolendObligation,
       name: 'Solend: Refresh Obligation',
-      isVisible: canUseAnyInstruction,
-    },
-    {
-      id: Instructions.WithdrawObligationCollateralAndRedeemReserveLiquidity,
-      name: 'Solend: Withdraw Funds',
       isVisible: canUseAnyInstruction,
     },
     {

@@ -57,6 +57,34 @@ import InitObligationAccount from './components/instructions/Solend/InitObligati
 import RefreshObligation from './components/instructions/Solend/RefreshObligation'
 import RefreshReserve from './components/instructions/Solend/RefreshReserve'
 import WithdrawObligationCollateralAndRedeemReserveLiquidity from './components/instructions/Solend/WithdrawObligationCollateralAndRedeemReserveLiquidity'
+import TribecaNewEscrow from './components/instructions/tribeca/NewEscrow'
+import TribecaLock from './components/instructions/tribeca/Lock'
+import TribecaCreateEscrowSbrATA from './components/instructions/tribeca/CreateEscrowSbrATA'
+import TribecaCreateGaugeVoter from './components/instructions/tribeca/CreateGaugeVoter'
+import TribecaCreateGaugeVote from './components/instructions/tribeca/CreateGaugeVote'
+import TribecaSetGaugeVote from './components/instructions/tribeca/SetGaugeVote'
+import TribecaPrepareEpochGaugeVoter from './components/instructions/tribeca/PrepareEpochGaugeVoter'
+import TribecaCreateEpochGauge from './components/instructions/tribeca/CreateEpochGauge'
+import TribecaGaugeCommitVote from './components/instructions/tribeca/GaugeCommitVote'
+import SetProgramAuthority from './components/instructions/SetProgramAuthority'
+import SoceanMintBondedTokens from './components/instructions/socean/MintBondedTokens'
+import SoceanDepositToAuctionPool from './components/instructions/socean/DepositToAuctionPool'
+import SoceanCloseAuction from './components/instructions/socean/CloseAuction'
+import SoceanPurchaseBondedTokens from './components/instructions/socean/PurchaseBondedTokens'
+import SoceanCancelVest from './components/instructions/socean/CancelVest'
+import SoceanVest from './components/instructions/socean/Vest'
+import AddLiquidityRaydium from './components/instructions/raydium/AddLiquidity'
+import RemoveLiquidityRaydium from './components/instructions/raydium/RemoveLiquidity'
+import InitializeController from './components/instructions/UXD/InitializeController'
+import SetMangoDepositoriesRedeemableSoftCap from './components/instructions/UXD/SetMangoDepositoriesRedeemableSoftCap'
+import RegisterMangoDepository from './components/instructions/UXD/RegisterMangoDepository'
+import DepositInsuranceToMangoDepository from './components/instructions/UXD/DepositInsuranceToMangoDepository'
+import WithdrawInsuranceFromMangoDepository from './components/instructions/UXD/WithdrawInsuranceFromMangoDepository'
+import SetRedeemGlobalSupplyCap from './components/instructions/UXD/SetRedeemGlobalSupplyCap'
+import TokenTransferBetweenInternalGovernanceAccounts from './components/instructions/TokenTransferBetweenInternalGovernanceAccounts'
+import GovernanceUnderlyingTokenAccountTransfer from './components/instructions/GovernanceUnderlyingTokenAccountTransfer'
+import SaberPoolsDeposit from './components/instructions/saberPools/Deposit'
+import SaberPoolsWithdrawOne from './components/instructions/saberPools/WithdrawOne'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -139,11 +167,11 @@ const New = () => {
   const getAvailableInstructionsForIndex = (index) => {
     if (index === 0) {
       return availableInstructions
-    } else {
-      return availableInstructions.filter((x) =>
-        customInstructionFilterForSelectedGovernance(x.id)
-      )
     }
+
+    return availableInstructions.filter((x) =>
+      customInstructionFilterForSelectedGovernance(x.id)
+    )
   }
   const [instructionsData, setInstructions] = useState<
     ComponentInstructionData[]
@@ -313,6 +341,8 @@ const New = () => {
         return (
           <ProgramUpgrade index={idx} governance={governance}></ProgramUpgrade>
         )
+      case Instructions.SetProgramAuthority:
+        return <SetProgramAuthority index={idx} governance={governance} />
       case Instructions.CreateAssociatedTokenAccount:
         return (
           <CreateAssociatedTokenAccount index={idx} governance={governance} />
@@ -339,12 +369,57 @@ const New = () => {
             governance={governance}
           />
         )
+      case Instructions.AddLiquidityRaydium:
+        return <AddLiquidityRaydium index={idx} governance={governance} />
+      case Instructions.RemoveLiquidityRaydium:
+        return <RemoveLiquidityRaydium index={idx} governance={governance} />
+      case Instructions.InitializeController:
+        return <InitializeController index={idx} governance={governance} />
+      case Instructions.SetRedeemableGlobalSupplyCap:
+        return <SetRedeemGlobalSupplyCap index={idx} governance={governance} />
+      case Instructions.TokenTransferBetweenInternalGovernanceAccounts:
+        return (
+          <TokenTransferBetweenInternalGovernanceAccounts
+            index={idx}
+            governance={governance}
+          />
+        )
+      case Instructions.GovernanceUnderlyingTokenAccountTransfer:
+        return (
+          <GovernanceUnderlyingTokenAccountTransfer
+            index={idx}
+            governance={governance}
+          />
+        )
+      case Instructions.SetMangoDepositoriesRedeemableSoftCap:
+        return (
+          <SetMangoDepositoriesRedeemableSoftCap
+            index={idx}
+            governance={governance}
+          />
+        )
+      case Instructions.RegisterMangoDepository:
+        return <RegisterMangoDepository index={idx} governance={governance} />
+      case Instructions.DepositInsuranceToMangoDepository:
+        return (
+          <DepositInsuranceToMangoDepository
+            index={idx}
+            governance={governance}
+          />
+        )
+      case Instructions.WithdrawInsuranceFromMangoDepository:
+        return (
+          <WithdrawInsuranceFromMangoDepository
+            index={idx}
+            governance={governance}
+          />
+        )
       case Instructions.Mint:
-        return <Mint index={idx} governance={governance}></Mint>
+        return <Mint index={idx} governance={governance} />
       case Instructions.Base64:
-        return <CustomBase64 index={idx} governance={governance}></CustomBase64>
+        return <CustomBase64 index={idx} governance={governance} />
       case Instructions.None:
-        return <Empty index={idx} governance={governance}></Empty>
+        return <Empty index={idx} governance={governance} />
       case Instructions.MangoMakeChangeMaxAccounts:
         return (
           <MakeChangeMaxAccounts
@@ -360,9 +435,49 @@ const New = () => {
           ></MakeChangeReferralFeeParams>
         )
       case Instructions.Grant:
-        return <Grant index={idx} governance={governance}></Grant>
+        return <Grant index={idx} governance={governance} />
       case Instructions.Clawback:
-        return <Clawback index={idx} governance={governance}></Clawback>
+        return <Clawback index={idx} governance={governance} />
+      case Instructions.TribecaNewEscrow:
+        return <TribecaNewEscrow index={idx} governance={governance} />
+      case Instructions.TribecaLock:
+        return <TribecaLock index={idx} governance={governance} />
+      case Instructions.TribecaCreateEscrowSbrATA:
+        return <TribecaCreateEscrowSbrATA index={idx} governance={governance} />
+      case Instructions.TribecaCreateGaugeVoter:
+        return <TribecaCreateGaugeVoter index={idx} governance={governance} />
+      case Instructions.TribecaCreateGaugeVote:
+        return <TribecaCreateGaugeVote index={idx} governance={governance} />
+      case Instructions.TribecaGaugeSetVote:
+        return <TribecaSetGaugeVote index={idx} governance={governance} />
+      case Instructions.TribecaPrepareEpochGaugeVoter:
+        return (
+          <TribecaPrepareEpochGaugeVoter index={idx} governance={governance} />
+        )
+      case Instructions.TribecaCreateEpochGauge:
+        return <TribecaCreateEpochGauge index={idx} governance={governance} />
+      case Instructions.TribecaGaugeCommitVote:
+        return <TribecaGaugeCommitVote index={idx} governance={governance} />
+      case Instructions.SoceanMintBondedTokens:
+        return <SoceanMintBondedTokens index={idx} governance={governance} />
+      case Instructions.SoceanDepositToAuctionPool:
+        return (
+          <SoceanDepositToAuctionPool index={idx} governance={governance} />
+        )
+      case Instructions.SoceanCloseAuction:
+        return <SoceanCloseAuction index={idx} governance={governance} />
+      case Instructions.SoceanPurchaseBondedTokens:
+        return (
+          <SoceanPurchaseBondedTokens index={idx} governance={governance} />
+        )
+      case Instructions.SoceanCancelVest:
+        return <SoceanCancelVest index={idx} governance={governance} />
+      case Instructions.SoceanVest:
+        return <SoceanVest index={idx} governance={governance} />
+      case Instructions.SaberPoolsDeposit:
+        return <SaberPoolsDeposit index={idx} governance={governance} />
+      case Instructions.SaberPoolsWithdrawOne:
+        return <SaberPoolsWithdrawOne index={idx} governance={governance} />
       default:
         null
     }

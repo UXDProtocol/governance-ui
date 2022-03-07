@@ -39,6 +39,7 @@ export default function InstructionCard({
     nftsGovernedTokenAccounts,
     governedTokenAccountsWithoutNfts,
   } = useGovernanceAssets()
+
   const connection = useWalletStore((s) => s.connection)
   const tokenRecords = useWalletStore((s) => s.selectedRealm)
   const [descriptor, setDescriptor] = useState<InstructionDescriptor>()
