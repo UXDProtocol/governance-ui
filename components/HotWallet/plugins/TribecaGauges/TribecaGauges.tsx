@@ -43,11 +43,6 @@ const HotWalletPluginTribecaGauges = ({
         title="Next epoch"
         epochGaugeVoterData={infos?.nextEpochGaugeVoterData}
       />
-
-      <div
-        style={{ maxHeight: '350px' }}
-        className="overflow-y-auto space-y-3"
-      ></div>
     </div>
   )
 }
