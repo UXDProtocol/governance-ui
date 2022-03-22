@@ -73,24 +73,26 @@ const useHotWalletPluginTokenAccounts = (
     )
 
     setTokenAccounts(
-      ownedTokenAccounts.map((tokenAccount) => {
-        const mintInfo = mintInfos[tokenAccount.account.mint.toBase58()]
+      ownedTokenAccounts
+        .map((tokenAccount) => {
+          const mintInfo = mintInfos[tokenAccount.account.mint.toBase58()]
 
-        return {
-          mint: tokenAccount.account.mint,
-          publicKey: tokenAccount.publicKey,
-          amount: tokenAccount.account.amount,
-          decimals: mintInfo.account.decimals,
-          mintName: mintInfo.name,
-          usdMintValue: mintInfo.usdValue,
-          usdTotalValue: new BN(
-            new BigNumber(tokenAccount.account.amount.toString())
-              .multipliedBy(mintInfo.usdValue)
-              .integerValue()
-              .toString()
-          ),
-        }
-      })
+          return {
+            mint: tokenAccount.account.mint,
+            publicKey: tokenAccount.publicKey,
+            amount: tokenAccount.account.amount,
+            decimals: mintInfo.account.decimals,
+            mintName: mintInfo.name,
+            usdMintValue: mintInfo.usdValue,
+            usdTotalValue: new BN(
+              new BigNumber(tokenAccount.account.amount.toString())
+                .multipliedBy(mintInfo.usdValue)
+                .integerValue()
+                .toString()
+            ),
+          }
+        })
+        .sort((a, b) => b.amount.toNumber() - a.amount.toNumber())
     )
   }, [
     connection,
