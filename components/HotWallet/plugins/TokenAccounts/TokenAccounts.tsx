@@ -23,7 +23,7 @@ const HotWalletPluginTokenAccounts = ({
 
       <div
         style={{ maxHeight: '150px' }}
-        className="overflow-y-auto space-y-3 bg-bkg-1 mb-3 px-4 py-2 rounded-md"
+        className="overflow-y-auto bg-bkg-1 mb-3 px-4 py-2 rounded-md"
       >
         {tokenAccounts?.map((tokenAccount) => (
           <TokenAccount

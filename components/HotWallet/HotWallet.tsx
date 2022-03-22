@@ -1,7 +1,9 @@
 import useHotWallet from '@hooks/useHotWallet'
 import { FireIcon } from '@heroicons/react/solid'
-import HotWalletPluginTokenAccounts from './plugins/TokenAccounts'
 import HotWalletName from './HotWalletName'
+import HotWalletPluginTribecaGauges from './plugins/TribecaGauges/TribecaGauges'
+import { saberTribecaConfiguration } from '@tools/sdk/tribeca/configurations'
+import HotWalletPluginTokenAccounts from './plugins/TokenAccounts/TokenAccounts'
 
 const HotWallet = (): JSX.Element => {
   const { hotWalletAccount } = useHotWallet()
@@ -24,11 +26,13 @@ const HotWallet = (): JSX.Element => {
 
       <div
         style={{ maxHeight: '1300px' }}
-        className="overflow-y-auto space-y-3"
+        className="overflow-y-auto space-y-8 mt-6"
       >
-        <div className="mt-2 mb-2" />
-
         <HotWalletPluginTokenAccounts hotWalletAccount={hotWalletAccount} />
+
+        <HotWalletPluginTribecaGauges
+          tribecaConfiguration={saberTribecaConfiguration}
+        />
       </div>
     </div>
   )

@@ -25,24 +25,29 @@ const TokenAccount = ({ info }: { info: HotWalletTokenAccounts[0] }) => {
 
   return (
     <div
-      className="flex flex-col items-start text-fgd-1 hover:bg-bkg-3 w-full cursor-pointer relative"
+      className="flex flex text-fgd-1 hover:bg-bkg-3 w-full flex-wrap justify-between pt-1 pb-1 cursor-pointer"
       onClick={() => linkRef.current?.click()}
     >
-      <span className="flex content-center text-sm flex">
-        {amountFormatted} {info.mintName ?? abbreviateAddress(info.mint)}
-      </span>
+      <div>
+        <span className="flex content-center flex">
+          <span className="text-sm">{amountFormatted}</span>
+          <span className="text-fgd-3 text-xs ml-1 flex items-center">
+            {info.mintName ?? abbreviateAddress(info.mint)}
+          </span>
+        </span>
 
-      <span className="text-fgd-3 text-xs">{usdTotalValueFormatted}</span>
+        <span className="text-fgd-3 text-xs">{usdTotalValueFormatted}</span>
+      </div>
 
       <a
-        className="absolute right-3 flex"
+        className="flex"
         href={getExplorerUrl(connection.endpoint, info.publicKey)}
         ref={linkRef}
         target="_blank"
         rel="noreferrer"
         onClick={(e) => e.stopPropagation()}
       >
-        <span className="text-xs text-fgd-3 flex items-center ml-3">
+        <span className="text-xs text-fgd-3 flex mt-1">
           {abbreviateAddress(info.publicKey)}
         </span>
         <ExternalLinkIcon className="flex-shrink-0 h-4 ml-2 mt-0.5 text-primary-light w-4" />
