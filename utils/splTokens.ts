@@ -2,6 +2,7 @@ import { PublicKey } from '@solana/web3.js'
 import SolendConfiguration, {
   SupportedCollateralMintNames as SolendSupportedCollateralMintNames,
 } from '@tools/sdk/solend/configuration'
+import { abbreviateAddress } from './formatting'
 
 export type SplTokenInformation = {
   name: string
@@ -33,6 +34,14 @@ export const SPL_TOKENS: {
 } as const
 
 export type SplTokenUIName = typeof SPL_TOKENS[keyof typeof SPL_TOKENS]['name']
+
+export function getSplTokenNameByMint(mint: PublicKey): string {
+  return (
+    Object.values(SPL_TOKENS).find(
+      (splToken) => splToken.mint.toBase58() === mint.toBase58()
+    )?.name ?? abbreviateAddress(mint)
+  )
+}
 
 export function getSplTokenMintAddressByUIName(
   nameToMatch: SplTokenUIName
