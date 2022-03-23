@@ -10,7 +10,6 @@ import ProgramUpgrade from './bpfUpgradeableLoader/ProgramUpgrade'
 import CreateAssociatedTokenAccount from './CreateAssociatedTokenAccount'
 import CustomBase64 from './CustomBase64'
 import Empty from './Empty'
-import MakeChangeReferralFeeParams from './Mango/MakeChangeReferralFeeParams'
 import RaydiumAddLiquidityToPool from './Raydium/AddLiquidityToPool'
 import RaydiumRemoveLiquidityFromPool from './Raydium/RemoveLiquidityFromPool'
 import Mint from './Mint'
@@ -157,10 +156,6 @@ const ProposalForm = ({
         return <CustomBase64 index={index} governance={governance} />
       case Instructions.None:
         return <Empty index={index} governance={governance} />
-      case Instructions.MangoChangeReferralFeeParams:
-        return (
-          <MakeChangeReferralFeeParams index={index} governance={governance} />
-        )
       case Instructions.Grant:
         return <Grant index={index} governance={governance} />
       case Instructions.Clawback:
@@ -180,7 +175,6 @@ const ProposalForm = ({
         Instructions.Base64,
         Instructions.Clawback,
         Instructions.Grant,
-        Instructions.MangoChangeReferralFeeParams,
         Instructions.None,
         Instructions.FriktionDepositIntoVolt,
         Instructions.UXDInitializeController,
