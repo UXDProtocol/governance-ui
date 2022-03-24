@@ -2,7 +2,6 @@ import { BN } from '@project-serum/anchor'
 import type { EscrowData } from '@tools/sdk/tribeca/programs'
 import { tryGetTokenMint } from '@utils/tokens'
 import BigNumber from 'bignumber.js'
-import moment from 'moment'
 import { useCallback, useEffect, useState } from 'react'
 import useWalletStore from 'stores/useWalletStore'
 
@@ -12,7 +11,7 @@ function formatDate(dateInSec: BN): string {
   }
 
   // mul by 1000 to get ms
-  return moment(dateInSec.mul(new BN(1000)).toNumber()).toString()
+  return new Date(dateInSec.mul(new BN(1000)).toNumber()).toUTCString()
 }
 
 const EscrowDataBloc = ({ escrowData }: { escrowData?: EscrowData }) => {
