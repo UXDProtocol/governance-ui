@@ -11,6 +11,7 @@ import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { WithdrawObligationCollateralAndRedeemReserveLiquidityForm } from '@utils/uiTypes/proposalCreationTypes'
 import SelectOptionList from '../../SelectOptionList'
 import { uiAmountToNativeBN } from '@tools/sdk/units'
+import { SOLEND_MINT_NAME_OPTIONS } from '@tools/sdk/solend/utils'
 
 const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
   index,
@@ -76,7 +77,7 @@ const WithdrawObligationCollateralAndRedeemReserveLiquidity = ({
         onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
         error={formErrors['baseTokenName']}
       >
-        <SelectOptionList list={SolendConfiguration.getSupportedMintNames()} />
+        <SelectOptionList list={SOLEND_MINT_NAME_OPTIONS} />
       </Select>
 
       <Input

@@ -3,10 +3,11 @@ import React from 'react'
 import * as yup from 'yup'
 import Select from '@components/inputs/Select'
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
-import SolendConfiguration from '@tools/sdk/solend/configuration'
 import { refreshReserve } from '@tools/sdk/solend/refreshReserve'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { RefreshReserveForm } from '@utils/uiTypes/proposalCreationTypes'
+import SelectOptionList from '../../SelectOptionList'
+import { SOLEND_MINT_NAME_OPTIONS } from '@tools/sdk/solend/utils'
 
 const RefreshReserve = ({
   index,
@@ -54,11 +55,7 @@ const RefreshReserve = ({
       onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
       error={formErrors['baseTokenName']}
     >
-      {SolendConfiguration.getSupportedMintNames().map((value) => (
-        <Select.Option key={value} value={value}>
-          {value}
-        </Select.Option>
-      ))}
+      <SelectOptionList list={SOLEND_MINT_NAME_OPTIONS} />
     </Select>
   )
 }

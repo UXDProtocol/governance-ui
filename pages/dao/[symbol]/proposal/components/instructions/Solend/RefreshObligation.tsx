@@ -3,11 +3,11 @@ import React from 'react'
 import * as yup from 'yup'
 import Select from '@components/inputs/Select'
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
-import SolendConfiguration from '@tools/sdk/solend/configuration'
 import { refreshObligation } from '@tools/sdk/solend/refreshObligation'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { RefreshObligationForm } from '@utils/uiTypes/proposalCreationTypes'
 import SelectOptionList from '../../SelectOptionList'
+import { SOLEND_MINT_NAME_OPTIONS } from '@tools/sdk/solend/utils'
 
 const RefreshObligation = ({
   index,
@@ -56,7 +56,7 @@ const RefreshObligation = ({
       onChange={(value) => handleSetForm({ value, propertyName: 'mintName' })}
       error={formErrors['baseTokenName']}
     >
-      <SelectOptionList list={SolendConfiguration.getSupportedMintNames()} />
+      <SelectOptionList list={SOLEND_MINT_NAME_OPTIONS} />
     </Select>
   )
 }

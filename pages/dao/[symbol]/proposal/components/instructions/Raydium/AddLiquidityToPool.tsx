@@ -17,6 +17,9 @@ import { AddLiquidityRaydiumForm } from '@utils/uiTypes/proposalCreationTypes'
 import SelectOptionList from '../../SelectOptionList'
 import { uiAmountToNativeBN } from '@tools/sdk/units'
 
+const SLIPPAGE_OPTIONS = [0.5, 1, 2]
+const FIXED_SIDE_LIST = ['base', 'quote']
+
 const RaydiumAddLiquidityToPool = ({
   index,
   governedAccount,
@@ -128,7 +131,7 @@ const RaydiumAddLiquidityToPool = ({
             }
             error={formErrors['slippage']}
           >
-            <SelectOptionList list={[0.5, 1, 2]} />
+            <SelectOptionList list={SLIPPAGE_OPTIONS} />
           </Select>
 
           <Input
@@ -148,7 +151,7 @@ const RaydiumAddLiquidityToPool = ({
             }
             error={formErrors['fixedSide']}
           >
-            <SelectOptionList list={['base', 'quote']} />
+            <SelectOptionList list={FIXED_SIDE_LIST} />
           </Select>
         </>
       )}

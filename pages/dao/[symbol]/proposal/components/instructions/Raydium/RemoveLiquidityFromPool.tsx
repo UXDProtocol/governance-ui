@@ -16,6 +16,8 @@ import SelectOptionList from '../../SelectOptionList'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { uiAmountToNativeBN } from '@tools/sdk/units'
 
+const POOL_KEYS_OPTIONS = Object.keys(liquidityPoolKeysList)
+
 const RaydiumRemoveLiquidityFromPool = ({
   index,
   governedAccount,
@@ -95,7 +97,7 @@ const RaydiumRemoveLiquidityFromPool = ({
         }
         error={formErrors['liquidityPool']}
       >
-        <SelectOptionList list={Object.keys(liquidityPoolKeysList)} />
+        <SelectOptionList list={POOL_KEYS_OPTIONS} />
       </Select>
 
       <Input
