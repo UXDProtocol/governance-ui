@@ -4,14 +4,17 @@ type Props = {
   list: string[] | number[]
 }
 
-const SelectOptionList = ({ list }: Props) => (
-  <>
-    {list.map((elt) => (
-      <Select.Option key={elt} value={elt}>
-        {elt}
-      </Select.Option>
-    ))}
-  </>
-)
+const SelectOptionList = ({ list }: Props) => {
+  if (!list?.length) return null
+  return (
+    <>
+      {list.map((elt) => (
+        <Select.Option key={elt} value={elt}>
+          {elt}
+        </Select.Option>
+      ))}
+    </>
+  )
+}
 
 export default SelectOptionList

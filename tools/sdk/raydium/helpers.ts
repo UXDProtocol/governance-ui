@@ -18,6 +18,7 @@ export const getAmountOut = async (
   connection: Connection,
   slippage: number //slippage in %
 ) => {
+  if (amountIn <= 0) return 0
   const poolKeys = getLiquidityPoolKeysByLabel(liquidityPool)
   const [base, quote] = await Promise.all([
     connection.getTokenSupply(poolKeys.baseMint),
