@@ -176,6 +176,8 @@ const New = () => {
   }
 
   useEffect(() => {
+    if (!fetchTokenAccountsForSelectedRealmGovernance) return
+
     // fetch to be up to date with amounts
     fetchTokenAccountsForSelectedRealmGovernance()
   }, [])
