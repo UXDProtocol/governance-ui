@@ -155,44 +155,38 @@ export interface RemoveLiquidityRaydiumForm {
 }
 
 export interface InitializeControllerForm {
-  governedAccount: GovernedProgramAccount | undefined
+  governedAccount: GovernedMultiTypeAccount | undefined
   mintDecimals: number
-  programId: string | undefined
 }
 
 export interface SetRedeemableGlobalSupplyCapForm {
-  governedAccount: GovernedProgramAccount | undefined
+  governedAccount: GovernedMultiTypeAccount | undefined
   supplyCap: number
-  programId: string | undefined
 }
 
 export interface SetMangoDepositoriesRedeemableSoftCapForm {
-  governedAccount: GovernedProgramAccount | undefined
+  governedAccount: GovernedMultiTypeAccount | undefined
   softCap: number
-  programId: string | undefined
 }
 
 export interface RegisterMangoDepositoryForm {
-  governedAccount: GovernedProgramAccount | undefined
-  collateralName: string
-  insuranceName: string
-  programId: string | undefined
+  governedAccount: GovernedMultiTypeAccount | undefined
+  collateralName?: string
+  insuranceName?: string
 }
 
 export interface DepositInsuranceToMangoDepositoryForm {
-  governedAccount: GovernedProgramAccount | undefined
-  collateralName: string
-  insuranceName: string
+  governedAccount: GovernedMultiTypeAccount | undefined
+  collateralName?: string
+  insuranceName?: string
   insuranceDepositedAmount: number
-  programId: string | undefined
 }
 
 export interface WithdrawInsuranceFromMangoDepositoryForm {
-  governedAccount: GovernedProgramAccount | undefined
-  collateralName: string
-  insuranceName: string
+  governedAccount: GovernedMultiTypeAccount | undefined
+  collateralName?: string
+  insuranceName?: string
   insuranceWithdrawnAmount: number
-  programId: string | undefined
 }
 
 export enum Instructions {
