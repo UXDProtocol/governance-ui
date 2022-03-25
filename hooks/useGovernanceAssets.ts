@@ -12,6 +12,12 @@ import useWalletStore from 'stores/useWalletStore'
 import useRealm from './useRealm'
 import useGovernanceAssetsStore from 'stores/useGovernanceAssetsStore'
 
+export type InstructionType = {
+  id: Instructions
+  name: string
+  isVisible?: boolean
+}
+
 export default function useGovernanceAssets() {
   const { ownVoterWeight, realm, symbol, governances } = useRealm()
   const connection = useWalletStore((s) => s.connection.current)
@@ -136,7 +142,7 @@ export default function useGovernanceAssets() {
       ownVoterWeight.canCreateProposal(acc.governance?.account?.config)
   )
 
-  const availableInstructions = [
+  const availableInstructions: InstructionType[] = [
     {
       id: Instructions.TribecaCreateEpochGauge,
       name: 'Tribeca: Create Epoch Gauge',

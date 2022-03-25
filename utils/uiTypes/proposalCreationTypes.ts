@@ -15,6 +15,7 @@ import { DepositWithMintAccount, Voter } from 'VoteStakeRegistry/sdk/accounts'
 import { LockupKind } from 'VoteStakeRegistry/tools/types'
 import { AmountSide } from '@raydium-io/raydium-sdk'
 import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
+import { InstructionType } from '@hooks/useGovernanceAssets'
 
 export interface UiInstruction {
   serializedInstruction: string
@@ -300,8 +301,9 @@ export type createParams = [
 export interface ComponentInstructionData {
   governedAccount?: ProgramAccount<Governance>
   getInstruction?: () => Promise<UiInstruction>
-  type: any
+  type?: InstructionType
 }
+
 export interface InstructionsContext {
   instructionsData: ComponentInstructionData[]
   handleSetInstructions: (val, index) => void
