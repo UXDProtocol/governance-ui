@@ -10,8 +10,8 @@ import {
   ComponentInstructionData,
   Instructions,
 } from '@utils/uiTypes/proposalCreationTypes'
-import InstructionContentContainer from './components/InstructionContentContainer'
-import ProposalForm from './components/instructions/ProposalForm'
+import InstructionContentContainer from './InstructionContentContainer'
+import ProposalForm from './instructions/ProposalForm'
 import SelectInstructionType from './SelectInstructionType'
 
 const InstructionForm = ({
@@ -33,7 +33,7 @@ const InstructionForm = ({
     instructionType,
     idx,
   }: {
-    instructionType: InstructionType
+    instructionType: InstructionType | null
     idx: number
   }) => void
 

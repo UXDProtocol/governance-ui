@@ -10,6 +10,7 @@ import Empty from './Empty'
 import Mint from './Mint'
 import RaydiumAddLiquidityToPool from './Raydium/AddLiquidityToPool'
 import RaydiumRemoveLiquidityFromPool from './Raydium/RemoveLiquidityFromPool'
+import FriktionDeposit from './Friktion/FriktionDeposit'
 import SetProgramAuthority from './SetProgramAuthority'
 import SplTokenTransfer from './SplTokenTransfer'
 import SolendCreateObligationAccount from './Solend/CreateObligationAccount'
@@ -224,6 +225,8 @@ const SelectedInstruction = ({
       return (
         <TribecaGaugeSetVote index={index} governedAccount={governedAccount} />
       )
+    case Instructions.FriktionDepositIntoVolt:
+      return <FriktionDeposit index={index} governance={governance} />
     case Instructions.Mint:
       return <Mint index={index} governance={governance} />
     case Instructions.Base64:

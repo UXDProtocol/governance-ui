@@ -5,7 +5,7 @@ import { Governance, ProgramAccount } from '@solana/spl-governance'
 import { ComponentInstructionData } from '@utils/uiTypes/proposalCreationTypes'
 import { useState } from 'react'
 import InstructionForm from './InstructionForm'
-import { NewProposalContext } from './new'
+import { NewProposalContext } from '../new'
 
 const InstructionsForm = ({
   availableInstructions,
@@ -48,12 +48,12 @@ const InstructionsForm = ({
     instructionType,
     idx,
   }: {
-    instructionType: InstructionType
+    instructionType: InstructionType | null
     idx: number
   }) => {
     handleSetInstructionData(
       {
-        type: instructionType,
+        type: instructionType ? instructionType : undefined,
       },
       idx
     )
