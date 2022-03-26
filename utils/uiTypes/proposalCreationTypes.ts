@@ -7,7 +7,6 @@ import { getNameOf } from '@tools/core/script'
 import {
   GovernedMintInfoAccount,
   GovernedMultiTypeAccount,
-  GovernedProgramAccount,
   GovernedTokenAccount,
 } from '@utils/tokens'
 import { SupportedMintName } from '@tools/sdk/solend/configuration'
@@ -80,18 +79,16 @@ export interface MintForm {
 }
 
 export interface ProgramUpgradeForm {
-  governedAccount: GovernedProgramAccount | undefined
-  programId: string | undefined
-  bufferAddress: string
-  bufferSpillAddress?: string | undefined
+  governedAccount: GovernedMultiTypeAccount | undefined
+  bufferAddress?: string
+  bufferSpillAddress?: string
 }
 
 export const programUpgradeFormNameOf = getNameOf<ProgramUpgradeForm>()
 
 export interface SetProgramAuthorityForm {
-  governedAccount: GovernedProgramAccount | GovernedTokenAccount | undefined
-  accountId: string | undefined
-  destinationAuthority: string
+  governedAccount: GovernedMultiTypeAccount | undefined
+  destinationAuthority?: string
 }
 export interface Base64InstructionForm {
   governedAccount?: GovernedMultiTypeAccount

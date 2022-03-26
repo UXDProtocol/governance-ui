@@ -28,12 +28,9 @@ const ProposalForm = ({
       {![
         Instructions.Transfer,
         Instructions.Mint,
-        Instructions.ProgramUpgrade,
-        Instructions.SetProgramAuthority,
         Instructions.Base64,
         Instructions.Clawback,
         Instructions.Grant,
-        Instructions.None,
         Instructions.FriktionDepositIntoVolt,
       ].includes(itxType) && (
         <GovernedAccountSelect
