@@ -27,6 +27,7 @@ import UXDWithdrawInsuranceFromMangoDepository from './UXD/WithdrawInsuranceFrom
 import UXDStakingInitializeStakingCampaign from './UXDStaking/InitializeStakingCampaign'
 import UXDStakingFinalizeStakingCampaign from './UXDStaking/FinalizeStakingCampaign'
 import UXDStakingAddStakingOption from './UXDStaking/AddStakingOption'
+import UXDStakingActivateStakingOption from './UXDStaking/ActivateStakingOption'
 
 const SelectedInstruction = ({
   itxType,
@@ -177,6 +178,13 @@ const SelectedInstruction = ({
     case Instructions.UXDStakingAddStakingOption:
       return (
         <UXDStakingAddStakingOption
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.UXDStakingActivateStakingOption:
+      return (
+        <UXDStakingActivateStakingOption
           index={index}
           governedAccount={governedAccount}
         />

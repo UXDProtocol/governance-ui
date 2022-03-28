@@ -281,6 +281,11 @@ export default function useGovernanceAssets() {
       name: 'UXD Staking: Add Staking Option',
       isVisible: canUseMintInstruction,
     },
+    {
+      id: Instructions.UXDStakingActivateStakingOption,
+      name: 'UXD Staking: Activate Staking Option',
+      isVisible: canUseMintInstruction,
+    },
   ]
 
   return {
