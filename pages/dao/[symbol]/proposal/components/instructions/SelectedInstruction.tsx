@@ -38,6 +38,7 @@ import VoteStakeRegistryClawback from 'VoteStakeRegistry/components/instructions
 import UXDStakingInitializeStakingCampaign from './UXDStaking/InitializeStakingCampaign'
 import UXDStakingFinalizeStakingCampaign from './UXDStaking/FinalizeStakingCampaign'
 import UXDStakingAddStakingOption from './UXDStaking/AddStakingOption'
+import UXDStakingActivateStakingOption from './UXDStaking/ActivateStakingOption'
 
 const SelectedInstruction = ({
   itxType,
@@ -176,6 +177,13 @@ const SelectedInstruction = ({
     case InstructionEnum.UXDStakingAddStakingOption:
       return (
         <UXDStakingAddStakingOption
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case InstructionEnum.UXDStakingActivateStakingOption:
+      return (
+        <UXDStakingActivateStakingOption
           index={index}
           governedAccount={governedAccount}
         />

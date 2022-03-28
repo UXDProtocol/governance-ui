@@ -406,6 +406,11 @@ export default function useGovernanceAssets() {
       isVisible: canUseMintInstruction,
       packageId: PackageEnum.UXDStaking,
     },
+    [InstructionEnum.UXDStakingActivateStakingOption]: {
+      name: 'Activate Staking Option',
+      isVisible: canUseMintInstruction,
+      packageId: PackageEnum.UXDStaking,
+    },
   }
 
   const availableInstructions = Object.entries(instructions)

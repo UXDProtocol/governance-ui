@@ -270,6 +270,13 @@ export interface UXDStakingAddStakingOptionForm {
   }[]
 }
 
+export interface UXDStakingActivateStakingOptionForm {
+  governedAccount?: GovernedMultiTypeAccount
+  stakingCampaignPda?: string
+  activate?: boolean
+  stakingOptionIdentifier?: number
+}
+
 export enum InstructionEnum {
   Transfer,
   ProgramUpgrade,
@@ -309,6 +316,7 @@ export enum InstructionEnum {
   UXDStakingInitializeStakingCampaign,
   UXDStakingFinalizeStakingCampaign,
   UXDStakingAddStakingOption,
+  UXDStakingActivateStakingOption,
 }
 
 export enum PackageEnum {
