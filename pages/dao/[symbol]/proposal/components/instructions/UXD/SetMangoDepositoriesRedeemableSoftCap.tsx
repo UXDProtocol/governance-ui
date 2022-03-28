@@ -10,7 +10,7 @@ const SetMangoDepositoriesRedeemableSoftCap = ({
   governedAccount,
 }: {
   index: number
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
 }) => {
   const {
     form,
@@ -26,7 +26,7 @@ const SetMangoDepositoriesRedeemableSoftCap = ({
       governedAccount: yup
         .object()
         .nullable()
-        .required('Program governed account is required'),
+        .required('Governance account is required'),
       softCap: yup
         .number()
         .moreThan(0, 'Redeemable soft cap should be more than 0')

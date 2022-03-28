@@ -11,7 +11,7 @@ const InitializeController = ({
   governedAccount,
 }: {
   index: number
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
 }) => {
   const {
     wallet,
@@ -33,7 +33,7 @@ const InitializeController = ({
       governedAccount: yup
         .object()
         .nullable()
-        .required('Program governed account is required'),
+        .required('Governance account is required'),
     }),
     buildInstruction: async function () {
       if (!governedAccount?.governance?.account) {
@@ -41,7 +41,7 @@ const InitializeController = ({
       }
       return createInitializeControllerInstruction(
         form.governedAccount!.governance.account.governedAccount,
-        form.mintDecimals ?? 0,
+        form.mintDecimals,
         form.governedAccount!.governance.pubkey,
         new PublicKey(wallet!.publicKey!.toBase58())
       )

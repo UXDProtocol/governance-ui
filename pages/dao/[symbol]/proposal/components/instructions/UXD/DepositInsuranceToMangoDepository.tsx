@@ -16,7 +16,7 @@ const UXDDepositInsuranceToMangoDepository = ({
   governedAccount,
 }: {
   index: number
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
 }) => {
   const {
     connection,
@@ -43,25 +43,18 @@ const UXDDepositInsuranceToMangoDepository = ({
       governedAccount: yup
         .object()
         .nullable()
-        .required('Program governed account is required'),
+        .required('Governance account is required'),
     }),
     buildInstruction: async function () {
       if (!governedAccount?.governance?.account) {
         throw new Error('Governance must be a Program Account Governance')
       }
-      if (
-        !form.collateralName ||
-        !form.insuranceName ||
-        !form.insuranceDepositedAmount
-      ) {
-        throw new Error('missing form parameter')
-      }
       return createDepositInsuranceToMangoDepositoryInstruction(
         connection,
         form.governedAccount!.governance!.account.governedAccount,
         form.governedAccount!.governance!.pubkey,
-        form.collateralName,
-        form.insuranceName,
+        form.collateralName!,
+        form.insuranceName!,
         form.insuranceDepositedAmount
       )
     },

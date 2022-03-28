@@ -91,12 +91,9 @@ const ProgramUpgrade = ({
         ? new PublicKey(form.bufferSpillAddress)
         : wallet!.publicKey!
 
-      if (!form.bufferAddress) {
-        throw new Error('missing form inputs')
-      }
       return createUpgradeInstruction(
         form.governedAccount!.governance.account.governedAccount,
-        new PublicKey(form.bufferAddress),
+        new PublicKey(form.bufferAddress!),
         form.governedAccount!.governance.pubkey,
         bufferSpillAddress
       )

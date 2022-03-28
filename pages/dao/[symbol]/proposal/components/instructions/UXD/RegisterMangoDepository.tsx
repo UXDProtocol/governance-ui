@@ -16,7 +16,7 @@ const RegisterMangoDepository = ({
   governedAccount,
 }: {
   index: number
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
 }) => {
   const {
     connection,
@@ -37,22 +37,19 @@ const RegisterMangoDepository = ({
       governedAccount: yup
         .object()
         .nullable()
-        .required('Program governed account is required'),
+        .required('Governance account is required'),
     }),
     buildInstruction: async function () {
       if (!governedAccount?.governance?.account) {
         throw new Error('Governance must be a Program Account Governance')
-      }
-      if (!form.collateralName || !form.insuranceName) {
-        throw new Error('missing form parameter')
       }
       return createRegisterMangoDepositoryInstruction(
         connection,
         form.governedAccount!.governance.account.governedAccount,
         form.governedAccount!.governance.pubkey,
         new PublicKey(wallet!.publicKey!.toBase58()),
-        form.collateralName,
-        form.insuranceName
+        form.collateralName!,
+        form.insuranceName!
       )
     },
   })

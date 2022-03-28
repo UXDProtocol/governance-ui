@@ -16,7 +16,7 @@ const WithdrawInsuranceFromMangoDepository = ({
   governedAccount,
 }: {
   index: number
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
 }) => {
   const {
     connection,
@@ -45,20 +45,12 @@ const WithdrawInsuranceFromMangoDepository = ({
       if (!governedAccount?.governance?.account) {
         throw new Error('Governance must be a Program Account Governance')
       }
-      if (
-        !form.collateralName ||
-        !form.insuranceName ||
-        !form.insuranceWithdrawnAmount
-      ) {
-        throw new Error('missing form parameter')
-      }
-
       return createWithdrawInsuranceFromMangoDepositoryInstruction(
         connection,
         form.governedAccount!.governance.account.governedAccount,
         form.governedAccount!.governance.pubkey,
-        form.collateralName,
-        form.insuranceName,
+        form.collateralName!,
+        form.insuranceName!,
         form.insuranceWithdrawnAmount
       )
     },
