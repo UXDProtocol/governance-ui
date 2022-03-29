@@ -3,9 +3,9 @@ import { PlusCircleIcon } from '@heroicons/react/solid'
 import { InstructionType } from '@hooks/useGovernanceAssets'
 import { Governance, ProgramAccount } from '@solana/spl-governance'
 import { ComponentInstructionData } from '@utils/uiTypes/proposalCreationTypes'
+import { NewProposalContext } from 'pages/dao/[symbol]/proposal/new'
 import { useState } from 'react'
 import InstructionForm from './InstructionForm'
-import { NewProposalContext } from '../new'
 
 const InstructionsForm = ({
   availableInstructions,

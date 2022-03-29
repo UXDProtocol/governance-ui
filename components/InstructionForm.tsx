@@ -10,8 +10,8 @@ import {
   ComponentInstructionData,
   Instructions,
 } from '@utils/uiTypes/proposalCreationTypes'
-import InstructionContentContainer from './InstructionContentContainer'
-import ProposalForm from './instructions/ProposalForm'
+import InstructionContentContainer from '../pages/dao/[symbol]/proposal/components/InstructionContentContainer'
+import ProposalForm from '../pages/dao/[symbol]/proposal/components/instructions/ProposalForm'
 import SelectInstructionType from './SelectInstructionType'
 
 const InstructionForm = ({

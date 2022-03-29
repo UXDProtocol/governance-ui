@@ -98,10 +98,6 @@ export default function useGovernanceAssets() {
       ownVoterWeight.canCreateProposal(gov.account.config)
     )
 
-  const getAvailableInstructions = () => {
-    return availableInstructions.filter((itx) => itx.isVisible)
-  }
-
   async function getMintWithGovernances() {
     const mintGovernances = getGovernancesByAccountTypes([
       GovernanceAccountType.MintGovernanceV1,
@@ -328,6 +324,11 @@ export default function useGovernanceAssets() {
         ),
     },
   ]
+
+  const getAvailableInstructions = () => {
+    return availableInstructions.filter((itx) => itx.isVisible)
+  }
+
   return {
     governancesArray,
     getGovernancesByAccountType,

@@ -1,7 +1,9 @@
 import Select from '@components/inputs/Select'
 import { InstructionType } from '@hooks/useGovernanceAssets'
 import { useState } from 'react'
-import PackageSelection, { PackageName } from './PackageSelection'
+import PackageSelection, {
+  PackageName,
+} from '../pages/dao/[symbol]/proposal/components/PackageSelection'
 
 const SelectInstructionType = ({
   idx,

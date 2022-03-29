@@ -28,7 +28,7 @@ import useWalletStore from 'stores/useWalletStore'
 import { notify } from 'utils/notifications'
 
 import VoteBySwitch from './components/VoteBySwitch'
-import InstructionsForm from './components/InstructionsForm'
+import InstructionsForm from '@components/InstructionsForm'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
