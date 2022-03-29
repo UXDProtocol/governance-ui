@@ -23,7 +23,7 @@ const HotWalletPluginSaberStats = ({
 
       <div style={{ maxHeight: '350px' }} className="overflow-y-auto space-y-3">
         {saberStats.map((saberStat) => (
-          <SaberStat key={saberStat.liquidityPoolName} saberStat={saberStat} />
+          <SaberStat key={saberStat.liquidityPoolName} {...saberStat} />
         ))}
       </div>
     </div>

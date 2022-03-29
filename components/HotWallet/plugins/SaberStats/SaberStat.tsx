@@ -1,10 +1,11 @@
 import { SaberStats } from '@hooks/useSaberStats'
 
 const SaberStat = ({
-  saberStat: { liquidityPoolName, uiBalance, pendingRewards, mintName },
-}: {
-  saberStat: SaberStats
-}) => {
+  liquidityPoolName,
+  uiBalance,
+  pendingRewards,
+  mintName,
+}: SaberStats) => {
   return (
     <div className="flex flex-col items-start bg-bkg-1 p-3">
       <span>{liquidityPoolName}</span>

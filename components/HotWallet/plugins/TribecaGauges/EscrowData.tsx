@@ -1,7 +1,7 @@
 import { BN } from '@project-serum/anchor'
 import type { EscrowData } from '@tools/sdk/tribeca/programs'
+import { nativeAmountToFormattedUiAmount } from '@tools/sdk/units'
 import { tryGetTokenMint } from '@utils/tokens'
-import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import useWalletStore from 'stores/useWalletStore'
 
@@ -34,11 +34,10 @@ const EscrowDataBloc = ({ escrowData }: { escrowData?: EscrowData }) => {
       return '-'
     }
 
-    return Number(
-      new BigNumber(escrowData.amount.toString())
-        .shiftedBy(-tokenInfo.account.decimals)
-        .toString()
-    ).toLocaleString()
+    return nativeAmountToFormattedUiAmount(
+      escrowData.amount,
+      tokenInfo.account.decimals
+    )
   }, [connection, escrowData])
 
   useEffect(() => {

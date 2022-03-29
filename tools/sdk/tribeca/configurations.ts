@@ -1,4 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
+import { SPL_TOKENS } from '@utils/splTokens'
 import ATribecaConfiguration from './ATribecaConfiguration'
 
 class SaberTribecaConfiguration extends ATribecaConfiguration {
@@ -6,12 +7,7 @@ class SaberTribecaConfiguration extends ATribecaConfiguration {
     '8erad8kmNrLJDJPe9UkmTHomrMV3EW48sjGeECyVjbYX'
   )
 
-  public readonly token = {
-    name: 'SBR - Saber Protocol Token',
-    mint: new PublicKey('Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1'),
-    decimals: 6,
-  }
-
+  public readonly token = SPL_TOKENS.SBR
   public readonly name = 'Saber'
 }
 
@@ -20,12 +16,7 @@ class SunnyTribecaConfiguration extends ATribecaConfiguration {
     '4tr9CDSgZRLYPGdcsm9PztaGSfJtX5CEmqDbEbvCTX2G'
   )
 
-  public readonly token = {
-    name: 'SUNNY - Sunny Governance Token',
-    mint: new PublicKey('SUNNYWgPQmFxe9wTZzNK7iPnJ3vYDrkgnxJRJm1s3ag'),
-    decimals: 6,
-  }
-
+  public readonly token = SPL_TOKENS.SUNNY
   public readonly name = 'Sunny'
 }
 

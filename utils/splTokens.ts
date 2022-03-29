@@ -37,13 +37,13 @@ export const SPL_TOKENS: {
     decimals: 9,
   },
 
-  UXP: {
+  UXD: {
     name: 'UXD',
     mint: new PublicKey('7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT'),
     decimals: 6,
   },
 
-  UXD: {
+  UXP: {
     name: 'UXP',
     mint: new PublicKey('UXPhBoR3qG4UCiGNJfV7MqhHyFqKN68g45GoYvAeL2M'),
     decimals: 9,
