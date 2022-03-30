@@ -285,6 +285,15 @@ export enum InstructionEnum {
   UXDWithdrawInsuranceFromMangoDepository,
 }
 
+export enum PackageEnum {
+  Native,
+  Solend,
+  Raydium,
+  UXD,
+  Friktion,
+  Tribeca,
+}
+
 export type createParams = [
   rpc: RpcContext,
   realm: PublicKey,

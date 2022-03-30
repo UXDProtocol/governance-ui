@@ -1,9 +1,10 @@
 import Select from '@components/inputs/Select'
-import { InstructionType } from '@hooks/useGovernanceAssets'
+import useGovernanceAssets, {
+  InstructionType,
+} from '@hooks/useGovernanceAssets'
+import { PackageEnum } from '@utils/uiTypes/proposalCreationTypes'
 import { useCallback, useEffect, useState } from 'react'
-import PackageSelection, {
-  PackageName,
-} from '../pages/dao/[symbol]/proposal/components/PackageSelection'
+import PackageSelection from '../pages/dao/[symbol]/proposal/components/PackageSelection'
 
 const SelectInstructionType = ({
   idx,
@@ -23,36 +24,59 @@ const SelectInstructionType = ({
     idx: number
   }) => void
 }) => {
-  const [packageName, setPackageName] = useState<PackageName | null>(null)
+  const [packageId, setPackageId] = useState<PackageEnum | null>(null)
+  const { availablePackages, getPackageTypeById } = useGovernanceAssets()
 
   const [filteredInstructionTypes, setFilteredInstructionTypes] = useState<
     InstructionType[]
   >([])
 
   const computeFilteredInstructionsTypes = useCallback(() => {
-    if (packageName === null) {
+    if (packageId === null) {
       setFilteredInstructionTypes(instructionTypes)
+
+      // Select first instruction by default
+      if (instructionTypes.length && !selectedInstruction) {
+        onChange({ instructionType: instructionTypes[0], idx })
+      }
+
       return
     }
 
-    if (
-      selectedInstruction &&
-      selectedInstruction.name.toLowerCase().indexOf(packageName) === -1
-    ) {
+    if (selectedInstruction && selectedInstruction.packageId !== packageId) {
       onChange({ instructionType: null, idx })
     }
 
-    setFilteredInstructionTypes(
-      instructionTypes.filter(
-        (instructionType) =>
-          instructionType.name.toLowerCase().indexOf(packageName) !== -1
-      )
+    const filteredInstructionTypes = instructionTypes.filter(
+      (instructionType) => instructionType.packageId === packageId
     )
-  }, [packageName, instructionTypes])
+
+    // Select first instruction by default
+    if (filteredInstructionTypes.length && !selectedInstruction) {
+      onChange({ instructionType: filteredInstructionTypes[0], idx })
+    }
+
+    setFilteredInstructionTypes(filteredInstructionTypes)
+  }, [packageId, instructionTypes])
 
   useEffect(() => {
     computeFilteredInstructionsTypes()
   }, [computeFilteredInstructionsTypes])
+
+  // Only display the package name is a no package is selected
+  const getInstructionDisplayName = (instruction?: InstructionType) => {
+    if (!instruction) {
+      return ''
+    }
+
+    if (packageId !== null) {
+      return instruction.name
+    }
+
+    return `${getPackageTypeById(instruction.packageId)!.name}: ${
+      instruction.name
+    }`
+  }
 
   return (
     <div>
@@ -65,15 +89,16 @@ const SelectInstructionType = ({
 
         <PackageSelection
           className="ml-3"
-          selected={packageName}
-          onClick={(selected: PackageName) => {
+          selected={packageId}
+          packages={availablePackages}
+          onClick={(selectedPackageId: PackageEnum) => {
             // Clicking on selected packageName unselect it
-            if (selected === packageName) {
-              setPackageName(null)
+            if (selectedPackageId === packageId) {
+              setPackageId(null)
               return
             }
 
-            setPackageName(selected)
+            setPackageId(selectedPackageId)
           }}
         />
       </div>
@@ -86,15 +111,14 @@ const SelectInstructionType = ({
             ? 'Select instruction'
             : 'No available instructions'
         }`}
-        // label={`Instruction ${idx + 1}`}
         onChange={(instructionType: InstructionType) =>
           onChange({ instructionType, idx })
         }
-        value={selectedInstruction?.name}
+        value={getInstructionDisplayName(selectedInstruction)}
       >
         {filteredInstructionTypes.map((instructionType) => (
           <Select.Option key={instructionType.name} value={instructionType}>
-            <span>{instructionType.name}</span>
+            <span>{getInstructionDisplayName(instructionType)}</span>
           </Select.Option>
         ))}
       </Select>

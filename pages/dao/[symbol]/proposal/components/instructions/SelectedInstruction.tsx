@@ -41,7 +41,7 @@ const SelectedInstruction = ({
   index,
   governedAccount,
 }: {
-  itxType: number
+  itxType: InstructionEnum
   index: number
   governedAccount?: GovernedMultiTypeAccount
 }) => {

@@ -1,28 +1,52 @@
-export type PackageName = 'raydium' | 'friktion' | 'solend'
+import { PackageType } from '@hooks/useGovernanceAssets'
+import { PackageEnum } from '@utils/uiTypes/proposalCreationTypes'
 
 const PackageSelection = ({
   selected,
   className,
   onClick,
+  packages,
 }: {
-  selected: PackageName | null
+  selected: PackageEnum | null
   className?: string | undefined
-  onClick: (selected: PackageName) => void
+  onClick: (selected: PackageEnum) => void
+  packages: PackageType[]
 }) => {
-  const packages: PackageName[] = ['raydium', 'friktion', 'solend']
-
   return (
-    <div className={`flex space-x-3 ${className}`}>
-      {packages.map((packageName) => (
-        <img
-          key={packageName}
-          src={`/img/${packageName}.png`}
-          className={`h-6 w-6 hover:grayscale-0 ${
-            selected !== packageName ? 'grayscale' : ''
-          } cursor-pointer`}
-          onClick={() => onClick(packageName)}
-        />
-      ))}
+    <div className={`flex items-center space-x-3 ${className}`}>
+      {packages.map(({ id, name, image }) => {
+        if (image) {
+          return (
+            <img
+              key={name}
+              style={{
+                boxShadow: selected === id ? '0 0 8px 4px #aeaeae' : 'none',
+              }}
+              src={image}
+              className={`h-6 w-6 p-0.5 rounded-full hover:grayscale-0 ${
+                selected !== id ? 'grayscale' : ''
+              } cursor-pointer`}
+              onClick={() => onClick(Number(id) as PackageEnum)}
+            />
+          )
+        }
+
+        // There is no image, we use the text instead
+        return (
+          <span
+            style={{
+              boxShadow: selected === id ? '0 0 8px 4px #aeaeae' : 'none',
+            }}
+            className={`text-xs hover:text-white pl-2 pr-2 pt-0.5 pb-0.5 rounded-full cursor-pointer ${
+              selected !== id ? 'text-gray-400' : 'text-white'
+            }`}
+            onClick={() => onClick(Number(id) as PackageEnum)}
+            key={name}
+          >
+            {name}
+          </span>
+        )
+      })}
     </div>
   )
 }
