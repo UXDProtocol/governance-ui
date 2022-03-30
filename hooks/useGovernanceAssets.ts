@@ -138,6 +138,11 @@ export default function useGovernanceAssets() {
 
   const availableInstructions = [
     {
+      id: Instructions.TribecaCreateEpochGauge,
+      name: 'Tribeca: Create Epoch Gauge',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.SolendCreateObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,

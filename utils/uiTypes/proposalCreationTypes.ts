@@ -186,6 +186,11 @@ export interface WithdrawInsuranceFromMangoDepositoryForm {
   insuranceWithdrawnAmount: number
 }
 
+export interface TribecaCreateEpochGaugeForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -205,6 +210,7 @@ export enum Instructions {
   SolendWithdrawObligationCollateralAndRedeemReserveLiquidity,
   SolendRefreshObligation,
   SolendRefreshReserve,
+  TribecaCreateEpochGauge,
   UXDInitializeController,
   UXDSetRedeemableGlobalSupplyCap,
   UXDSetMangoDepositoriesRedeemableSoftCap,
