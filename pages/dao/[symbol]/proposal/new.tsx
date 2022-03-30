@@ -21,7 +21,7 @@ import { formValidation, isFormValid } from '@utils/formValidation'
 import {
   ComponentInstructionData,
   InstructionsContext,
-  UiInstruction,
+  FormInstructionData,
 } from '@utils/uiTypes/proposalCreationTypes'
 
 import useWalletStore from 'stores/useWalletStore'
@@ -29,16 +29,17 @@ import { notify } from 'utils/notifications'
 
 import VoteBySwitch from './components/VoteBySwitch'
 import InstructionsForm from '@components/InstructionsForm'
+import GovernedAccountSelect from './components/GovernedAccountSelect'
+import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
 })
 
 const defaultGovernanceCtx: InstructionsContext = {
-  instructionsData: [],
-  handleSetInstructions: () => null,
-  governance: null,
-  setGovernance: () => null,
+  instructions: [],
+  handleSetInstruction: () => null,
 }
 
 export const NewProposalContext = createContext<InstructionsContext>(
@@ -50,8 +51,7 @@ const New = () => {
   const { handleCreateProposal } = useCreateProposal()
   const { fmtUrlWithCluster } = useQueryContext()
   const { symbol, realm, realmDisplayName, canChooseWhoVote } = useRealm()
-  const { getAvailableInstructions } = useGovernanceAssets()
-  const availableInstructions = getAvailableInstructions()
+  const { availableInstructions } = useGovernanceAssets()
   const {
     fetchRealmGovernance,
     fetchTokenAccountsForSelectedRealmGovernance,
@@ -62,17 +62,19 @@ const New = () => {
     description: '',
   })
   const [formErrors, setFormErrors] = useState({})
-  const [
-    governance,
-    setGovernance,
-  ] = useState<ProgramAccount<Governance> | null>(null)
   const [isLoadingSignedProposal, setIsLoadingSignedProposal] = useState(false)
   const [isLoadingDraft, setIsLoadingDraft] = useState(false)
   const isLoading = isLoadingSignedProposal || isLoadingDraft
 
-  const [instructionsData, setInstructions] = useState<
-    ComponentInstructionData[]
-  >([{ type: availableInstructions[0] }])
+  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
+
+  const [governedAccount, setGovernedAccount] = useState<
+    GovernedMultiTypeAccount | undefined
+  >()
+
+  const [instructions, setInstructions] = useState<ComponentInstructionData[]>(
+    []
+  )
 
   const handleSetForm = ({
     propertyName,
@@ -85,18 +87,18 @@ const New = () => {
     setForm({ ...form, [propertyName]: value })
   }
 
-  const getUiInstructions = async () => {
-    const instructions: UiInstruction[] = []
+  const getFormInstructionsData = async () => {
+    const formInstructionsData: FormInstructionData[] = []
 
-    for (const inst of instructionsData) {
+    for (const inst of instructions) {
       if (inst.getInstruction) {
-        const instruction: UiInstruction = await inst?.getInstruction()
+        const formInstructionData: FormInstructionData = await inst?.getInstruction()
 
-        instructions.push(instruction)
+        formInstructionsData.push(formInstructionData)
       }
     }
 
-    return instructions
+    return formInstructionsData
   }
 
   const handleTurnOffLoaders = () => {
@@ -112,6 +114,11 @@ const New = () => {
       throw 'No realm selected'
     }
 
+    if (!governedAccount) {
+      handleTurnOffLoaders()
+      throw Error('No governance selected')
+    }
+
     if (isDraft) {
       setIsLoadingDraft(true)
     } else {
@@ -123,23 +130,21 @@ const New = () => {
       form
     )
 
-    const instructions: UiInstruction[] = await getUiInstructions()
+    const formInstructionsData: FormInstructionData[] = await getFormInstructionsData()
 
-    if (!isValid || instructions.some((x: UiInstruction) => !x.isValid)) {
+    if (
+      !isValid ||
+      formInstructionsData.some((x: FormInstructionData) => !x.isValid)
+    ) {
       setFormErrors(validationErrors)
       handleTurnOffLoaders()
       return
     }
 
-    if (!governance) {
-      handleTurnOffLoaders()
-      throw Error('No governance selected')
-    }
-
     try {
       // Fetch governance to get up to date proposalCount
       const selectedGovernance = (await fetchRealmGovernance(
-        governance.pubkey
+        governedAccount.governance.pubkey
       )) as ProgramAccount<Governance>
 
       const proposalAddress = await handleCreateProposal({
@@ -149,27 +154,29 @@ const New = () => {
         voteByCouncil,
         isDraft,
 
-        instructionsData: instructions.map((x) => {
+        instructionsData: formInstructionsData.map((uiInstruction) => {
           return {
-            data: x.serializedInstruction
-              ? getInstructionDataFromBase64(x.serializedInstruction)
+            data: uiInstruction.serializedInstruction
+              ? getInstructionDataFromBase64(
+                  uiInstruction.serializedInstruction
+                )
               : null,
-            holdUpTime: x.customHoldUpTime
-              ? getTimestampFromDays(x.customHoldUpTime)
+            holdUpTime: uiInstruction.customHoldUpTime
+              ? getTimestampFromDays(uiInstruction.customHoldUpTime)
               : selectedGovernance?.account?.config.minInstructionHoldUpTime,
-            prerequisiteInstructions: x.prerequisiteInstructions || [],
-            chunkSplitByDefault: x.chunkSplitByDefault || false,
-            signers: x.signers,
-            shouldSplitIntoSeparateTxs: x.shouldSplitIntoSeparateTxs,
+            prerequisiteInstructions:
+              uiInstruction.prerequisiteInstructions || [],
+            chunkSplitByDefault: uiInstruction.chunkSplitByDefault || false,
+            signers: uiInstruction.signers,
+            shouldSplitIntoSeparateTxs:
+              uiInstruction.shouldSplitIntoSeparateTxs,
           }
         }),
       })
 
-      const url = fmtUrlWithCluster(
-        `/dao/${symbol}/proposal/${proposalAddress}`
+      router.push(
+        fmtUrlWithCluster(`/dao/${symbol}/proposal/${proposalAddress}`)
       )
-
-      router.push(url)
     } catch (ex) {
       notify({ type: 'error', message: `${ex}` })
     }
@@ -205,7 +212,7 @@ const New = () => {
           </div>
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 space-y-6">
           <div className="pb-4">
             <Input
               label="Title"
@@ -223,7 +230,6 @@ const New = () => {
           </div>
 
           <Textarea
-            className="mb-3"
             label="Description"
             placeholder="Description of your proposal or use a github gist link (optional)"
             value={form.description}
@@ -233,7 +239,7 @@ const New = () => {
                 propertyName: 'description',
               })
             }
-          ></Textarea>
+          />
 
           {canChooseWhoVote && (
             <VoteBySwitch
@@ -241,25 +247,30 @@ const New = () => {
               onChange={() => {
                 setVoteByCouncil(!voteByCouncil)
               }}
-            ></VoteBySwitch>
+            />
           )}
+
+          <GovernedAccountSelect
+            label="Governance"
+            governedAccounts={governedMultiTypeAccounts}
+            onChange={(governedAccount?: GovernedMultiTypeAccount) =>
+              setGovernedAccount(governedAccount)
+            }
+            value={governedAccount}
+            governance={governedAccount?.governance}
+          />
 
           <InstructionsForm
             availableInstructions={availableInstructions}
-            onGovernanceChange={(
-              governance: ProgramAccount<Governance> | null
+            onInstructionsChange={(
+              instructions: ComponentInstructionData[]
             ) => {
-              setGovernance(governance)
+              setInstructions(instructions)
             }}
-            onInstructionsDataChange={(
-              instructionsData: ComponentInstructionData[]
-            ) => {
-              console.log('setInstructions >>>>', instructionsData)
-              setInstructions(instructionsData)
-            }}
+            governedAccount={governedAccount}
           />
 
-          <div className="border-t border-fgd-4 flex justify-end mt-6 pt-6 space-x-4">
+          <div className="border-t border-fgd-4 flex justify-end pt-6 space-x-4">
             <SecondaryButton
               disabled={isLoading}
               isLoading={isLoadingDraft}

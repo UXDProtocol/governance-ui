@@ -14,7 +14,7 @@ import {
 } from '@utils/tokens'
 import {
   SplTokenTransferForm,
-  UiInstruction,
+  FormInstructionData,
 } from '@utils/uiTypes/proposalCreationTypes'
 import { getAccountName } from '@components/instructions/tools'
 import { debounce } from '@utils/debounce'
@@ -90,7 +90,7 @@ const SplTokenTransfer = ({
       propertyName: 'amount',
     })
   }
-  async function getInstruction(): Promise<UiInstruction> {
+  async function getInstruction(): Promise<FormInstructionData> {
     return !form.governedTokenAccount?.isSol
       ? getTransferInstruction({
           schema,

@@ -5,7 +5,7 @@ import useWalletStore from 'stores/useWalletStore'
 import { GovernedMultiTypeAccount, tryGetMint } from '@utils/tokens'
 import {
   ClawbackForm,
-  UiInstruction,
+  FormInstructionData,
 } from '@utils/uiTypes/proposalCreationTypes'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
 import {
@@ -63,7 +63,7 @@ const Clawback = ({
     setFormErrors({})
     setForm({ ...form, [propertyName]: value })
   }
-  async function getInstruction(): Promise<UiInstruction> {
+  async function getInstruction(): Promise<FormInstructionData> {
     const isValid = await validateInstruction({ schema, form, setFormErrors })
     let serializedInstruction = ''
     const prerequisiteInstructions: TransactionInstruction[] = []
@@ -91,7 +91,7 @@ const Clawback = ({
       serializedInstruction = serializeInstructionToBase64(clawbackIx!)
     }
 
-    const obj: UiInstruction = {
+    const obj: FormInstructionData = {
       serializedInstruction,
       isValid,
       governance: governancesArray.find(

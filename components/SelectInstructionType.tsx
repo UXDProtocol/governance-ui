@@ -1,6 +1,6 @@
 import Select from '@components/inputs/Select'
 import { InstructionType } from '@hooks/useGovernanceAssets'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import PackageSelection, {
   PackageName,
 } from '../pages/dao/[symbol]/proposal/components/PackageSelection'
@@ -27,11 +27,9 @@ const SelectInstructionType = ({
 
   const [filteredInstructionTypes, setFilteredInstructionTypes] = useState<
     InstructionType[]
-  >(instructionTypes)
+  >([])
 
-  const handleSetPackageName = (packageName: PackageName | null) => {
-    setPackageName(packageName)
-
+  const computeFilteredInstructionsTypes = useCallback(() => {
     if (packageName === null) {
       setFilteredInstructionTypes(instructionTypes)
       return
@@ -50,7 +48,11 @@ const SelectInstructionType = ({
           instructionType.name.toLowerCase().indexOf(packageName) !== -1
       )
     )
-  }
+  }, [packageName, instructionTypes])
+
+  useEffect(() => {
+    computeFilteredInstructionsTypes()
+  }, [computeFilteredInstructionsTypes])
 
   return (
     <div>
@@ -67,11 +69,11 @@ const SelectInstructionType = ({
           onClick={(selected: PackageName) => {
             // Clicking on selected packageName unselect it
             if (selected === packageName) {
-              handleSetPackageName(null)
+              setPackageName(null)
               return
             }
 
-            handleSetPackageName(selected)
+            setPackageName(selected)
           }}
         />
       </div>

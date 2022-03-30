@@ -8,7 +8,7 @@ import useWalletStore from 'stores/useWalletStore'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import {
   FriktionDepositForm,
-  UiInstruction,
+  FormInstructionData,
 } from '@utils/uiTypes/proposalCreationTypes'
 import { NewProposalContext } from '../../../new'
 import { getFriktionDepositSchema } from '@utils/validations'
@@ -81,7 +81,7 @@ const FriktionDeposit = ({
     })
   }
 
-  async function getInstruction(): Promise<UiInstruction> {
+  async function getInstruction(): Promise<FormInstructionData> {
     return getFriktionDepositInstruction({
       schema,
       form,

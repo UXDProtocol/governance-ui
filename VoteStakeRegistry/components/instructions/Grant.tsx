@@ -15,7 +15,10 @@ import {
   TokenProgramAccount,
   tryGetTokenAccount,
 } from '@utils/tokens'
-import { GrantForm, UiInstruction } from '@utils/uiTypes/proposalCreationTypes'
+import {
+  GrantForm,
+  FormInstructionData,
+} from '@utils/uiTypes/proposalCreationTypes'
 import { getAccountName } from '@components/instructions/tools'
 import { debounce } from '@utils/debounce'
 import { getTokenTransferSchema } from '@utils/validations'
@@ -108,7 +111,7 @@ const Grant = ({
       propertyName: 'amount',
     })
   }
-  async function getInstruction(): Promise<UiInstruction> {
+  async function getInstruction(): Promise<FormInstructionData> {
     const isValid = await validateInstruction({ schema, form, setFormErrors })
     let serializedInstruction = ''
     const prerequisiteInstructions: TransactionInstruction[] = []
@@ -153,7 +156,7 @@ const Grant = ({
       serializedInstruction = serializeInstructionToBase64(grantIx!)
     }
 
-    const obj: UiInstruction = {
+    const obj: FormInstructionData = {
       serializedInstruction,
       isValid,
       governance: form.governedTokenAccount?.governance,

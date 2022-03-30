@@ -138,7 +138,7 @@ export default function useGovernanceAssets() {
       ownVoterWeight.canCreateProposal(acc.governance?.account?.config)
   )
 
-  const availableInstructions: InstructionType[] = [
+  const instructions: InstructionType[] = [
     {
       id: Instructions.TribecaCreateEpochGauge,
       name: 'Tribeca: Create Epoch Gauge',
@@ -325,16 +325,13 @@ export default function useGovernanceAssets() {
     },
   ]
 
-  const getAvailableInstructions = () => {
-    return availableInstructions.filter((itx) => itx.isVisible)
-  }
+  const availableInstructions = instructions.filter((itx) => itx.isVisible)
 
   return {
     governancesArray,
     getGovernancesByAccountType,
     getGovernancesByAccountTypes,
     availableInstructions,
-    getAvailableInstructions,
     governedTokenAccounts,
     getMintWithGovernances,
     canUseTransferInstruction,

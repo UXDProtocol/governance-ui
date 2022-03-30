@@ -17,7 +17,7 @@ import { AmountSide } from '@raydium-io/raydium-sdk'
 import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
 import { InstructionType } from '@hooks/useGovernanceAssets'
 
-export interface UiInstruction {
+export interface FormInstructionData {
   serializedInstruction: string
   isValid: boolean
   governance: ProgramAccount<Governance> | undefined
@@ -27,6 +27,7 @@ export interface UiInstruction {
   signers?: Keypair[]
   shouldSplitIntoSeparateTxs?: boolean | undefined
 }
+
 export interface SplTokenTransferForm {
   destinationAccount: string
   amount: number | undefined
@@ -300,13 +301,14 @@ export type createParams = [
 
 export interface ComponentInstructionData {
   governedAccount?: ProgramAccount<Governance>
-  getInstruction?: () => Promise<UiInstruction>
+  getInstruction?: () => Promise<FormInstructionData>
   type?: InstructionType
 }
 
 export interface InstructionsContext {
-  instructionsData: ComponentInstructionData[]
-  handleSetInstructions: (val, index) => void
-  governance?: ProgramAccount<Governance> | null
-  setGovernance: (val) => void
+  instructions: ComponentInstructionData[]
+  handleSetInstruction: (
+    val: Partial<ComponentInstructionData>,
+    idx: number
+  ) => void
 }

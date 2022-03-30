@@ -13,7 +13,10 @@ import {
   TokenProgramAccount,
   tryGetTokenAccount,
 } from '@utils/tokens'
-import { UiInstruction, MintForm } from 'utils/uiTypes/proposalCreationTypes'
+import {
+  FormInstructionData,
+  MintForm,
+} from 'utils/uiTypes/proposalCreationTypes'
 import { getAccountName } from 'components/instructions/tools'
 import { debounce } from 'utils/debounce'
 import { NewProposalContext } from '../../new'
@@ -84,7 +87,7 @@ const Mint = ({
       propertyName: 'amount',
     })
   }
-  async function getInstruction(): Promise<UiInstruction> {
+  async function getInstruction(): Promise<FormInstructionData> {
     return getMintInstruction({
       schema,
       form,

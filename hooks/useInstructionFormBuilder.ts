@@ -5,7 +5,7 @@ import { Connection, PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { debounce } from '@utils/debounce'
 import { isFormValid } from '@utils/formValidation'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
-import { UiInstruction } from '@utils/uiTypes/proposalCreationTypes'
+import { FormInstructionData } from '@utils/uiTypes/proposalCreationTypes'
 
 import { NewProposalContext } from 'pages/dao/[symbol]/proposal/new'
 import useWalletStore from 'stores/useWalletStore'
@@ -22,7 +22,7 @@ function useInstructionFormBuilder<
   schema,
   buildInstruction,
 }: {
-  index?: number
+  index: number
   initialFormValues: T
   schema: yup.ObjectSchema<
     {
@@ -43,7 +43,7 @@ function useInstructionFormBuilder<
 }) {
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
-  const { handleSetInstructions } = useContext(NewProposalContext)
+  const { handleSetInstruction } = useContext(NewProposalContext)
   const { getGovernedAccountPublicKey } = useGovernedMultiTypeAccounts()
 
   const [form, setForm] = useState<T>(initialFormValues)
@@ -60,7 +60,7 @@ function useInstructionFormBuilder<
     return isValid
   }
 
-  const getInstruction = async (): Promise<UiInstruction> => {
+  const getInstruction = async (): Promise<FormInstructionData> => {
     const governedAccountPubkey = getGovernedAccountPublicKey(
       form.governedAccount,
       true
@@ -81,13 +81,13 @@ function useInstructionFormBuilder<
       return {
         serializedInstruction: buildInstruction
           ? serializeInstructionToBase64(
-              await buildInstruction({
-                form,
-                connection: connection.current,
-                wallet,
-                governedAccountPubkey,
-              })
-            )
+            await buildInstruction({
+              form,
+              connection: connection.current,
+              wallet,
+              governedAccountPubkey,
+            })
+          )
           : '',
         isValid: true,
         governance: form.governedAccount?.governance,
@@ -114,7 +114,7 @@ function useInstructionFormBuilder<
     debounce.debounceFcn(async () => {
       await validateForm()
     })
-    handleSetInstructions(
+    handleSetInstruction(
       { governedAccount: form.governedAccount?.governance, getInstruction },
       index
     )

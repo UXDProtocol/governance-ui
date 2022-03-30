@@ -46,7 +46,6 @@ const ProposalForm = ({
       <SelectedInstruction
         itxType={itxType}
         index={index}
-        governance={governance}
         governedAccount={governedAccount}
       />
     </>

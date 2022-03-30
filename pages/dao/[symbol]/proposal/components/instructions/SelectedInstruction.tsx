@@ -1,4 +1,3 @@
-import { Governance, ProgramAccount } from '@solana/spl-governance'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { Instructions } from '@utils/uiTypes/proposalCreationTypes'
 import Clawback from 'VoteStakeRegistry/components/instructions/Clawback'
@@ -40,17 +39,15 @@ import UXDWithdrawInsuranceFromMangoDepository from './UXD/WithdrawInsuranceFrom
 const SelectedInstruction = ({
   itxType,
   index,
-  governance,
   governedAccount,
 }: {
   itxType: number
   index: number
-  governance: ProgramAccount<Governance> | null
   governedAccount: GovernedMultiTypeAccount | undefined
 }) => {
   switch (itxType) {
     case Instructions.Transfer:
-      return <SplTokenTransfer index={index} governance={governance} />
+      return <SplTokenTransfer index={index} governance={null} />
     case Instructions.ProgramUpgrade:
       return <ProgramUpgrade index={index} governedAccount={governedAccount} />
     case Instructions.SetProgramAuthority:
@@ -226,17 +223,17 @@ const SelectedInstruction = ({
         <TribecaGaugeSetVote index={index} governedAccount={governedAccount} />
       )
     case Instructions.FriktionDepositIntoVolt:
-      return <FriktionDeposit index={index} governance={governance} />
+      return <FriktionDeposit index={index} governance={null} />
     case Instructions.Mint:
-      return <Mint index={index} governance={governance} />
+      return <Mint index={index} governance={null} />
     case Instructions.Base64:
-      return <CustomBase64 index={index} governance={governance} />
+      return <CustomBase64 index={index} governance={null} />
     case Instructions.None:
       return <Empty index={index} governedAccount={governedAccount} />
     case Instructions.Grant:
-      return <Grant index={index} governance={governance} />
+      return <Grant index={index} governance={null} />
     case Instructions.Clawback:
-      return <Clawback index={index} governance={governance} />
+      return <Clawback index={index} governance={null} />
     default:
       return null
   }

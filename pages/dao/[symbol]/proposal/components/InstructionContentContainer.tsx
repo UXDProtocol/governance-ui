@@ -7,23 +7,19 @@ import DryRunInstructionBtn from './DryRunInstructionBtn'
 
 const InstructionContentContainer = ({
   children,
-  idx,
-  instructionsData,
+  instruction,
 }: {
-  children: any
-  idx: number
-  instructionsData: ComponentInstructionData[]
+  children: unknown
+  instruction?: ComponentInstructionData
 }) => {
-  const currentInstruction = instructionsData ? instructionsData[idx] : null
-
   return (
     <div className="space-y-4 w-full">
       {children}
 
-      {currentInstruction?.type?.id !== Instructions.None && (
+      {instruction?.type?.id !== Instructions.None && (
         <DryRunInstructionBtn
           btnClassNames=""
-          getInstructionDataFcn={currentInstruction?.getInstruction}
+          getInstructionDataFcn={instruction?.getInstruction}
         />
       )}
     </div>

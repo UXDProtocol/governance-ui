@@ -10,7 +10,7 @@ import Textarea from '@components/inputs/Textarea'
 import { validateInstruction } from '@utils/instructionTools'
 import {
   Base64InstructionForm,
-  UiInstruction,
+  FormInstructionData,
 } from '@utils/uiTypes/proposalCreationTypes'
 import useWalletStore from 'stores/useWalletStore'
 
@@ -34,12 +34,12 @@ const CustomBase64 = ({
     holdUpTime: 0,
   })
   const [formErrors, setFormErrors] = useState({})
-  const { handleSetInstructions } = useContext(NewProposalContext)
+  const { handleSetInstruction } = useContext(NewProposalContext)
   const handleSetForm = ({ propertyName, value }) => {
     setFormErrors({})
     setForm({ ...form, [propertyName]: value })
   }
-  async function getInstruction(): Promise<UiInstruction> {
+  async function getInstruction(): Promise<FormInstructionData> {
     const isValid = await validateInstruction({ schema, form, setFormErrors })
     let serializedInstruction = ''
     if (
@@ -49,7 +49,7 @@ const CustomBase64 = ({
     ) {
       serializedInstruction = form.base64
     }
-    const obj: UiInstruction = {
+    const obj: FormInstructionData = {
       serializedInstruction: serializedInstruction,
       isValid,
       governance: form.governedAccount?.governance,
@@ -58,7 +58,7 @@ const CustomBase64 = ({
     return obj
   }
   useEffect(() => {
-    handleSetInstructions(
+    handleSetInstruction(
       { governedAccount: form.governedAccount?.governance, getInstruction },
       index
     )
