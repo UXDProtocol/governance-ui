@@ -12,6 +12,8 @@ import useWalletStore from 'stores/useWalletStore'
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
 import useGovernedMultiTypeAccounts from './useGovernedMultiTypeAccounts'
 
+export type SerializedInstruction = string
+
 function useInstructionFormBuilder<
   T extends {
     governedAccount?: GovernedMultiTypeAccount
@@ -21,6 +23,7 @@ function useInstructionFormBuilder<
   initialFormValues,
   schema,
   buildInstruction,
+  getCustomHoldUpTime,
 }: {
   index: number
   initialFormValues: T
@@ -39,7 +42,10 @@ function useInstructionFormBuilder<
     connection: Connection
     wallet: SignerWalletAdapter
     governedAccountPubkey: PublicKey
-  }) => Promise<TransactionInstruction>
+  }) => Promise<
+    TransactionInstruction | SerializedInstruction
+  >
+  getCustomHoldUpTime?: () => Promise<number>
 }) {
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
@@ -78,22 +84,36 @@ function useInstructionFormBuilder<
       }
     }
     try {
-      return {
-        serializedInstruction: buildInstruction
+      const transactionInstructionOrSerializedInstruction = buildInstruction
+        ? await buildInstruction({
+          form,
+          connection: connection.current,
+          wallet,
+          governedAccountPubkey,
+        })
+        : ''
+
+      const serializedInstruction =
+        transactionInstructionOrSerializedInstruction instanceof
+          TransactionInstruction
           ? serializeInstructionToBase64(
-            await buildInstruction({
-              form,
-              connection: connection.current,
-              wallet,
-              governedAccountPubkey,
-            })
+            transactionInstructionOrSerializedInstruction
           )
-          : '',
+          : transactionInstructionOrSerializedInstruction
+
+      const customHoldUpTime = getCustomHoldUpTime
+        ? await getCustomHoldUpTime()
+        : undefined
+
+      return {
+        serializedInstruction,
         isValid: true,
         governance: form.governedAccount?.governance,
+        customHoldUpTime,
       }
     } catch (e) {
       console.error(e)
+
       return {
         serializedInstruction: '',
         isValid: false,

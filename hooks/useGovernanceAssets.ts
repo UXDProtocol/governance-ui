@@ -15,10 +15,13 @@ import useWalletStore from 'stores/useWalletStore'
 import useRealm from './useRealm'
 import useGovernanceAssetsStore from 'stores/useGovernanceAssetsStore'
 
+export type InstructionTag = 'beta' | 'deprecated'
+
 type Instruction = {
   name: string
   isVisible?: boolean
   packageId: PackageEnum
+  tag?: InstructionTag
 }
 
 type Instructions = {
@@ -29,6 +32,7 @@ export type InstructionType = {
   id: InstructionEnum
   name: string
   packageId: PackageEnum
+  tag?: InstructionTag
 }
 
 type Package = {
@@ -167,6 +171,10 @@ export default function useGovernanceAssets() {
   const packages: Packages = {
     [PackageEnum.Native]: {
       name: 'Native',
+    },
+    [PackageEnum.VoteStakeRegistry]: {
+      name: 'Vote Stake Registry',
+      image: '/img/vote-stake-registry.png',
     },
     [PackageEnum.Solend]: {
       name: 'Solend',
@@ -325,20 +333,23 @@ export default function useGovernanceAssets() {
       name: 'Transfer Tokens',
       isVisible: canUseTokenTransferInstruction,
       packageId: PackageEnum.Native,
+      tag: 'deprecated',
     },
     [InstructionEnum.Grant]: {
       name: 'Grant',
       isVisible:
         canUseTokenTransferInstruction &&
         realm?.account.config.useCommunityVoterWeightAddin,
-      packageId: PackageEnum.Native,
+      packageId: PackageEnum.VoteStakeRegistry,
+      tag: 'deprecated',
     },
     [InstructionEnum.Clawback]: {
       name: 'Clawback',
       isVisible:
         canUseTokenTransferInstruction &&
         realm?.account.config.useCommunityVoterWeightAddin,
-      packageId: PackageEnum.Native,
+      packageId: PackageEnum.VoteStakeRegistry,
+      tag: 'deprecated',
     },
     [InstructionEnum.CreateAssociatedTokenAccount]: {
       name: 'Create Associated Token Account',
@@ -359,6 +370,7 @@ export default function useGovernanceAssets() {
       name: 'Mint Tokens',
       isVisible: canUseMintInstruction,
       packageId: PackageEnum.Native,
+      tag: 'deprecated',
     },
     [InstructionEnum.Base64]: {
       name: 'Execute Custom Instruction',
@@ -381,10 +393,11 @@ export default function useGovernanceAssets() {
     .filter(
       ([, { isVisible }]) => typeof isVisible === 'undefined' || isVisible
     )
-    .map(([id, { name, packageId }]) => ({
+    .map(([id, { name, packageId, tag }]) => ({
       id: Number(id) as InstructionEnum,
       name,
       packageId,
+      tag,
     }))
 
   const availablePackages: PackageType[] = Object.entries(packages).map(

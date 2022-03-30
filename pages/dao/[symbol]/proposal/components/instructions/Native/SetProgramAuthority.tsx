@@ -33,6 +33,7 @@ const SetProgramAuthority = ({
         .string()
         .required('new authority address is required'),
     }),
+
     buildInstruction: async function () {
       if (!governedAccount?.governance?.account) {
         throw new Error('Governance must be a Program Account Governance')

@@ -287,6 +287,7 @@ export enum InstructionEnum {
 
 export enum PackageEnum {
   Native,
+  VoteStakeRegistry,
   Solend,
   Raydium,
   UXD,

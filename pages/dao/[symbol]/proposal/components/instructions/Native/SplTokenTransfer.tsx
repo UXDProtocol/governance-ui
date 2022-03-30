@@ -1,32 +1,35 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Input from 'components/inputs/Input'
-import useRealm from 'hooks/useRealm'
+import Input from '@components/inputs/Input'
+import useRealm from '@hooks/useRealm'
 import { AccountInfo } from '@solana/spl-token'
 import { getMintMinAmountAsDecimal } from '@tools/sdk/units'
 import { PublicKey } from '@solana/web3.js'
-import { precision } from 'utils/formatting'
-import { tryParseKey } from 'tools/validators/pubkey'
+import { precision } from '@utils/formatting'
+import { tryParseKey } from '@tools/validators/pubkey'
 import useWalletStore from 'stores/useWalletStore'
 import {
-  GovernedMintInfoAccount,
   GovernedMultiTypeAccount,
   TokenProgramAccount,
   tryGetTokenAccount,
 } from '@utils/tokens'
 import {
+  SplTokenTransferForm,
   FormInstructionData,
-  MintForm,
-} from 'utils/uiTypes/proposalCreationTypes'
-import { getAccountName } from 'components/instructions/tools'
-import { debounce } from 'utils/debounce'
-import { NewProposalContext } from '../../new'
+} from '@utils/uiTypes/proposalCreationTypes'
+import { getAccountName } from '@components/instructions/tools'
+import { debounce } from '@utils/debounce'
+import { getTokenTransferSchema } from '@utils/validations'
+import useGovernanceAssets from '@hooks/useGovernanceAssets'
 import { Governance } from '@solana/spl-governance'
 import { ProgramAccount } from '@solana/spl-governance'
-import useGovernanceAssets from 'hooks/useGovernanceAssets'
-import { getMintSchema } from 'utils/validations'
-import GovernedAccountSelect from '../GovernedAccountSelect'
-import { getMintInstruction } from 'utils/instructionTools'
-const Mint = ({
+import {
+  getSolTransferInstruction,
+  getTransferInstruction,
+} from '@utils/instructionTools'
+import { NewProposalContext } from '../../../new'
+import GovernedAccountSelect from '../../GovernedAccountSelect'
+
+const SplTokenTransfer = ({
   index,
   governance,
 }: {
@@ -34,18 +37,19 @@ const Mint = ({
   governance: ProgramAccount<Governance> | null
 }) => {
   const connection = useWalletStore((s) => s.connection)
+  const wallet = useWalletStore((s) => s.current)
   const { realmInfo } = useRealm()
-  const { getMintWithGovernances } = useGovernanceAssets()
+  const { governedTokenAccountsWithoutNfts } = useGovernanceAssets()
   const shouldBeGoverned = index !== 0 && governance
   const programId: PublicKey | undefined = realmInfo?.programId
-  const [form, setForm] = useState<MintForm>({
+  const [form, setForm] = useState<SplTokenTransferForm>({
     destinationAccount: '',
-    // No default mint amount
+    // No default transfer amount
     amount: undefined,
-    mintAccount: undefined,
+    governedTokenAccount: undefined,
     programId: programId?.toString(),
+    mintInfo: undefined,
   })
-  const wallet = useWalletStore((s) => s.current)
   const [governedAccount, setGovernedAccount] = useState<
     ProgramAccount<Governance> | undefined
   >(undefined)
@@ -54,18 +58,17 @@ const Mint = ({
     setDestinationAccount,
   ] = useState<TokenProgramAccount<AccountInfo> | null>(null)
   const [formErrors, setFormErrors] = useState({})
-  const [
-    mintGovernancesWithMintInfo,
-    setMintGovernancesWithMintInfo,
-  ] = useState<GovernedMintInfoAccount[]>([])
-  const mintMinAmount = form.mintAccount
-    ? getMintMinAmountAsDecimal(form.mintAccount.mintInfo)
+  const mintMinAmount = form.mintInfo
+    ? getMintMinAmountAsDecimal(form.mintInfo)
     : 1
   const currentPrecision = precision(mintMinAmount)
   const { handleSetInstruction } = useContext(NewProposalContext)
   const handleSetForm = ({ propertyName, value }) => {
     setFormErrors({})
     setForm({ ...form, [propertyName]: value })
+  }
+  const setMintInfo = (value) => {
+    setForm({ ...form, mintInfo: value })
   }
   const setAmount = (event) => {
     const value = event.target.value
@@ -88,15 +91,25 @@ const Mint = ({
     })
   }
   async function getInstruction(): Promise<FormInstructionData> {
-    return getMintInstruction({
-      schema,
-      form,
-      programId,
-      connection,
-      wallet,
-      governedMintInfoAccount: form.mintAccount,
-      setFormErrors,
-    })
+    return !form.governedTokenAccount?.isSol
+      ? getTransferInstruction({
+          schema,
+          form,
+          programId,
+          connection,
+          wallet,
+          currentAccount: form.governedTokenAccount || null,
+          setFormErrors,
+        })
+      : getSolTransferInstruction({
+          schema,
+          form,
+          programId,
+          connection,
+          wallet,
+          currentAccount: form.governedTokenAccount || null,
+          setFormErrors,
+        })
   }
 
   useEffect(() => {
@@ -125,37 +138,33 @@ const Mint = ({
       { governedAccount: governedAccount, getInstruction },
       index
     )
-  }, [form, governedAccount])
+  }, [form])
+
   useEffect(() => {
-    setGovernedAccount(form?.mintAccount?.governance)
-  }, [form.mintAccount])
-  useEffect(() => {
-    async function getMintWithGovernancesFcn() {
-      const resp = await getMintWithGovernances()
-      setMintGovernancesWithMintInfo(resp)
-    }
-    getMintWithGovernancesFcn()
-  }, [])
+    setGovernedAccount(form.governedTokenAccount?.governance)
+    setMintInfo(form.governedTokenAccount?.mint?.account)
+  }, [form.governedTokenAccount])
   const destinationAccountName =
     destinationAccount?.publicKey &&
     getAccountName(destinationAccount?.account.address)
-  const schema = getMintSchema({ form, connection })
+  const schema = getTokenTransferSchema({ form, connection })
 
   return (
     <>
       <GovernedAccountSelect
-        label="Mint"
+        label="Source account"
         governedAccounts={
-          mintGovernancesWithMintInfo as GovernedMultiTypeAccount[]
+          governedTokenAccountsWithoutNfts as GovernedMultiTypeAccount[]
         }
         onChange={(value) => {
-          handleSetForm({ value, propertyName: 'mintAccount' })
+          handleSetForm({ value, propertyName: 'governedTokenAccount' })
         }}
-        value={form.mintAccount}
-        error={formErrors['mintAccount']}
+        value={form.governedTokenAccount}
+        error={formErrors['governedTokenAccount']}
         shouldBeGoverned={shouldBeGoverned}
         governance={governance}
-      ></GovernedAccountSelect>
+      />
+
       <Input
         label="Destination account"
         value={form.destinationAccount}
@@ -196,4 +205,4 @@ const Mint = ({
   )
 }
 
-export default Mint
+export default SplTokenTransfer

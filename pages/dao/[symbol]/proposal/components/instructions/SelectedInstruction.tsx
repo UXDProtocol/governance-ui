@@ -1,17 +1,12 @@
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { InstructionEnum } from '@utils/uiTypes/proposalCreationTypes'
-import Clawback from 'VoteStakeRegistry/components/instructions/Clawback'
-import Grant from 'VoteStakeRegistry/components/instructions/Grant'
 import ProgramUpgrade from './bpfUpgradeableLoader/ProgramUpgrade'
-import CreateAssociatedTokenAccount from './CreateAssociatedTokenAccount'
-import CustomBase64 from './CustomBase64'
-import Empty from './Empty'
-import Mint from './Mint'
+import CreateAssociatedTokenAccount from './Native/CreateAssociatedTokenAccount'
 import RaydiumAddLiquidityToPool from './Raydium/AddLiquidityToPool'
 import RaydiumRemoveLiquidityFromPool from './Raydium/RemoveLiquidityFromPool'
 import FriktionDeposit from './Friktion/FriktionDeposit'
-import SetProgramAuthority from './SetProgramAuthority'
-import SplTokenTransfer from './SplTokenTransfer'
+import SetProgramAuthority from './Native/SetProgramAuthority'
+import SplTokenTransfer from './Native/SplTokenTransfer'
 import SolendCreateObligationAccount from './Solend/CreateObligationAccount'
 import SolendDepositReserveLiquidityAndObligationCollateral from './Solend/DepositReserveLiquidityAndObligationCollateral'
 import SolendInitObligationAccount from './Solend/InitObligationAccount'
@@ -35,6 +30,11 @@ import UXDRegisterMangoDeposiory from './UXD/RegisterMangoDepository'
 import UXDSetMangoDepositoriesRedeemableSoftCap from './UXD/SetMangoDepositoriesRedeemableSoftCap'
 import UXDSetRedeemableGlobalSupplyCap from './UXD/SetRedeemGlobalSupplyCap'
 import UXDWithdrawInsuranceFromMangoDepository from './UXD/WithdrawInsuranceFromMangoDepository'
+import NativeMint from './Native/Mint'
+import NativeEmpty from './Native/Empty'
+import NativeCustomBase64 from './Native/CustomBase64'
+import VoteStakeRegistryGrant from 'VoteStakeRegistry/components/instructions/Grant'
+import VoteStakeRegistryClawback from 'VoteStakeRegistry/components/instructions/Clawback'
 
 const SelectedInstruction = ({
   itxType,
@@ -225,15 +225,18 @@ const SelectedInstruction = ({
     case InstructionEnum.FriktionDepositIntoVolt:
       return <FriktionDeposit index={index} governance={null} />
     case InstructionEnum.Mint:
-      return <Mint index={index} governance={null} />
-    case InstructionEnum.Base64:
-      return <CustomBase64 index={index} governance={null} />
-    case InstructionEnum.None:
-      return <Empty index={index} governedAccount={governedAccount} />
+      return <NativeMint index={index} governance={null} />
     case InstructionEnum.Grant:
-      return <Grant index={index} governance={null} />
+      return <VoteStakeRegistryGrant index={index} governance={null} />
     case InstructionEnum.Clawback:
-      return <Clawback index={index} governance={null} />
+      return <VoteStakeRegistryClawback index={index} governance={null} />
+    case InstructionEnum.Base64:
+      return (
+        <NativeCustomBase64 index={index} governedAccount={governedAccount} />
+      )
+    case InstructionEnum.None:
+      return <NativeEmpty index={index} governedAccount={governedAccount} />
+
     default:
       return null
   }

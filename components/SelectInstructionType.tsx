@@ -64,18 +64,30 @@ const SelectInstructionType = ({
   }, [computeFilteredInstructionsTypes])
 
   // Only display the package name is a no package is selected
-  const getInstructionDisplayName = (instruction?: InstructionType) => {
+  const getInstructionDisplayName = (
+    instruction?: InstructionType
+  ): string | JSX.Element => {
     if (!instruction) {
       return ''
     }
 
-    if (packageId !== null) {
-      return instruction.name
-    }
+    return (
+      <>
+        {packageId !== null ? (
+          <span className="pr-1">
+            {getPackageTypeById(instruction.packageId)!.name}:
+          </span>
+        ) : null}
 
-    return `${getPackageTypeById(instruction.packageId)!.name}: ${
-      instruction.name
-    }`
+        <span>{instruction.name}</span>
+
+        {instruction.tag ? (
+          <span className="ml-3 text-primary-light font-bold">
+            {instruction.tag}
+          </span>
+        ) : null}
+      </>
+    )
   }
 
   return (
