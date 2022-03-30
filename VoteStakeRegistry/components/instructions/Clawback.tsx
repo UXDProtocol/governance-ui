@@ -58,7 +58,7 @@ const Clawback = ({
     ProgramAccount<Governance> | undefined
   >(undefined)
   const [formErrors, setFormErrors] = useState({})
-  const { handleSetInstructions } = useContext(NewProposalContext)
+  const { handleSetInstruction } = useContext(NewProposalContext)
   const handleSetForm = ({ propertyName, value }) => {
     setFormErrors({})
     setForm({ ...form, [propertyName]: value })
@@ -103,7 +103,7 @@ const Clawback = ({
     return obj
   }
   useEffect(() => {
-    handleSetInstructions(
+    handleSetInstruction(
       { governedAccount: governedAccount, getInstruction },
       index
     )

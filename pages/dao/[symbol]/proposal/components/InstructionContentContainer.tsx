@@ -1,6 +1,6 @@
 import {
   ComponentInstructionData,
-  Instructions,
+  InstructionEnum,
 } from '@utils/uiTypes/proposalCreationTypes'
 import React from 'react'
 import DryRunInstructionBtn from './DryRunInstructionBtn'
@@ -16,7 +16,7 @@ const InstructionContentContainer = ({
     <div className="space-y-4 w-full">
       {children}
 
-      {instruction?.type?.id !== Instructions.None && (
+      {instruction?.type?.id !== InstructionEnum.None && (
         <DryRunInstructionBtn
           btnClassNames=""
           getInstructionDataFcn={instruction?.getInstruction}

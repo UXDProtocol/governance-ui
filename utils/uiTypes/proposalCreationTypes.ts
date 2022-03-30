@@ -82,7 +82,7 @@ export interface MintForm {
 }
 
 export interface ProgramUpgradeForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   bufferAddress?: string
   bufferSpillAddress?: string
 }
@@ -90,7 +90,7 @@ export interface ProgramUpgradeForm {
 export const programUpgradeFormNameOf = getNameOf<ProgramUpgradeForm>()
 
 export interface SetProgramAuthorityForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   destinationAuthority?: string
 }
 export interface Base64InstructionForm {
@@ -155,35 +155,35 @@ export interface RemoveLiquidityRaydiumForm {
 }
 
 export interface InitializeControllerForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   mintDecimals: number
 }
 
 export interface SetRedeemableGlobalSupplyCapForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   supplyCap: number
 }
 
 export interface SetMangoDepositoriesRedeemableSoftCapForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   softCap: number
 }
 
 export interface RegisterMangoDepositoryForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   collateralName?: string
   insuranceName?: string
 }
 
 export interface DepositInsuranceToMangoDepositoryForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   collateralName?: string
   insuranceName?: string
   insuranceDepositedAmount: number
 }
 
 export interface WithdrawInsuranceFromMangoDepositoryForm {
-  governedAccount: GovernedMultiTypeAccount | undefined
+  governedAccount?: GovernedMultiTypeAccount
   collateralName?: string
   insuranceName?: string
   insuranceWithdrawnAmount: number
@@ -247,7 +247,7 @@ export interface TribecaGaugeSetVoteForm {
   weight?: number
 }
 
-export enum Instructions {
+export enum InstructionEnum {
   Transfer,
   ProgramUpgrade,
   SetProgramAuthority,

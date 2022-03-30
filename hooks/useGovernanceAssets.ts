@@ -5,7 +5,7 @@ import {
   GovernedMintInfoAccount,
   parseMintAccountData,
 } from '@utils/tokens'
-import { Instructions } from '@utils/uiTypes/proposalCreationTypes'
+import { InstructionEnum } from '@utils/uiTypes/proposalCreationTypes'
 
 import useWalletStore from 'stores/useWalletStore'
 
@@ -13,7 +13,7 @@ import useRealm from './useRealm'
 import useGovernanceAssetsStore from 'stores/useGovernanceAssetsStore'
 
 export type InstructionType = {
-  id: Instructions
+  id: InstructionEnum
   name: string
   isVisible?: boolean
 }
@@ -140,182 +140,182 @@ export default function useGovernanceAssets() {
 
   const instructions: InstructionType[] = [
     {
-      id: Instructions.TribecaCreateEpochGauge,
+      id: InstructionEnum.TribecaCreateEpochGauge,
       name: 'Tribeca: Create Epoch Gauge',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaCreateEscrowGovernanceTokenATA,
+      id: InstructionEnum.TribecaCreateEscrowGovernanceTokenATA,
       name: 'Tribeca: Create Escrow Governance Token ATA',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaCreateGaugeVote,
+      id: InstructionEnum.TribecaCreateGaugeVote,
       name: 'Tribeca: Create Gauge Vote',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaCreateGaugeVoter,
+      id: InstructionEnum.TribecaCreateGaugeVoter,
       name: 'Tribeca: Create Gauge Voter',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaGaugeCommitVote,
+      id: InstructionEnum.TribecaGaugeCommitVote,
       name: 'Tribeca: Gauge Commit Vote',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaGaugeRevertVote,
+      id: InstructionEnum.TribecaGaugeRevertVote,
       name: 'Tribeca: Gauge Revert Vote',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaLock,
+      id: InstructionEnum.TribecaLock,
       name: 'Tribeca: Lock Tokens',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaNewEscrow,
+      id: InstructionEnum.TribecaNewEscrow,
       name: 'Tribeca: New Escrow',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaPrepareEpochGaugeVoter,
+      id: InstructionEnum.TribecaPrepareEpochGaugeVoter,
       name: 'Tribeca: Prepare Epoch Gauge Voter',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaResetEpochGaugeVoter,
+      id: InstructionEnum.TribecaResetEpochGaugeVoter,
       name: 'Tribeca: Reset Epoch Gauge Voter',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.TribecaGaugeSetVote,
+      id: InstructionEnum.TribecaGaugeSetVote,
       name: 'Tribeca: Set Gauge Vote',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.SolendCreateObligationAccount,
+      id: InstructionEnum.SolendCreateObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.SolendInitObligationAccount,
+      id: InstructionEnum.SolendInitObligationAccount,
       name: 'Solend: Init Obligation Account',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.SolendDepositReserveLiquidityAndObligationCollateral,
+      id: InstructionEnum.SolendDepositReserveLiquidityAndObligationCollateral,
       name: 'Solend: Deposit Funds',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.SolendRefreshReserve,
+      id: InstructionEnum.SolendRefreshReserve,
       name: 'Solend: Refresh Reserve',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.SolendRefreshObligation,
+      id: InstructionEnum.SolendRefreshObligation,
       name: 'Solend: Refresh Obligation',
       isVisible: canUseAnyInstruction,
     },
     {
       id:
-        Instructions.SolendWithdrawObligationCollateralAndRedeemReserveLiquidity,
+        InstructionEnum.SolendWithdrawObligationCollateralAndRedeemReserveLiquidity,
       name: 'Solend: Withdraw Funds',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.UXDInitializeController,
+      id: InstructionEnum.UXDInitializeController,
       name: 'UXD: Initialize Controller',
       isVisible: canUseUxdInstructions,
     },
     {
-      id: Instructions.UXDSetRedeemableGlobalSupplyCap,
+      id: InstructionEnum.UXDSetRedeemableGlobalSupplyCap,
       name: 'UXD: Set Redeemable Global Supply Cap',
       isVisible: canUseUxdInstructions,
     },
     {
-      id: Instructions.UXDSetMangoDepositoriesRedeemableSoftCap,
+      id: InstructionEnum.UXDSetMangoDepositoriesRedeemableSoftCap,
       name: 'UXD: Set Mango Depositories Redeemable Supply Soft Cap',
       isVisible: canUseUxdInstructions,
     },
     {
-      id: Instructions.UXDRegisterMangoDepository,
+      id: InstructionEnum.UXDRegisterMangoDepository,
       name: 'UXD: Register Mango Depository',
       isVisible: canUseUxdInstructions,
     },
     {
-      id: Instructions.UXDDepositInsuranceToMangoDepository,
+      id: InstructionEnum.UXDDepositInsuranceToMangoDepository,
       name: 'UXD: Deposit Insurance To Mango Depository',
       isVisible: canUseUxdInstructions,
     },
     {
-      id: Instructions.UXDWithdrawInsuranceFromMangoDepository,
+      id: InstructionEnum.UXDWithdrawInsuranceFromMangoDepository,
       name: 'UXD: Withdraw Insurance From Mango Depository',
       isVisible: canUseUxdInstructions,
     },
     {
-      id: Instructions.RaydiumAddLiquidity,
+      id: InstructionEnum.RaydiumAddLiquidity,
       name: 'Raydium: Add To Liquidity Pool',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.RaydiumRemoveLiquidity,
+      id: InstructionEnum.RaydiumRemoveLiquidity,
       name: 'Raydium: Remove From Liquidity Pool',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.Transfer,
+      id: InstructionEnum.Transfer,
       name: 'Transfer Tokens',
       isVisible: canUseTokenTransferInstruction,
     },
     {
-      id: Instructions.Grant,
+      id: InstructionEnum.Grant,
       name: 'Grant',
       isVisible:
         canUseTokenTransferInstruction &&
         realm?.account.config.useCommunityVoterWeightAddin,
     },
     {
-      id: Instructions.Clawback,
+      id: InstructionEnum.Clawback,
       name: 'Clawback',
       isVisible:
         canUseTokenTransferInstruction &&
         realm?.account.config.useCommunityVoterWeightAddin,
     },
     {
-      id: Instructions.CreateAssociatedTokenAccount,
+      id: InstructionEnum.CreateAssociatedTokenAccount,
       name: 'Create Associated Token Account',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.FriktionDepositIntoVolt,
+      id: InstructionEnum.FriktionDepositIntoVolt,
       name: 'Friktion: Deposit into Volt',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.ProgramUpgrade,
+      id: InstructionEnum.ProgramUpgrade,
       name: 'Upgrade Program',
       isVisible: canUseProgramUpgradeInstruction,
     },
     {
-      id: Instructions.SetProgramAuthority,
+      id: InstructionEnum.SetProgramAuthority,
       name: 'Set Program Authority',
       isVisible: canUseProgramUpgradeInstruction,
     },
     {
-      id: Instructions.Mint,
+      id: InstructionEnum.Mint,
       name: 'Mint Tokens',
       isVisible: canUseMintInstruction,
     },
     {
-      id: Instructions.Base64,
+      id: InstructionEnum.Base64,
       name: 'Execute Custom Instruction',
       isVisible: canUseAnyInstruction,
     },
     {
-      id: Instructions.None,
+      id: InstructionEnum.None,
       name: 'None',
       isVisible:
         realm &&

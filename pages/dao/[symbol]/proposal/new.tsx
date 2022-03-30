@@ -33,8 +33,14 @@ import GovernedAccountSelect from './components/GovernedAccountSelect'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 
+type Form = {
+  title: string
+  description: string
+}
+
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
+  description: yup.string(),
 })
 
 const defaultGovernanceCtx: InstructionsContext = {
@@ -57,7 +63,7 @@ const New = () => {
     fetchTokenAccountsForSelectedRealmGovernance,
   } = useWalletStore((s) => s.actions)
   const [voteByCouncil, setVoteByCouncil] = useState(false)
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Form>({
     title: '',
     description: '',
   })
