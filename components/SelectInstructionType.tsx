@@ -4,7 +4,7 @@ import useGovernanceAssets, {
 } from '@hooks/useGovernanceAssets'
 import { PackageEnum } from '@utils/uiTypes/proposalCreationTypes'
 import { useCallback, useEffect, useState } from 'react'
-import PackageSelection from '../pages/dao/[symbol]/proposal/components/PackageSelection'
+import PackageSelection from './PackageSelection'
 
 const SelectInstructionType = ({
   idx,
