@@ -6,6 +6,7 @@ class UXDProtocolStakingConfiguration {
     [cluster in EndpointTypes]?: PublicKey
   } = {
     devnet: new PublicKey('G32Z4MiJhFfaidSLCz36WBLzcNJQ4o4mv6dHLzM35Huq'),
+    mainnet: new PublicKey('UXDSkps5NR8Lu1HB5uPLFfuB34hZ6DCk7RhYZZtGzbF'),
   }
 
   public readonly instructionCodes = {

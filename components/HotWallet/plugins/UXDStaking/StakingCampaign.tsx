@@ -62,9 +62,9 @@ const StakingCampaign = ({
         </div>
 
         <div className="flex justify-between">
-          <span className="text-xs">status:</span>
+          <span className="text-xs">finalized:</span>
           <span className="text-xs">
-            {stakingCampaignInfo.isFinalized ? 'ended' : 'in progress'}
+            {stakingCampaignInfo.isFinalized ? 'yes' : 'no'}
           </span>
         </div>
       </div>

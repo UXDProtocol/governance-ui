@@ -10,9 +10,18 @@ import { PublicKey } from '@solana/web3.js'
 
 const UsersCampaigns = {
   ['AWuSjBCEMVtk8fX2HAwtuMjoHLmLM72PJxi1dZdKHPFu']: [
+    // Fake Dao devnet SOL Treasury's governance
     {
       name: 'Campaign Name',
       pda: new PublicKey('CrRH3o9TbxvRdNkkjcmG5qdG7XM397nKcRmxgkVniAtB'),
+    },
+  ],
+
+  ['AuQHcJZhTd1dnXRrM78RomFiCvW6a9CqxxJ94Fp9h8b']: [
+    // Fake Dao SOL Treasury's governance
+    {
+      name: 'Campaign Test',
+      pda: new PublicKey('C37FJ2JeDciaEs1nKazMkkH21VZjQVq4WTMLSJYiibRr'),
     },
   ],
 }
@@ -29,35 +38,40 @@ const useHotWalletPluginUXDStaking = (hotWalletAccount: HotWalletAccount) => {
   const connection = useWalletStore((s) => s.connection)
 
   const loadUXDStakingCampaignInfo = useCallback(async () => {
-    const programId =
-      uxdProtocolStakingConfiguration.programId[connection.cluster]
+    try {
+      const programId =
+        uxdProtocolStakingConfiguration.programId[connection.cluster]
 
-    if (!programId) {
-      throw new Error(
-        `Unsupported cluster ${connection.cluster} for UXD Protocol Staking`
-      )
-    }
+      if (!programId) {
+        throw new Error(
+          `Unsupported cluster ${connection.cluster} for UXD Protocol Staking`
+        )
+      }
 
-    const campaigns =
-      UsersCampaigns[hotWalletAccount.publicKey.toBase58()] ?? []
+      const campaigns =
+        UsersCampaigns[hotWalletAccount.publicKey.toBase58()] ?? []
 
-    const stakingCampaignStates: StakingCampaignState[] = await Promise.all(
-      campaigns.map(({ pda }) =>
-        getOnchainStakingCampaign(
-          pda,
-          connection.current,
-          uxdProtocolStakingConfiguration.TXN_OPTS
+      const stakingCampaignStates: StakingCampaignState[] = await Promise.all(
+        campaigns.map(({ pda }) =>
+          getOnchainStakingCampaign(
+            pda,
+            connection.current,
+            uxdProtocolStakingConfiguration.TXN_OPTS
+          )
         )
       )
-    )
 
-    setStakingCampaignsInfo(
-      stakingCampaignStates.map((state, index) => ({
-        ...state,
-        name: campaigns[index].name,
-        pda: campaigns[index].pda,
-      }))
-    )
+      setStakingCampaignsInfo(
+        stakingCampaignStates.map((state, index) => ({
+          ...state,
+          name: campaigns[index].name,
+          pda: campaigns[index].pda,
+        }))
+      )
+    } catch (e) {
+      console.log(e)
+      setStakingCampaignsInfo([])
+    }
   }, [connection, hotWalletAccount])
 
   useEffect(() => {

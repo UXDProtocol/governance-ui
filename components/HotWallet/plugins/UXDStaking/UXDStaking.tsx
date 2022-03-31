@@ -24,12 +24,18 @@ const HotWalletPluginUXDStaking = ({
       </h3>
 
       <div className="space-y-3">
-        {stakingCampaignsInfo.map((stakingCampaignInfo) => (
-          <StakingCampaign
-            key={stakingCampaignInfo.pda.toBase58()}
-            stakingCampaignInfo={stakingCampaignInfo}
-          />
-        ))}
+        {stakingCampaignsInfo.length ? (
+          stakingCampaignsInfo.map((stakingCampaignInfo) => (
+            <StakingCampaign
+              key={stakingCampaignInfo.pda.toBase58()}
+              stakingCampaignInfo={stakingCampaignInfo}
+            />
+          ))
+        ) : (
+          <div className="text-sm text-fgd-3 bg-bkg-1 w-full p-2">
+            no configured campaign
+          </div>
+        )}
       </div>
     </div>
   )
