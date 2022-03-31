@@ -247,6 +247,29 @@ export interface TribecaGaugeSetVoteForm {
   weight?: number
 }
 
+export interface UXDStakingInitializeStakingCampaignForm {
+  governedAccount?: GovernedMultiTypeAccount
+  rewardMintUIName?: SplTokenUIName
+  stakedMintUIName?: SplTokenUIName
+  startTs?: number
+  endTs?: number
+  uiRewardAmountToDeposit?: number
+}
+
+export interface UXDStakingFinalizeStakingCampaignForm {
+  governedAccount?: GovernedMultiTypeAccount
+  stakingCampaignPda?: string
+}
+
+export interface UXDStakingAddStakingOptionForm {
+  governedAccount?: GovernedMultiTypeAccount
+  stakingCampaignPda?: string
+  stakingOptions: {
+    lockupSecs?: number
+    apr?: number
+  }[]
+}
+
 export enum InstructionEnum {
   Transfer,
   ProgramUpgrade,
@@ -283,6 +306,9 @@ export enum InstructionEnum {
   UXDRegisterMangoDepository,
   UXDDepositInsuranceToMangoDepository,
   UXDWithdrawInsuranceFromMangoDepository,
+  UXDStakingInitializeStakingCampaign,
+  UXDStakingFinalizeStakingCampaign,
+  UXDStakingAddStakingOption,
 }
 
 export enum PackageEnum {
@@ -291,6 +317,7 @@ export enum PackageEnum {
   Solend,
   Raydium,
   UXD,
+  UXDStaking,
   Friktion,
   Tribeca,
 }
