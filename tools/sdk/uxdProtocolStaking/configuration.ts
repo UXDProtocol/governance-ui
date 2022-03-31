@@ -21,6 +21,9 @@ class UXDProtocolStakingConfiguration {
     preflightCommitment: 'processed',
     skipPreflight: false,
   }
+
+  // 10_000 = 100%, 5_000 = 50% ...
+  public readonly APR_BASIS = 10_000
 }
 
 export default new UXDProtocolStakingConfiguration()

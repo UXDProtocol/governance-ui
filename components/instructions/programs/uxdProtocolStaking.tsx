@@ -57,8 +57,10 @@ export const UXD_PROTOCOL_STAKING_INSTRUCTIONS = {
 
         const { startTs, endTs, rewardDepositAmount } = args
 
-        const startDate = new Date(startTs).toUTCString()
-        const endDate = endTs ? new Date(endTs).toUTCString() : '-'
+        const startDate = new Date(Number(startTs) * 1000).toUTCString()
+        const endDate = endTs
+          ? new Date(Number(endTs) * 1000).toUTCString()
+          : '-'
 
         const rewardDepositAmountUi = getMintDecimalAmountFromNatural(
           mintInfo.account,
@@ -130,7 +132,9 @@ export const UXD_PROTOCOL_STAKING_INSTRUCTIONS = {
                   <p>{`option ${index + 1} lockup time on seconds: ${Number(
                     args[`lockupSecs${index}`]
                   ).toLocaleString()}`}</p>
-                  <p>{`option ${index + 1} apr: ${args[`apr${index}`]}%`}</p>
+                  <p>{`option ${index + 1} apr: ${
+                    args[`apr${index}`] / (stakingConfiguration.APR_BASIS / 100)
+                  }%`}</p>
                 </>
               )
             })}
