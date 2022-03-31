@@ -13,6 +13,7 @@ class UXDProtocolStakingConfiguration {
     addStakingOption: 191,
     activateStakingOption: 193,
     finalizeStakingCampaign: 166,
+    refillRewardVault: 83,
   }
 
   public readonly TXN_OPTS: ConfirmOptions = {

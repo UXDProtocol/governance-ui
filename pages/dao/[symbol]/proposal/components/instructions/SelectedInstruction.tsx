@@ -39,6 +39,7 @@ import UXDStakingInitializeStakingCampaign from './UXDStaking/InitializeStakingC
 import UXDStakingFinalizeStakingCampaign from './UXDStaking/FinalizeStakingCampaign'
 import UXDStakingAddStakingOption from './UXDStaking/AddStakingOption'
 import UXDStakingActivateStakingOption from './UXDStaking/ActivateStakingOption'
+import UXDStakingRefillRewardVault from './UXDStaking/RefillRewardVault'
 
 const SelectedInstruction = ({
   itxType,
@@ -184,6 +185,13 @@ const SelectedInstruction = ({
     case InstructionEnum.UXDStakingActivateStakingOption:
       return (
         <UXDStakingActivateStakingOption
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case InstructionEnum.UXDStakingRefillRewardVault:
+      return (
+        <UXDStakingRefillRewardVault
           index={index}
           governedAccount={governedAccount}
         />
