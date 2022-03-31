@@ -2,7 +2,7 @@ import { Connection } from '@solana/web3.js'
 import { nu64, struct, u32, u8 } from 'buffer-layout'
 import { AccountMetaData } from '@solana/spl-governance'
 import stakingConfiguration from '@tools/sdk/uxdProtocolStaking/configuration'
-import { tryGetMint } from '@utils/tokens'
+import { tryGetMint, tryGetTokenMint } from '@utils/tokens'
 import { getMintDecimalAmountFromNatural } from '@tools/sdk/units'
 
 export const UXD_PROTOCOL_STAKING_INSTRUCTIONS = {
@@ -195,8 +195,8 @@ export const UXD_PROTOCOL_STAKING_INSTRUCTIONS = {
         'rent',
       ],
       getDataUI: async (
-        connection: Connection,
-        data: Uint8Array,
+        _connection: Connection,
+        _data: Uint8Array,
         accounts: AccountMetaData[]
       ) => {
         const authority = accounts[0].pubkey
@@ -212,6 +212,70 @@ export const UXD_PROTOCOL_STAKING_INSTRUCTIONS = {
             <p>{`campaign PDA: ${campaignPDA.toBase58()}`}</p>
             <p>{`reward mint: ${rewardMint.toBase58()}`}</p>
             <p>{`reward vault: ${rewardVault.toBase58()}`}</p>
+          </>
+        )
+      },
+    },
+
+    [stakingConfiguration.instructionCodes.refillRewardVault]: {
+      name: 'UXD Staking - Refill Reward Vault',
+      accounts: [
+        'authority',
+        'payer',
+        'stakingCampaign',
+        'rewardVault',
+        'authorityRewardAta',
+        'tokenProgram',
+      ],
+      getDataUI: async (
+        connection: Connection,
+        data: Uint8Array,
+        accounts: AccountMetaData[]
+      ) => {
+        const dataLayout = struct([
+          u8('instruction'),
+          u8('SIGHASH_1'),
+          u8('SIGHASH_2'),
+          u8('SIGHASH_3'),
+          u8('SIGHASH_4'),
+          u8('SIGHASH_5'),
+          u8('SIGHASH_6'),
+          u8('SIGHASH_7'),
+          nu64('rewardRefillAmount'),
+        ])
+
+        const authority = accounts[0].pubkey
+        const payer = accounts[1].pubkey
+        const campaignPDA = accounts[2].pubkey
+        const rewardVault = accounts[3].pubkey
+        const authorityRewardAta = accounts[4].pubkey
+
+        const args = dataLayout.decode(Buffer.from(data)) as any
+
+        const mintInfo = await tryGetTokenMint(connection, rewardVault)
+
+        if (!mintInfo)
+          throw new Error(
+            `Cannot load account mint info ${rewardVault.toBase58()}`
+          )
+
+        const { rewardRefillAmount } = args
+
+        const rewardRefillAmountUi = getMintDecimalAmountFromNatural(
+          mintInfo.account,
+          rewardRefillAmount
+        )
+          .toNumber()
+          .toLocaleString()
+
+        return (
+          <>
+            <p>{`authority: ${authority.toBase58()}`}</p>
+            <p>{`payer: ${payer.toBase58()}`}</p>
+            <p>{`reward vault: ${rewardVault.toBase58()}`}</p>
+            <p>{`authority reward ATA: ${authorityRewardAta.toBase58()}`}</p>
+            <p>{`campaign PDA: ${campaignPDA.toBase58()}`}</p>
+            <p>{`reward refill amount: ${rewardRefillAmountUi}`}</p>
           </>
         )
       },

@@ -216,6 +216,12 @@ export interface UXDStakingActivateStakingOptionForm {
   stakingOptionIdentifier?: number
 }
 
+export interface UXDStakingRefillRewardVaultForm {
+  governedAccount?: GovernedMultiTypeAccount
+  stakingCampaignPda?: string
+  uiRewardRefillAmount?: number
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -245,6 +251,7 @@ export enum Instructions {
   UXDStakingFinalizeStakingCampaign,
   UXDStakingAddStakingOption,
   UXDStakingActivateStakingOption,
+  UXDStakingRefillRewardVault,
 }
 
 export type createParams = [

@@ -269,22 +269,27 @@ export default function useGovernanceAssets() {
     {
       id: Instructions.UXDStakingInitializeStakingCampaign,
       name: 'UXD Staking: Initialize Staking Campaign',
-      isVisible: canUseMintInstruction,
+      isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.UXDStakingFinalizeStakingCampaign,
       name: 'UXD Staking: Finalize Staking Campaign',
-      isVisible: canUseMintInstruction,
+      isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.UXDStakingAddStakingOption,
       name: 'UXD Staking: Add Staking Option',
-      isVisible: canUseMintInstruction,
+      isVisible: canUseAnyInstruction,
     },
     {
       id: Instructions.UXDStakingActivateStakingOption,
       name: 'UXD Staking: Activate Staking Option',
-      isVisible: canUseMintInstruction,
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.UXDStakingRefillRewardVault,
+      name: 'UXD Staking: Refill Reward Vault',
+      isVisible: canUseAnyInstruction,
     },
   ]
 
