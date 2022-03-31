@@ -57,6 +57,10 @@ const AddStakingOption = ({
           apr: yup
             .number()
             .moreThan(0, 'Apr should be more than 0')
+            .lessThan(
+              uxdProtocolStakingConfiguration.APR_BASIS + 1,
+              `Apr should be less or equal than ${uxdProtocolStakingConfiguration.APR_BASIS}`
+            )
             .required('Apr is required'),
         })
       ),
@@ -203,11 +207,11 @@ const AddStakingOption = ({
               />
 
               <Input
-                label="Apr in %"
+                label="Apr in APR_BASIS (100% = 10000, 50% = 5000)"
                 value={apr}
                 type="number"
                 min={0}
-                max={100}
+                max={uxdProtocolStakingConfiguration.APR_BASIS}
                 onChange={(evt) =>
                   handleSetStakingOption({
                     apr: evt.target.value,

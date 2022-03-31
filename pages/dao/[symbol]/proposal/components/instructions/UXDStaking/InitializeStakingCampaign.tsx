@@ -10,7 +10,6 @@ import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { UXDStakingInitializeStakingCampaignForm } from '@utils/uiTypes/proposalCreationTypes'
 import uxdProtocolStakingConfiguration from '@tools/sdk/uxdProtocolStaking/configuration'
-import { BN } from '@project-serum/anchor'
 import { getSplTokenInformationByUIName } from '@utils/splTokens'
 import SelectSplToken from '../../SelectSplToken'
 import { findATAAddrSync } from '@utils/ataTools'
@@ -94,8 +93,8 @@ const InitializeStakingCampaign = ({
         stakedSplToken.mint,
         stakedSplToken.decimals,
         programId,
-        new BN(form.startTs!).mul(new BN(1000)).toNumber(),
-        form.endTs ? new BN(form.endTs).mul(new BN(1000)).toNumber() : undefined
+        Number(form.startTs!),
+        form.endTs ? form.endTs : undefined
       )
 
       console.log('Initialize Staking Campaign', {
@@ -157,6 +156,10 @@ const InitializeStakingCampaign = ({
         error={formErrors['startTs']}
       />
 
+      {form.startTs ? (
+        <span>{new Date(form.startTs * 1000).toUTCString()}</span>
+      ) : null}
+
       <Input
         label="End Timestamp (in seconds, 10 digits) - Optional"
         value={form.endTs}
@@ -170,6 +173,10 @@ const InitializeStakingCampaign = ({
         }
         error={formErrors['endTs']}
       />
+
+      {form.endTs ? (
+        <span>{new Date(form.endTs * 1000).toUTCString()}</span>
+      ) : null}
 
       <Input
         label="Reward Amount to Deposit"
