@@ -62,10 +62,7 @@ const InitializeStakingCampaign = ({
       const programId =
         uxdProtocolStakingConfiguration.programId[connection.cluster]
 
-      const campaignPDA =
-        uxdProtocolStakingConfiguration.campaignPDA[connection.cluster]
-
-      if (!programId || !campaignPDA) {
+      if (!programId) {
         throw new Error(
           `Unsupported cluster ${connection.cluster} for UXD Protocol Staking`
         )
@@ -91,21 +88,19 @@ const InitializeStakingCampaign = ({
       const [rewardVaultPda] = findATAAddrSync(authority, rewardSplToken.mint)
       const [stakedVaultPda] = findATAAddrSync(authority, stakedSplToken.mint)
 
-      const stakingCampaign = new StakingCampaign(
-        campaignPDA,
+      const stakingCampaign = StakingCampaign.setup(
         rewardSplToken.mint,
         rewardSplToken.decimals,
-        rewardVaultPda,
         stakedSplToken.mint,
         stakedSplToken.decimals,
-        stakedVaultPda,
-        new BN(form.startTs!).mul(new BN(1000)),
-        form.endTs ? new BN(form.endTs).mul(new BN(1000)) : undefined
+        programId,
+        new BN(form.startTs!).mul(new BN(1000)).toNumber(),
+        form.endTs ? new BN(form.endTs).mul(new BN(1000)).toNumber() : undefined
       )
 
       console.log('Initialize Staking Campaign', {
         authority: authority.toString(),
-        campaignPDA: campaignPDA.toString(),
+        campaignPDA: stakingCampaign.pda.toString(),
         rewardSplTokenMint: rewardSplToken.mint.toString(),
         rewardSplTokenDecimals: rewardSplToken.decimals,
         rewardVaultPda: rewardVaultPda.toString(),
@@ -115,6 +110,7 @@ const InitializeStakingCampaign = ({
         startTs: form.startTs,
         endTs: form.endTs,
         payer: wallet.publicKey.toString(),
+        uiRewardAmountToDeposit: form.uiRewardAmountToDeposit?.toString(),
       })
 
       return client.createInitializeStakingCampaignInstruction({
