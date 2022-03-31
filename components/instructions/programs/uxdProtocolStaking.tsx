@@ -96,8 +96,6 @@ export const UXD_PROTOCOL_STAKING_INSTRUCTIONS = {
         // 16 bytes = 8 for lockupSecs, 8 for apr
         const nbOptions = (data.length - 12) / 16
 
-        console.log('nbOptions', nbOptions)
-
         const dataLayout = struct([
           u8('instruction'),
           u8('SIGHASH_1'),
