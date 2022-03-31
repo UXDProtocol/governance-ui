@@ -195,6 +195,11 @@ export interface TribecaCreateEscrowGovernanceTokenATAForm {
   governedAccount?: GovernedMultiTypeAccount
 }
 
+export interface TribecaCreateGaugeVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -216,6 +221,7 @@ export enum Instructions {
   SolendRefreshReserve,
   TribecaCreateEpochGauge,
   TribecaCreateEscrowGovernanceTokenATA,
+  TribecaCreateGaugeVote,
   UXDInitializeController,
   UXDSetRedeemableGlobalSupplyCap,
   UXDSetMangoDepositoriesRedeemableSoftCap,

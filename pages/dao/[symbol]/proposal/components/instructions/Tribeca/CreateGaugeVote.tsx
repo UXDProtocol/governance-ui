@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import * as yup from 'yup'
+import { TribecaCreateGaugeVoteForm } from '@utils/uiTypes/proposalCreationTypes'
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
-import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
-import useTribecaLockerData from '@hooks/useTribecaLockerData'
-import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
-import { createEscrowATAInstruction } from '@tools/sdk/tribeca/instructions/createEscrowSaberATAInstruction'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
-import { TribecaCreateEscrowGovernanceTokenATAForm } from '@utils/uiTypes/proposalCreationTypes'
+import useTribecaGauge from '@hooks/useTribecaGauge'
+import GaugeSelect from './GaugeSelect'
 import GovernorSelect from './GovernorSelect'
+import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
+import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
+import { createGaugeVoteInstruction } from '@tools/sdk/tribeca/instructions/createGaugeVoteInstruction'
 
-const CreateEscrowGovernanceATA = ({
+const CreateGaugeVote = ({
   index,
   governedAccount,
 }: {
@@ -20,14 +21,16 @@ const CreateEscrowGovernanceATA = ({
     tribecaConfiguration,
     setTribecaConfiguration,
   ] = useState<ATribecaConfiguration | null>(null)
-  const { lockerData } = useTribecaLockerData(tribecaConfiguration)
 
   const { getGovernedAccountPublicKey } = useGovernedMultiTypeAccounts()
+  const { gauges, programs } = useTribecaGauge(tribecaConfiguration)
   const {
     connection,
     wallet,
     form,
-  } = useInstructionFormBuilder<TribecaCreateEscrowGovernanceTokenATAForm>({
+    formErrors,
+    handleSetForm,
+  } = useInstructionFormBuilder<TribecaCreateGaugeVoteForm>({
     index,
     initialFormValues: {
       governedAccount,
@@ -37,6 +40,7 @@ const CreateEscrowGovernanceATA = ({
         .object()
         .nullable()
         .required('Governed account is required'),
+      gaugeName: yup.string().required('Gauge is required'),
     }),
     buildInstruction: async function () {
       const pubkey = getGovernedAccountPublicKey(form.governedAccount, true)
@@ -45,15 +49,19 @@ const CreateEscrowGovernanceATA = ({
           'Error finding governed account pubkey, wrong governance account type'
         )
       }
-
-      // FIXME: does not pass this check without refreshing the form
-      if (!tribecaConfiguration || !lockerData) {
+      if (
+        !programs ||
+        !gauges ||
+        !gauges[form.gaugeName!] ||
+        !tribecaConfiguration
+      ) {
         throw new Error('Error initializing Tribeca configuration')
       }
 
-      return createEscrowATAInstruction({
+      return createGaugeVoteInstruction({
         tribecaConfiguration,
-        lockerData,
+        programs,
+        gauge: gauges[form.gaugeName!].mint,
         payer: wallet!.publicKey!,
         authority: pubkey,
       })
@@ -66,11 +74,25 @@ const CreateEscrowGovernanceATA = ({
   }
 
   return (
-    <GovernorSelect
-      tribecaConfiguration={tribecaConfiguration}
-      setTribecaConfiguration={setTribecaConfiguration}
-    />
+    <>
+      <GovernorSelect
+        tribecaConfiguration={tribecaConfiguration}
+        setTribecaConfiguration={setTribecaConfiguration}
+      />
+
+      <GaugeSelect
+        gauges={gauges}
+        value={form.gaugeName}
+        onChange={(value) =>
+          handleSetForm({
+            value,
+            propertyName: 'gaugeName',
+          })
+        }
+        error={formErrors['gaugeName']}
+      />
+    </>
   )
 }
 
-export default CreateEscrowGovernanceATA
+export default CreateGaugeVote
