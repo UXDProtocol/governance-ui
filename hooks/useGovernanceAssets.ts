@@ -143,6 +143,11 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.TribecaCreateEscrowGovernanceTokenATA,
+      name: 'Tribeca: Create Escrow Governance Token ATA',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.SolendCreateObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,

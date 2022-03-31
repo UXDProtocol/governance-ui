@@ -19,6 +19,7 @@ import SolendRefreshObligation from './Solend/RefreshObligation'
 import SolendRefreshReserve from './Solend/RefreshReserve'
 import SolendWithdrawObligationCollateralAndRedeemReserveLiquidity from './Solend/WithdrawObligationCollateralAndRedeemReserveLiquidity'
 import TribecaCreateEpochGauge from './Tribeca/CreateEpochGauge'
+import TribecaCreateEscrowGovernanceTokenATA from './Tribeca/CreateEscrowGovernanceTokenATA'
 import UXDDepositInsuranceToMangoDepository from './UXD/DepositInsuranceToMangoDepository'
 import UXDInitializeController from './UXD/InitializeController'
 import UXDRegisterMangoDeposiory from './UXD/RegisterMangoDepository'
@@ -151,6 +152,13 @@ const SelectedInstruction = ({
     case Instructions.TribecaCreateEpochGauge:
       return (
         <TribecaCreateEpochGauge
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.TribecaCreateEscrowGovernanceTokenATA:
+      return (
+        <TribecaCreateEscrowGovernanceTokenATA
           index={index}
           governedAccount={governedAccount}
         />

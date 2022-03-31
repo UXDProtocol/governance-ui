@@ -51,7 +51,6 @@ function useInstructionFormBuilder<
     if (
       !wallet?.publicKey ||
       !form.governedAccount?.governance?.account ||
-      //!buildInstruction ||
       !(await validateForm())
     ) {
       return {

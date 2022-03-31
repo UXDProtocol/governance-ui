@@ -191,6 +191,10 @@ export interface TribecaCreateEpochGaugeForm {
   gaugeName?: string
 }
 
+export interface TribecaCreateEscrowGovernanceTokenATAForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -211,6 +215,7 @@ export enum Instructions {
   SolendRefreshObligation,
   SolendRefreshReserve,
   TribecaCreateEpochGauge,
+  TribecaCreateEscrowGovernanceTokenATA,
   UXDInitializeController,
   UXDSetRedeemableGlobalSupplyCap,
   UXDSetMangoDepositoriesRedeemableSoftCap,
