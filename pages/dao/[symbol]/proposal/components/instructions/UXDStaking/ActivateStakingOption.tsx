@@ -54,10 +54,7 @@ const ActivateStakingOption = ({
       const programId =
         uxdProtocolStakingConfiguration.programId[connection.cluster]
 
-      const campaignPDA =
-        uxdProtocolStakingConfiguration.campaignPDA[connection.cluster]
-
-      if (!programId || !campaignPDA) {
+      if (!programId) {
         throw new Error(
           `Unsupported cluster ${connection.cluster} for UXD Protocol Staking`
         )
@@ -67,8 +64,10 @@ const ActivateStakingOption = ({
         throw new Error('Wallet should be connected')
       }
 
+      const stakingCampaignPda = new PublicKey(form.stakingCampaignPda!)
+
       const stakingCampaignState = await getOnchainStakingCampaign(
-        new PublicKey(form.stakingCampaignPda!),
+        stakingCampaignPda,
         connection.current,
         uxdProtocolStakingConfiguration.TXN_OPTS
       )
@@ -79,7 +78,8 @@ const ActivateStakingOption = ({
 
       const authority = governedAccount!.governance.pubkey
 
-      console.log('Activate Staking Option', {
+      console.log('Activate/Deactivate Staking Option', {
+        stakingCampaignPda: stakingCampaignPda.toString(),
         authority: authority.toString(),
         rewardMint: stakingCampaignState.rewardMint.toString(),
         rewardMintDecimals: stakingCampaignState.rewardMintDecimals,
@@ -89,18 +89,19 @@ const ActivateStakingOption = ({
         stakedVault: stakingCampaignState.stakedVault.toString(),
         startTs: stakingCampaignState.startTs.toString(),
         endTs: stakingCampaignState.endTs?.toString(),
+        stakingOptions: stakingCampaignState.stakingOptions.map(
+          ({ active, identifier, lockupSecs, apr }) => ({
+            active,
+            identifier,
+            lockupSecs: lockupSecs.toString(),
+            apr: apr.toString(),
+          })
+        ),
       })
 
-      const stakingCampaign = new StakingCampaign(
-        campaignPDA,
-        stakingCampaignState.rewardMint,
-        stakingCampaignState.rewardMintDecimals,
-        stakingCampaignState.rewardVault,
-        stakingCampaignState.stakedMint,
-        stakingCampaignState.stakedMintDecimals,
-        stakingCampaignState.stakedVault,
-        stakingCampaignState.startTs,
-        stakingCampaignState.endTs
+      const stakingCampaign = StakingCampaign.fromState(
+        stakingCampaignPda,
+        stakingCampaignState
       )
 
       return client.createActivateStakingOptionInstruction({

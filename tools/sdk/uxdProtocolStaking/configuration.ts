@@ -5,13 +5,14 @@ class UXDProtocolStakingConfiguration {
   public readonly programId: {
     [cluster in EndpointTypes]?: PublicKey
   } = {
-    devnet: new PublicKey('HK3c5ScJWeb8rvJTthdDQ955K16Nz8BQwZtJkLKY1cCb'),
+    devnet: new PublicKey('G32Z4MiJhFfaidSLCz36WBLzcNJQ4o4mv6dHLzM35Huq'),
   }
 
-  public readonly campaignPDA: {
-    [cluster in EndpointTypes]?: PublicKey
-  } = {
-    devnet: new PublicKey('5U5qQ4kL44ygd3uk7JUktA76f5jLJZ7sGt3CVqc4hLVi'),
+  public readonly instructionCodes = {
+    initializeStakingCampaign: 161,
+    addStakingOption: 191,
+    activateStakingOption: 193,
+    finalizeStakingCampaign: 166,
   }
 
   public readonly TXN_OPTS: ConfirmOptions = {

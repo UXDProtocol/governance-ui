@@ -6,6 +6,7 @@ import {
   getOnchainStakingCampaign,
   SingleSideStakingClient,
   StakingCampaign,
+  StakingCampaignState,
 } from '@uxdprotocol/uxd-staking-client'
 import Input from '@components/inputs/Input'
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
@@ -65,10 +66,7 @@ const AddStakingOption = ({
       const programId =
         uxdProtocolStakingConfiguration.programId[connection.cluster]
 
-      const campaignPDA =
-        uxdProtocolStakingConfiguration.campaignPDA[connection.cluster]
-
-      if (!programId || !campaignPDA) {
+      if (!programId) {
         throw new Error(
           `Unsupported cluster ${connection.cluster} for UXD Protocol Staking`
         )
@@ -78,8 +76,10 @@ const AddStakingOption = ({
         throw new Error('Wallet should be connected')
       }
 
-      const stakingCampaignState = await getOnchainStakingCampaign(
-        new PublicKey(form.stakingCampaignPda!),
+      const stakingCampaignPda = new PublicKey(form.stakingCampaignPda!)
+
+      const stakingCampaignState: StakingCampaignState = await getOnchainStakingCampaign(
+        stakingCampaignPda,
         connection.current,
         uxdProtocolStakingConfiguration.TXN_OPTS
       )
@@ -91,6 +91,7 @@ const AddStakingOption = ({
       const authority = governedAccount!.governance.pubkey
 
       console.log('Add Staking Option', {
+        stakingCampaignPda: stakingCampaignPda.toString(),
         authority: authority.toString(),
         rewardMint: stakingCampaignState.rewardMint.toString(),
         rewardMintDecimals: stakingCampaignState.rewardMintDecimals,
@@ -103,16 +104,9 @@ const AddStakingOption = ({
         stakingOptions: form.stakingOptions,
       })
 
-      const stakingCampaign = new StakingCampaign(
-        campaignPDA,
-        stakingCampaignState.rewardMint,
-        stakingCampaignState.rewardMintDecimals,
-        stakingCampaignState.rewardVault,
-        stakingCampaignState.stakedMint,
-        stakingCampaignState.stakedMintDecimals,
-        stakingCampaignState.stakedVault,
-        stakingCampaignState.startTs,
-        stakingCampaignState.endTs
+      const stakingCampaign = StakingCampaign.fromState(
+        new PublicKey(form.stakingCampaignPda!),
+        stakingCampaignState
       )
 
       return client.createAddStakingOptionInstruction({
