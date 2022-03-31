@@ -129,7 +129,7 @@ export const UXD_PROTOCOL_STAKING_INSTRUCTIONS = {
             {Array.from(new Array(nbOptions)).map((_, index) => {
               return (
                 <>
-                  <p>{`option ${index + 1} lockup time on seconds: ${Number(
+                  <p>{`option ${index + 1} lockup time in seconds: ${Number(
                     args[`lockupSecs${index}`]
                   ).toLocaleString()}`}</p>
                   <p>{`option ${index + 1} apr: ${
