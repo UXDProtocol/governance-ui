@@ -24,6 +24,9 @@ import UXDRegisterMangoDeposiory from './UXD/RegisterMangoDepository'
 import UXDSetMangoDepositoriesRedeemableSoftCap from './UXD/SetMangoDepositoriesRedeemableSoftCap'
 import UXDSetRedeemableGlobalSupplyCap from './UXD/SetRedeemGlobalSupplyCap'
 import UXDWithdrawInsuranceFromMangoDepository from './UXD/WithdrawInsuranceFromMangoDepository'
+import UXDStakingInitializeStakingCampaign from './UXDStaking/InitializeStakingCampaign'
+import UXDStakingFinalizeStakingCampaign from './UXDStaking/FinalizeStakingCampaign'
+import UXDStakingAddStakingOption from './UXDStaking/AddStakingOption'
 
 const SelectedInstruction = ({
   itxType,
@@ -157,6 +160,27 @@ const SelectedInstruction = ({
       return <Grant index={index} governance={governance} />
     case Instructions.Clawback:
       return <Clawback index={index} governance={governance} />
+    case Instructions.UXDStakingInitializeStakingCampaign:
+      return (
+        <UXDStakingInitializeStakingCampaign
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.UXDStakingFinalizeStakingCampaign:
+      return (
+        <UXDStakingFinalizeStakingCampaign
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.UXDStakingAddStakingOption:
+      return (
+        <UXDStakingAddStakingOption
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
     default:
       return null
   }

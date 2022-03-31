@@ -266,7 +266,23 @@ export default function useGovernanceAssets() {
           ownVoterWeight.canCreateProposal(g.account.config)
         ),
     },
+    {
+      id: Instructions.UXDStakingInitializeStakingCampaign,
+      name: 'UXD Staking: Initialize Staking Campaign',
+      isVisible: canUseMintInstruction,
+    },
+    {
+      id: Instructions.UXDStakingFinalizeStakingCampaign,
+      name: 'UXD Staking: Finalize Staking Campaign',
+      isVisible: canUseMintInstruction,
+    },
+    {
+      id: Instructions.UXDStakingAddStakingOption,
+      name: 'UXD Staking: Add Staking Option',
+      isVisible: canUseMintInstruction,
+    },
   ]
+
   return {
     governancesArray,
     getGovernancesByAccountType,
