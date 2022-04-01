@@ -200,6 +200,15 @@ export interface TribecaCreateGaugeVoteForm {
   gaugeName?: string
 }
 
+export interface TribecaCreateGaugeVoterForm {
+  governedAccount?: GovernedMultiTypeAccount
+}
+
+export interface TribecaGaugeCommitVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -222,6 +231,8 @@ export enum Instructions {
   TribecaCreateEpochGauge,
   TribecaCreateEscrowGovernanceTokenATA,
   TribecaCreateGaugeVote,
+  TribecaCreateGaugeVoter,
+  TribecaGaugeCommitVote,
   UXDInitializeController,
   UXDSetRedeemableGlobalSupplyCap,
   UXDSetMangoDepositoriesRedeemableSoftCap,

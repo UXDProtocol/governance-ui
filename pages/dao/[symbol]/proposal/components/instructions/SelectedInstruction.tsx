@@ -21,6 +21,8 @@ import SolendWithdrawObligationCollateralAndRedeemReserveLiquidity from './Solen
 import TribecaCreateEpochGauge from './Tribeca/CreateEpochGauge'
 import TribecaCreateEscrowGovernanceTokenATA from './Tribeca/CreateEscrowGovernanceTokenATA'
 import TribecaCreateGaugeVote from './Tribeca/CreateGaugeVote'
+import TribecaCreateGaugeVoter from './Tribeca/CreateGaugeVoter'
+import TribecaGaugeCommitVote from './Tribeca/GaugeCommitVote'
 import UXDDepositInsuranceToMangoDepository from './UXD/DepositInsuranceToMangoDepository'
 import UXDInitializeController from './UXD/InitializeController'
 import UXDRegisterMangoDeposiory from './UXD/RegisterMangoDepository'
@@ -167,6 +169,20 @@ const SelectedInstruction = ({
     case Instructions.TribecaCreateGaugeVote:
       return (
         <TribecaCreateGaugeVote
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.TribecaCreateGaugeVoter:
+      return (
+        <TribecaCreateGaugeVoter
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.TribecaGaugeCommitVote:
+      return (
+        <TribecaGaugeCommitVote
           index={index}
           governedAccount={governedAccount}
         />

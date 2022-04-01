@@ -153,6 +153,16 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.TribecaCreateGaugeVoter,
+      name: 'Tribeca: Create Gauge Voter',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaGaugeCommitVote,
+      name: 'Tribeca: Gauge Commit Vote',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.SolendCreateObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,
