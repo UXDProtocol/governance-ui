@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import * as yup from 'yup'
 import { serializeInstructionToBase64 } from '@solana/spl-governance'
-import { TransactionInstruction } from '@solana/web3.js'
+import { Connection, TransactionInstruction } from '@solana/web3.js'
 import { debounce } from '@utils/debounce'
 import { isFormValid } from '@utils/formValidation'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
@@ -9,6 +9,7 @@ import { UiInstruction } from '@utils/uiTypes/proposalCreationTypes'
 
 import { NewProposalContext } from 'pages/dao/[symbol]/proposal/new'
 import useWalletStore from 'stores/useWalletStore'
+import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
 
 function useInstructionFormBuilder<
   T extends {
@@ -27,7 +28,15 @@ function useInstructionFormBuilder<
       [key in keyof T]: yup.AnySchema
     }
   >
-  buildInstruction?: () => Promise<TransactionInstruction>
+  buildInstruction?: ({
+    filledForm,
+    connection,
+    wallet,
+  }: {
+    filledForm: T
+    connection: Connection
+    wallet: SignerWalletAdapter
+  }) => Promise<TransactionInstruction>
 }) {
   const connection = useWalletStore((s) => s.connection)
   const wallet = useWalletStore((s) => s.current)
@@ -59,11 +68,16 @@ function useInstructionFormBuilder<
         governance: form.governedAccount?.governance,
       }
     }
-
     try {
       return {
         serializedInstruction: buildInstruction
-          ? serializeInstructionToBase64(await buildInstruction())
+          ? serializeInstructionToBase64(
+              await buildInstruction({
+                filledForm: form,
+                connection: connection.current,
+                wallet,
+              })
+            )
           : '',
         isValid: true,
         governance: form.governedAccount?.governance,
@@ -97,11 +111,10 @@ function useInstructionFormBuilder<
   }, [form])
 
   return {
-    form,
-    setForm,
-    wallet,
     connection,
+    wallet,
     formErrors,
+    form,
     handleSetForm,
     validateForm,
   }

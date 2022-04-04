@@ -1,58 +1,64 @@
-import React, { useState } from 'react'
 import * as yup from 'yup'
-import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts'
+import { Wallet } from '@project-serum/common'
+import { PublicKey } from '@solana/web3.js'
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
-import useTribecaPrograms from '@hooks/useTribecaPrograms'
-import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
+import { getTribecaPrograms } from '@tools/sdk/tribeca/configurations'
 import { createGaugeVoterInstruction } from '@tools/sdk/tribeca/instructions/createGaugeVoterInstruction'
 import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { TribecaCreateGaugeVoterForm } from '@utils/uiTypes/proposalCreationTypes'
 import GovernorSelect from './GovernorSelect'
 
+const schema = yup.object().shape({
+  governedAccount: yup
+    .object()
+    .nullable()
+    .required('Governed account is required'),
+  tribecaConfiguration: yup
+    .object()
+    .nullable()
+    .required('Tribeca Configuration governor is required'),
+})
+
 const CreateGaugeVoter = ({
   index,
   governedAccount,
+  governedPublicKey,
 }: {
   index: number
   governedAccount?: GovernedMultiTypeAccount
+  governedPublicKey?: PublicKey
 }) => {
-  const [
-    tribecaConfiguration,
-    setTribecaConfiguration,
-  ] = useState<ATribecaConfiguration | null>(null)
-  const { programs } = useTribecaPrograms(tribecaConfiguration)
-  const { getGovernedAccountPublicKey } = useGovernedMultiTypeAccounts()
   const {
     connection,
-    wallet,
     form,
+    handleSetForm,
   } = useInstructionFormBuilder<TribecaCreateGaugeVoterForm>({
     index,
     initialFormValues: {
       governedAccount,
+      tribecaConfiguration: null,
     },
-    schema: yup.object().shape({
-      governedAccount: yup
-        .object()
-        .nullable()
-        .required('Governed account is required'),
-    }),
-    buildInstruction: async function () {
-      const pubkey = getGovernedAccountPublicKey(form.governedAccount, true)
-      if (!pubkey) {
+    schema,
+    buildInstruction: async function ({ wallet, connection, filledForm }) {
+      if (!governedPublicKey) {
         throw new Error(
           'Error finding governed account pubkey, wrong governance account type'
         )
       }
-      if (!programs || !tribecaConfiguration) {
+      const programs = getTribecaPrograms({
+        wallet: wallet as Wallet,
+        connection,
+        config: filledForm.tribecaConfiguration!,
+      })
+      if (!programs) {
         throw new Error('Error initializing Tribeca configuration')
       }
 
       return createGaugeVoterInstruction({
-        tribecaConfiguration,
+        tribecaConfiguration: form.tribecaConfiguration!,
         programs,
-        payer: wallet!.publicKey!,
-        authority: pubkey,
+        payer: wallet.publicKey!,
+        authority: governedPublicKey,
       })
     },
   })
@@ -64,8 +70,10 @@ const CreateGaugeVoter = ({
 
   return (
     <GovernorSelect
-      tribecaConfiguration={tribecaConfiguration}
-      setTribecaConfiguration={setTribecaConfiguration}
+      tribecaConfiguration={form.tribecaConfiguration}
+      setTribecaConfiguration={(value) =>
+        handleSetForm({ propertyName: 'tribecaConfiguration', value })
+      }
     />
   )
 }

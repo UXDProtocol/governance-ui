@@ -69,9 +69,9 @@ export default function useGovernedMultiTypeAccounts() {
 
     // can force the fact to use the owner for SOL Token Governance
     forceToUseSolTokenGovernanceOwner?: boolean
-  ): PublicKey | null | undefined => {
+  ): PublicKey | undefined => {
     if (!governedAccount) {
-      return null
+      return
     }
 
     const accountType = governedAccount.governance.account.accountType
@@ -81,7 +81,7 @@ export default function useGovernedMultiTypeAccounts() {
       accountType === GovernanceAccountType.ProgramGovernanceV2
     ) {
       if (governedAccount.isSol && !forceToUseSolTokenGovernanceOwner) {
-        return governedAccount.transferAddress
+        return governedAccount.transferAddress ?? undefined
       }
     }
     return governedAccount.governance.pubkey

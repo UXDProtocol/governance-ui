@@ -14,6 +14,7 @@ import { SplTokenUIName } from '@utils/splTokens'
 import { DepositWithMintAccount, Voter } from 'VoteStakeRegistry/sdk/accounts'
 import { LockupKind } from 'VoteStakeRegistry/tools/types'
 import { AmountSide } from '@raydium-io/raydium-sdk'
+import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
 
 export interface UiInstruction {
   serializedInstruction: string
@@ -193,6 +194,7 @@ export interface TribecaCreateEpochGaugeForm {
 
 export interface TribecaCreateEscrowGovernanceTokenATAForm {
   governedAccount?: GovernedMultiTypeAccount
+  tribecaConfiguration: ATribecaConfiguration | null
 }
 
 export interface TribecaCreateGaugeVoteForm {
@@ -202,6 +204,7 @@ export interface TribecaCreateGaugeVoteForm {
 
 export interface TribecaCreateGaugeVoterForm {
   governedAccount?: GovernedMultiTypeAccount
+  tribecaConfiguration: ATribecaConfiguration | null
 }
 
 export interface TribecaGaugeCommitVoteForm {

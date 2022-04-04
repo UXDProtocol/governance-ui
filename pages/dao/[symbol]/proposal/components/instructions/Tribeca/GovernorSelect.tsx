@@ -4,6 +4,11 @@ import {
   configurations as tribecaConfigurations,
   getConfigurationByName,
 } from '@tools/sdk/tribeca/configurations'
+import SelectOptionList from '../../SelectOptionList'
+
+const configurationList = Object.values(tribecaConfigurations || {}).map(
+  (configuration) => configuration.name
+)
 
 const GovernorSelect = ({
   tribecaConfiguration,
@@ -21,11 +26,7 @@ const GovernorSelect = ({
         setTribecaConfiguration(getConfigurationByName(value))
       }}
     >
-      {Object.values(tribecaConfigurations || {}).map((configuration) => (
-        <Select.Option key={configuration.name} value={configuration.name}>
-          {configuration.name}
-        </Select.Option>
-      ))}
+      <SelectOptionList list={configurationList} />
     </Select>
   )
 }
