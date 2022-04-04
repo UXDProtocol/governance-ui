@@ -48,7 +48,7 @@ const config = {
       const payer = accounts[1].pubkey
       const campaignPDA = accounts[2].pubkey
       const rewardMint = accounts[3].pubkey
-      const stackedMint = accounts[4].pubkey
+      const stakedMint = accounts[4].pubkey
 
       const mintInfo = await tryGetMint(connection, rewardMint)
 
@@ -78,7 +78,7 @@ const config = {
           <p>{`end of the campaign: ${endDate}`}</p>
           <p>{`reward deposit amount: ${rewardDepositAmountUi}`}</p>
           <p>{`reward mint: ${rewardMint.toBase58()}`}</p>
-          <p>{`staked mint: ${stackedMint.toBase58()}`}</p>
+          <p>{`staked mint: ${stakedMint.toBase58()}`}</p>
         </>
       )
     },

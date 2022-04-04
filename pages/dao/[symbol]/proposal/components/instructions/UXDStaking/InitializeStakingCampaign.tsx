@@ -67,10 +67,6 @@ const InitializeStakingCampaign = ({
         )
       }
 
-      if (!wallet?.publicKey) {
-        throw new Error('Wallet should be connected')
-      }
-
       const client: SingleSideStakingClient = new SingleSideStakingClient(
         programId
       )
@@ -108,7 +104,7 @@ const InitializeStakingCampaign = ({
         stakedVaultPda: stakedVaultPda.toString(),
         startTs: form.startTs,
         endTs: form.endTs,
-        payer: wallet.publicKey.toString(),
+        payer: wallet!.publicKey!.toBase58(),
         uiRewardAmountToDeposit: form.uiRewardAmountToDeposit?.toString(),
       })
 
@@ -117,7 +113,7 @@ const InitializeStakingCampaign = ({
         stakingCampaign,
         rewardDepositAmount: form.uiRewardAmountToDeposit!,
         options: uxdProtocolStakingConfiguration.TXN_OPTS,
-        payer: wallet.publicKey,
+        payer: wallet!.publicKey!,
       })
     },
   })

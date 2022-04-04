@@ -95,7 +95,7 @@ const StakingCampaign = ({
 
       <div className="flex flex-col bg-bkg-1 p-2 rounded-md space-y-1">
         <div className="flex justify-between">
-          <span className="text-xs">stacked mint:</span>
+          <span className="text-xs">staked mint:</span>
           <span className="text-xs">
             {getSplTokenNameByMint(stakingCampaignInfo.stakedMint)}
           </span>

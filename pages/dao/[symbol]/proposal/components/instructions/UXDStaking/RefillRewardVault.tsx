@@ -57,10 +57,6 @@ const RefillRewardVault = ({
         )
       }
 
-      if (!wallet?.publicKey) {
-        throw new Error('Wallet should be connected')
-      }
-
       const stakingCampaignPda = new PublicKey(form.stakingCampaignPda!)
 
       const stakingCampaignState = await getOnchainStakingCampaign(
@@ -99,7 +95,7 @@ const RefillRewardVault = ({
         stakingCampaign,
         rewardRefillAmount: form.uiRewardRefillAmount!,
         options: uxdProtocolStakingConfiguration.TXN_OPTS,
-        payer: wallet.publicKey,
+        payer: wallet!.publicKey!,
       })
     },
   })
