@@ -1,23 +1,28 @@
 import React, { useState } from 'react'
 import * as yup from 'yup'
-import { TribecaCreateEpochGaugeForm } from '@utils/uiTypes/proposalCreationTypes'
+import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
 import useTribecaGauge from '@hooks/useTribecaGauge'
+import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
+import createEpochGaugeInstruction from '@tools/sdk/tribeca/instructions/createEpochGaugeInstruction'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
+import { TribecaCreateEpochGaugeForm } from '@utils/uiTypes/proposalCreationTypes'
 import GaugeSelect from './GaugeSelect'
 import GovernorSelect from './GovernorSelect'
-import ATribecaConfiguration from '@tools/sdk/tribeca/ATribecaConfiguration'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
-import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
-import createEpochGaugeInstruction from '@tools/sdk/tribeca/instructions/createEpochGaugeInstruction'
-import { PublicKey } from '@solana/web3.js'
+
+const schema = yup.object().shape({
+  governedAccount: yup
+    .object()
+    .nullable()
+    .required('Governed account is required'),
+  gaugeName: yup.string().required('Gauge is required'),
+})
 
 const CreateEpochGauge = ({
   index,
   governedAccount,
-  governedPublicKey,
 }: {
   index: number
   governedAccount?: GovernedMultiTypeAccount
-  governedPublicKey?: PublicKey
 }) => {
   const [
     tribecaConfiguration,
@@ -35,22 +40,12 @@ const CreateEpochGauge = ({
     initialFormValues: {
       governedAccount,
     },
-    schema: yup.object().shape({
-      governedAccount: yup
-        .object()
-        .nullable()
-        .required('Governed account is required'),
-      gaugeName: yup.string().required('Gauge is required'),
-    }),
-    buildInstruction: async function ({ filledForm, wallet }) {
-      if (!governedPublicKey)
-        throw new Error(
-          'Error finding governed account pubkey, wrong governance account type'
-        )
+    schema,
+    buildInstruction: async function ({ form, wallet, governedAccountPubkey }) {
       if (
         !programs ||
         !gauges ||
-        !gauges[filledForm.gaugeName!] ||
+        !gauges[form.gaugeName!] ||
         !tribecaConfiguration
       ) {
         throw new Error('Error initializing Tribeca configuration')
@@ -59,9 +54,9 @@ const CreateEpochGauge = ({
       return createEpochGaugeInstruction({
         programs,
         tribecaConfiguration,
-        gauge: gauges[filledForm.gaugeName!].mint,
+        gauge: gauges[form.gaugeName!].mint,
         payer: wallet!.publicKey!,
-        authority: governedPublicKey,
+        authority: governedAccountPubkey,
       })
     },
   })

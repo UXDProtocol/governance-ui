@@ -1,16 +1,14 @@
-import React from 'react'
 import * as yup from 'yup'
+import { Wallet } from '@project-serum/common'
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
-import { createEscrowATAInstruction } from '@tools/sdk/tribeca/instructions/createEscrowSaberATAInstruction'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
-import { TribecaCreateEscrowGovernanceTokenATAForm } from '@utils/uiTypes/proposalCreationTypes'
-import GovernorSelect from './GovernorSelect'
-import { PublicKey } from '@solana/web3.js'
 import {
   getTribecaLocker,
   getTribecaPrograms,
 } from '@tools/sdk/tribeca/configurations'
-import { Wallet } from '@project-serum/common'
+import { createEscrowATAInstruction } from '@tools/sdk/tribeca/instructions/createEscrowSaberATAInstruction'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
+import { TribecaCreateEscrowGovernanceTokenATAForm } from '@utils/uiTypes/proposalCreationTypes'
+import GovernorSelect from './GovernorSelect'
 
 const schema = yup.object().shape({
   governedAccount: yup
@@ -26,11 +24,9 @@ const schema = yup.object().shape({
 const CreateEscrowGovernanceATA = ({
   index,
   governedAccount,
-  governedPublicKey,
 }: {
   index: number
   governedAccount?: GovernedMultiTypeAccount
-  governedPublicKey?: PublicKey
 }) => {
   const {
     connection,
@@ -43,19 +39,19 @@ const CreateEscrowGovernanceATA = ({
       tribecaConfiguration: null,
     },
     schema,
-    buildInstruction: async function ({ filledForm, connection, wallet }) {
-      if (!governedPublicKey) {
-        throw new Error(
-          'Error finding governed account pubkey, wrong governance account type'
-        )
-      }
+    buildInstruction: async function ({
+      form,
+      connection,
+      wallet,
+      governedAccountPubkey,
+    }) {
       const programs = getTribecaPrograms({
         connection,
         wallet: wallet as Wallet,
-        config: filledForm.tribecaConfiguration!,
+        config: form.tribecaConfiguration!,
       })
       const lockerData = await getTribecaLocker({
-        config: filledForm.tribecaConfiguration!,
+        config: form.tribecaConfiguration!,
         programs,
       })
       // FIXME: does not pass this check without refreshing the form
@@ -64,10 +60,10 @@ const CreateEscrowGovernanceATA = ({
       }
 
       return createEscrowATAInstruction({
-        tribecaConfiguration: filledForm.tribecaConfiguration!,
+        tribecaConfiguration: form.tribecaConfiguration!,
         lockerData,
-        payer: wallet!.publicKey!,
-        authority: governedPublicKey,
+        payer: wallet.publicKey!,
+        authority: governedAccountPubkey,
       })
     },
   })

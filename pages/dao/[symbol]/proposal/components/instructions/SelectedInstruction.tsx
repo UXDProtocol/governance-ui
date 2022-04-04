@@ -30,20 +30,17 @@ import UXDRegisterMangoDeposiory from './UXD/RegisterMangoDepository'
 import UXDSetMangoDepositoriesRedeemableSoftCap from './UXD/SetMangoDepositoriesRedeemableSoftCap'
 import UXDSetRedeemableGlobalSupplyCap from './UXD/SetRedeemGlobalSupplyCap'
 import UXDWithdrawInsuranceFromMangoDepository from './UXD/WithdrawInsuranceFromMangoDepository'
-import { PublicKey } from '@solana/web3.js'
 
 const SelectedInstruction = ({
   itxType,
   index,
   governance,
   governedAccount,
-  governedPublicKey,
 }: {
   itxType: number
   index: number
   governance: ProgramAccount<Governance> | null
   governedAccount: GovernedMultiTypeAccount | undefined
-  governedPublicKey?: PublicKey
 }) => {
   switch (itxType) {
     case Instructions.Transfer:
@@ -168,7 +165,6 @@ const SelectedInstruction = ({
         <TribecaCreateEscrowGovernanceTokenATA
           index={index}
           governedAccount={governedAccount}
-          governedPublicKey={governedPublicKey}
         />
       )
     case Instructions.TribecaCreateGaugeVote:

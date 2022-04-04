@@ -15,10 +15,7 @@ const ProposalForm = ({
   governance: ProgramAccount<Governance> | null
   itxType: number
 }) => {
-  const {
-    governedMultiTypeAccounts,
-    getGovernedAccountPublicKey,
-  } = useGovernedMultiTypeAccounts()
+  const { governedMultiTypeAccounts } = useGovernedMultiTypeAccounts()
   const shouldBeGoverned = index !== 0 && governance
 
   const [governedAccount, setGovernanceAccount] = useState<
@@ -51,7 +48,6 @@ const ProposalForm = ({
         index={index}
         governance={governance}
         governedAccount={governedAccount}
-        governedPublicKey={getGovernedAccountPublicKey(governedAccount, true)}
       />
     </>
   )

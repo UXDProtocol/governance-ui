@@ -1,6 +1,5 @@
 import * as yup from 'yup'
 import { Wallet } from '@project-serum/common'
-import { PublicKey } from '@solana/web3.js'
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
 import { getTribecaPrograms } from '@tools/sdk/tribeca/configurations'
 import { createGaugeVoterInstruction } from '@tools/sdk/tribeca/instructions/createGaugeVoterInstruction'
@@ -22,11 +21,9 @@ const schema = yup.object().shape({
 const CreateGaugeVoter = ({
   index,
   governedAccount,
-  governedPublicKey,
 }: {
   index: number
   governedAccount?: GovernedMultiTypeAccount
-  governedPublicKey?: PublicKey
 }) => {
   const {
     connection,
@@ -39,16 +36,16 @@ const CreateGaugeVoter = ({
       tribecaConfiguration: null,
     },
     schema,
-    buildInstruction: async function ({ wallet, connection, filledForm }) {
-      if (!governedPublicKey) {
-        throw new Error(
-          'Error finding governed account pubkey, wrong governance account type'
-        )
-      }
+    buildInstruction: async function ({
+      wallet,
+      connection,
+      form,
+      governedAccountPubkey,
+    }) {
       const programs = getTribecaPrograms({
         wallet: wallet as Wallet,
         connection,
-        config: filledForm.tribecaConfiguration!,
+        config: form.tribecaConfiguration!,
       })
       if (!programs) {
         throw new Error('Error initializing Tribeca configuration')
@@ -58,7 +55,7 @@ const CreateGaugeVoter = ({
         tribecaConfiguration: form.tribecaConfiguration!,
         programs,
         payer: wallet.publicKey!,
-        authority: governedPublicKey,
+        authority: governedAccountPubkey,
       })
     },
   })

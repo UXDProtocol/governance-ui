@@ -8,7 +8,6 @@ import { GovernedMultiTypeAccount } from '@utils/tokens'
 import { TribecaGaugeRevertVoteForm } from '@utils/uiTypes/proposalCreationTypes'
 import GaugeSelect from './GaugeSelect'
 import GovernorSelect from './GovernorSelect'
-import { PublicKey } from '@solana/web3.js'
 
 const schema = yup.object().shape({
   governedAccount: yup
@@ -21,11 +20,9 @@ const schema = yup.object().shape({
 const GaugeRevertVote = ({
   index,
   governedAccount,
-  governedPublicKey,
 }: {
   index: number
   governedAccount?: GovernedMultiTypeAccount
-  governedPublicKey?: PublicKey
 }) => {
   const [
     tribecaConfiguration,
@@ -44,16 +41,11 @@ const GaugeRevertVote = ({
       governedAccount,
     },
     schema,
-    buildInstruction: async function ({ wallet, filledForm }) {
-      if (!governedPublicKey) {
-        throw new Error(
-          'Error finding governed account pubkey, wrong governance account type'
-        )
-      }
+    buildInstruction: async function ({ wallet, form, governedAccountPubkey }) {
       if (
         !programs ||
         !gauges ||
-        !gauges[filledForm.gaugeName!] ||
+        !gauges[form.gaugeName!] ||
         !tribecaConfiguration
       ) {
         throw new Error('Error initializing Tribeca configuration')
@@ -61,8 +53,8 @@ const GaugeRevertVote = ({
 
       return gaugeRevertVoteInstruction({
         programs,
-        gauge: gauges[filledForm.gaugeName!].mint,
-        authority: governedPublicKey,
+        gauge: gauges[form.gaugeName!].mint,
+        authority: governedAccountPubkey,
         payer: wallet.publicKey!,
         tribecaConfiguration,
       })
