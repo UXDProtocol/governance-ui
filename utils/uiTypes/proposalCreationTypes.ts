@@ -217,6 +217,13 @@ export interface TribecaGaugeRevertVoteForm {
   gaugeName?: string
 }
 
+export interface TribecaLockForm {
+  governedAccount?: GovernedMultiTypeAccount
+  tribecaConfiguration: ATribecaConfiguration | null
+  uiAmount: number
+  durationSeconds: number
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -242,6 +249,7 @@ export enum Instructions {
   TribecaCreateGaugeVoter,
   TribecaGaugeCommitVote,
   TribecaGaugeRevertVote,
+  TribecaLock,
   UXDInitializeController,
   UXDSetRedeemableGlobalSupplyCap,
   UXDSetMangoDepositoriesRedeemableSoftCap,

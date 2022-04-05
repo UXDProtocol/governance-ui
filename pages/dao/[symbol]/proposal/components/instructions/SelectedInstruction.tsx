@@ -24,6 +24,7 @@ import TribecaCreateGaugeVote from './Tribeca/CreateGaugeVote'
 import TribecaCreateGaugeVoter from './Tribeca/CreateGaugeVoter'
 import TribecaGaugeCommitVote from './Tribeca/GaugeCommitVote'
 import TribecaGaugeRevertVote from './Tribeca/GaugeRevertVote'
+import TribecaLock from './Tribeca/Lock'
 import UXDDepositInsuranceToMangoDepository from './UXD/DepositInsuranceToMangoDepository'
 import UXDInitializeController from './UXD/InitializeController'
 import UXDRegisterMangoDeposiory from './UXD/RegisterMangoDepository'
@@ -195,6 +196,8 @@ const SelectedInstruction = ({
           governedAccount={governedAccount}
         />
       )
+    case Instructions.TribecaLock:
+      return <TribecaLock index={index} governedAccount={governedAccount} />
     case Instructions.Mint:
       return <Mint index={index} governance={governance} />
     case Instructions.Base64:

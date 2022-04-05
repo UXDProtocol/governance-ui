@@ -168,6 +168,11 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.TribecaLock,
+      name: 'Tribeca: Lock Tokens',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.SolendCreateObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,
