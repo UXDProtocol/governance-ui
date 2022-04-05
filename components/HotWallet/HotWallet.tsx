@@ -26,10 +26,7 @@ const HotWallet = (): JSX.Element => {
         hotWalletName={hotWalletAccount.name}
       />
 
-      <div
-        style={{ maxHeight: '1300px' }}
-        className="overflow-y-auto space-y-6 mt-6"
-      >
+      <div className="space-y-6 mt-6">
         <HotWalletPluginTokenAccounts hotWalletAccount={hotWalletAccount} />
 
         <HotWalletPluginUXDStaking hotWalletAccount={hotWalletAccount} />

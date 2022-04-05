@@ -24,6 +24,14 @@ const UsersCampaigns = {
       pda: new PublicKey('C37FJ2JeDciaEs1nKazMkkH21VZjQVq4WTMLSJYiibRr'),
     },
   ],
+
+  ['7M6TSEkRiXiYmpRCcCDSdJGTGxAPem2HBqjW4gLQ2KoE']: [
+    // Dao SOL Treasury's governance
+    {
+      name: 'UXP Campaign',
+      pda: new PublicKey('GMkG1Xr1ZAtLbHRxfbqLFEHqjP7rGwEfhQFed41aEL1k'),
+    },
+  ],
 }
 
 export type StakingCampaignInfo = StakingCampaignState & {
@@ -66,7 +74,7 @@ const useHotWalletPluginUXDStaking = (hotWalletAccount: HotWalletAccount) => {
           ...state,
           name: campaigns[index].name,
           pda: campaigns[index].pda,
-        }))
+        })) as StakingCampaignInfo[]
       )
     } catch (e) {
       console.log(e)
