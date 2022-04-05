@@ -224,6 +224,27 @@ export interface TribecaLockForm {
   durationSeconds: number
 }
 
+export interface TribecaNewEscrowForm {
+  governedAccount?: GovernedMultiTypeAccount
+  tribecaConfiguration: ATribecaConfiguration | null
+}
+
+export interface TribecaPrepareEpochGaugeVoterForm {
+  governedAccount?: GovernedMultiTypeAccount
+  tribecaConfiguration: ATribecaConfiguration | null
+}
+
+export interface TribecaResetEpochGaugeVoterForm {
+  governedAccount?: GovernedMultiTypeAccount
+  tribecaConfiguration: ATribecaConfiguration | null
+}
+
+export interface TribecaGaugeSetVoteForm {
+  governedAccount?: GovernedMultiTypeAccount
+  gaugeName?: string
+  weight?: number
+}
+
 export enum Instructions {
   Transfer,
   ProgramUpgrade,
@@ -250,6 +271,10 @@ export enum Instructions {
   TribecaGaugeCommitVote,
   TribecaGaugeRevertVote,
   TribecaLock,
+  TribecaNewEscrow,
+  TribecaPrepareEpochGaugeVoter,
+  TribecaResetEpochGaugeVoter,
+  TribecaGaugeSetVote,
   UXDInitializeController,
   UXDSetRedeemableGlobalSupplyCap,
   UXDSetMangoDepositoriesRedeemableSoftCap,

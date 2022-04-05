@@ -25,6 +25,10 @@ import TribecaCreateGaugeVoter from './Tribeca/CreateGaugeVoter'
 import TribecaGaugeCommitVote from './Tribeca/GaugeCommitVote'
 import TribecaGaugeRevertVote from './Tribeca/GaugeRevertVote'
 import TribecaLock from './Tribeca/Lock'
+import TribecaNewEscrow from './Tribeca/NewEscrow'
+import TribecaPrepareEpochGaugeVoter from './Tribeca/PrepareEpochGaugeVoter'
+import TribecaResetEpochGaugeVoter from './Tribeca/ResetEpochGaugeVoter'
+import TribecaGaugeSetVote from './Tribeca/SetGaugeVote'
 import UXDDepositInsuranceToMangoDepository from './UXD/DepositInsuranceToMangoDepository'
 import UXDInitializeController from './UXD/InitializeController'
 import UXDRegisterMangoDeposiory from './UXD/RegisterMangoDepository'
@@ -198,6 +202,28 @@ const SelectedInstruction = ({
       )
     case Instructions.TribecaLock:
       return <TribecaLock index={index} governedAccount={governedAccount} />
+    case Instructions.TribecaNewEscrow:
+      return (
+        <TribecaNewEscrow index={index} governedAccount={governedAccount} />
+      )
+    case Instructions.TribecaPrepareEpochGaugeVoter:
+      return (
+        <TribecaPrepareEpochGaugeVoter
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.TribecaResetEpochGaugeVoter:
+      return (
+        <TribecaResetEpochGaugeVoter
+          index={index}
+          governedAccount={governedAccount}
+        />
+      )
+    case Instructions.TribecaGaugeSetVote:
+      return (
+        <TribecaGaugeSetVote index={index} governedAccount={governedAccount} />
+      )
     case Instructions.Mint:
       return <Mint index={index} governance={governance} />
     case Instructions.Base64:

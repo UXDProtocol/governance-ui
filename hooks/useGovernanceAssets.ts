@@ -173,6 +173,26 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
     },
     {
+      id: Instructions.TribecaNewEscrow,
+      name: 'Tribeca: New Escrow',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaPrepareEpochGaugeVoter,
+      name: 'Tribeca: Prepare Epoch Gauge Voter',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaResetEpochGaugeVoter,
+      name: 'Tribeca: Reset Epoch Gauge Voter',
+      isVisible: canUseAnyInstruction,
+    },
+    {
+      id: Instructions.TribecaGaugeSetVote,
+      name: 'Tribeca: Set Gauge Vote',
+      isVisible: canUseAnyInstruction,
+    },
+    {
       id: Instructions.SolendCreateObligationAccount,
       name: 'Solend: Create Obligation Account',
       isVisible: canUseAnyInstruction,

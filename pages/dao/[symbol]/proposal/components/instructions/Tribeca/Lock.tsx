@@ -1,21 +1,19 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React from 'react'
-import * as yup from 'yup'
-import { TribecaLockForm } from '@utils/uiTypes/proposalCreationTypes'
-import Input from '@components/inputs/Input'
 import { BigNumber } from 'bignumber.js'
+import * as yup from 'yup'
 import { BN } from '@project-serum/anchor'
-import GovernorSelect from './GovernorSelect'
+import { Wallet } from '@project-serum/common'
+import Input from '@components/inputs/Input'
+import Select from '@components/inputs/Select'
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder'
-import { GovernedMultiTypeAccount } from '@utils/tokens'
 import {
   getTribecaLocker,
   getTribecaPrograms,
 } from '@tools/sdk/tribeca/configurations'
-import { Wallet } from '@project-serum/common'
-import Select from '@components/inputs/Select'
-import SelectOptionList from '../../SelectOptionList'
 import { lockInstruction } from '@tools/sdk/tribeca/instructions/lockInstruction'
+import { GovernedMultiTypeAccount } from '@utils/tokens'
+import { TribecaLockForm } from '@utils/uiTypes/proposalCreationTypes'
+import SelectOptionList from '../../SelectOptionList'
+import GovernorSelect from './GovernorSelect'
 
 const schema = yup.object().shape({
   governedAccount: yup
@@ -25,23 +23,12 @@ const schema = yup.object().shape({
   tribecaConfiguration: yup
     .object()
     .nullable()
-    .required('Governed account is required'),
+    .required('Tribeca Configuration Governoris required'),
   uiAmount: yup
     .number()
     .moreThan(0, 'Amount should be more than 0')
     .required('Amount is required'),
-  durationSeconds: yup
-    .number()
-    // .moreThan(
-    //   minDurationSeconds,
-    //   `Duration should be more than ${minDurationSeconds}`
-    // )
-    // .lessThan(
-    //   // +1 so maxDurationSeconds is included
-    //   maxDurationSeconds + 1,
-    //   `Duration should be less than ${maxDurationSeconds + 1}`
-    // )
-    .required('Duration is required'),
+  durationSeconds: yup.number().required('Duration is required'),
 })
 
 const Lock = ({
@@ -79,17 +66,7 @@ const Lock = ({
         programs,
         config: form.tribecaConfiguration!,
       })
-      const minDurationSeconds =
-        lockerData?.params?.minStakeDuration?.toNumber() ?? 0
 
-      const maxDurationSeconds =
-        lockerData?.params?.maxStakeDuration?.toNumber() ?? Number.MAX_VALUE
-      console.log('minDurationSeconds', minDurationSeconds)
-      console.log('maxDurationSeconds', maxDurationSeconds)
-      console.log(
-        form.durationSeconds * 60 * 60 * 24 * 365,
-        form.durationSeconds * 60 * 60 * 24 * 365
-      )
       return lockInstruction({
         tribecaConfiguration: form.tribecaConfiguration!,
         programs,
