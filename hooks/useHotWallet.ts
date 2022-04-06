@@ -35,8 +35,6 @@ const useHotWallet = () => {
     publicKey: PublicKey
   } | null>(null)
 
-  console.log('>>>> realm.account.name', realm?.account.name)
-
   useEffect(() => {
     if (!realm) return
 

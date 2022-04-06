@@ -72,6 +72,7 @@ const RefillRewardVault = ({
       const authority = governedAccount!.governance.pubkey
 
       console.log('Refill Reward Vault Staking Campaign', {
+        uiRewardRefillAmount: form.uiRewardRefillAmount!,
         stakingCampaignPda: stakingCampaignPda.toString(),
         authority: authority.toString(),
         rewardMint: stakingCampaignState.rewardMint.toString(),

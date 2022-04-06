@@ -1,4 +1,5 @@
 import { StakingCampaignInfo } from '@hooks/useHotWalletPluginUXDStaking'
+import { BN } from '@project-serum/anchor'
 import { nativeAmountToFormattedUiAmount } from '@tools/sdk/units'
 import { getSplTokenNameByMint } from '@utils/splTokens'
 
@@ -45,6 +46,7 @@ const StakingCampaign = ({
   )
 
   const rewardMintName = getSplTokenNameByMint(stakingCampaignInfo.rewardMint)
+  const stackedMintName = getSplTokenNameByMint(stakingCampaignInfo.stakedMint)
 
   return (
     <>
@@ -89,6 +91,37 @@ const StakingCampaign = ({
               stakingCampaignInfo.rewardMintDecimals
             )}
             <span className="ml-1">{rewardMintName}</span>
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-xs">staked vault balance:</span>
+          <span className="text-xs">
+            {stakingCampaignInfo.stakedVaultBalance
+              ? nativeAmountToFormattedUiAmount(
+                  new BN(stakingCampaignInfo.stakedVaultBalance),
+                  stakingCampaignInfo.stakedMintDecimals
+                )
+              : '-'}
+            <span className="ml-1">{stackedMintName}</span>
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-xs">total created staking accounts:</span>
+          <span className="text-xs">
+            {Number(
+              stakingCampaignInfo.totalCreatedStakingAccounts
+            ).toLocaleString()}
+          </span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-xs">total current staking accounts:</span>
+          <span className="text-xs">
+            {Number(
+              stakingCampaignInfo.totalCreatedStakingAccounts
+            ).toLocaleString()}
           </span>
         </div>
       </div>

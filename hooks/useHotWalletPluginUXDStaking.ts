@@ -34,9 +34,13 @@ const UsersCampaigns = {
   ],
 }
 
-export type StakingCampaignInfo = StakingCampaignState & {
+export type StakingCampaignInfo = Omit<
+  StakingCampaignState,
+  'validStakingOptions' | 'getStakedVaultBalance'
+> & {
   name: string
   pda: PublicKey
+  stakedVaultBalance?: number
 }
 
 const useHotWalletPluginUXDStaking = (hotWalletAccount: HotWalletAccount) => {
@@ -69,12 +73,35 @@ const useHotWalletPluginUXDStaking = (hotWalletAccount: HotWalletAccount) => {
         )
       )
 
+      const stakedVaultBalances = await Promise.allSettled(
+        stakingCampaignStates.map((stakingCampaignState) =>
+          stakingCampaignState.getStakedVaultBalance(connection.current)
+        )
+      )
+
       setStakingCampaignsInfo(
-        stakingCampaignStates.map((state, index) => ({
-          ...state,
-          name: campaigns[index].name,
-          pda: campaigns[index].pda,
-        })) as StakingCampaignInfo[]
+        stakingCampaignStates.map(
+          (
+            {
+              validStakingOptions: _validStakingOptions,
+              getStakedVaultBalance: _getStakedVaultBalance,
+              ...other
+            },
+            index
+          ) => {
+            const stakedVaultBalanceResult = stakedVaultBalances[index]
+
+            return {
+              ...other,
+              stakedVaultBalance:
+                stakedVaultBalanceResult.status === 'fulfilled'
+                  ? stakedVaultBalanceResult.value
+                  : undefined,
+              name: campaigns[index].name,
+              pda: campaigns[index].pda,
+            }
+          }
+        )
       )
     } catch (e) {
       console.log(e)
