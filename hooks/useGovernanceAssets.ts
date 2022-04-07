@@ -263,9 +263,9 @@ export default function useGovernanceAssets() {
       packageId: PackageEnum.Tribeca,
     },
     [InstructionEnum.SoceanMintBondedTokens]: {
-      id: Instructions.SoceanMintBondedTokens,
       name: 'Socean: Mint Bonded Tokens',
       isVisible: canUseAnyInstruction,
+      packageId: PackageEnum.Socean,
     },
     [InstructionEnum.SoceanDepositToAuctionPool]: {
       name: 'Socean: Deposit to Auction',

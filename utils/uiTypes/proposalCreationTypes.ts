@@ -394,6 +394,7 @@ export enum PackageEnum {
   UXDStaking,
   Friktion,
   Tribeca,
+  Socean,
 }
 
 export type createParams = [

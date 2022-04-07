@@ -131,7 +131,6 @@ function useInstructionFormBuilder<
   }, [JSON.stringify(initialFormValues.governedAccount)])
 
   useEffect(() => {
-    console.debug('form', form)
     debounce.debounceFcn(async () => {
       await validateForm()
     })
