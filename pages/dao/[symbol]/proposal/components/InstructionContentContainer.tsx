@@ -2,14 +2,14 @@ import {
   ComponentInstructionData,
   InstructionEnum,
 } from '@utils/uiTypes/proposalCreationTypes'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import DryRunInstructionBtn from './DryRunInstructionBtn'
 
 const InstructionContentContainer = ({
   children,
   instruction,
 }: {
-  children: unknown
+  children: ReactNode
   instruction?: ComponentInstructionData
 }) => {
   return (
