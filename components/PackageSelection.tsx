@@ -18,12 +18,13 @@ const PackageSelection = ({
         if (image) {
           return (
             <img
+              title={name}
               key={name}
               style={{
                 boxShadow: selected === id ? '0 0 8px 4px #aeaeae' : 'none',
               }}
               src={image}
-              className={`h-6 w-6 p-0.5 rounded-full hover:grayscale-0 ${
+              className={`h-6 max-w-6 p-0.5 rounded-full hover:grayscale-0 ${
                 selected !== id ? 'grayscale' : ''
               } cursor-pointer`}
               onClick={() => onClick(Number(id) as PackageEnum)}

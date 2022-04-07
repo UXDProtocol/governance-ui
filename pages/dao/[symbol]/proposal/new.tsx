@@ -160,22 +160,23 @@ const New = () => {
         voteByCouncil,
         isDraft,
 
-        instructionsData: formInstructionsData.map((uiInstruction) => {
+        instructionsData: formInstructionsData.map((formInstructionData) => {
           return {
-            data: uiInstruction.serializedInstruction
+            data: formInstructionData.serializedInstruction
               ? getInstructionDataFromBase64(
-                  uiInstruction.serializedInstruction
+                  formInstructionData.serializedInstruction
                 )
               : null,
-            holdUpTime: uiInstruction.customHoldUpTime
-              ? getTimestampFromDays(uiInstruction.customHoldUpTime)
+            holdUpTime: formInstructionData.customHoldUpTime
+              ? getTimestampFromDays(formInstructionData.customHoldUpTime)
               : selectedGovernance?.account?.config.minInstructionHoldUpTime,
             prerequisiteInstructions:
-              uiInstruction.prerequisiteInstructions || [],
-            chunkSplitByDefault: uiInstruction.chunkSplitByDefault || false,
-            signers: uiInstruction.signers,
+              formInstructionData.prerequisiteInstructions || [],
+            chunkSplitByDefault:
+              formInstructionData.chunkSplitByDefault || false,
+            signers: formInstructionData.signers,
             shouldSplitIntoSeparateTxs:
-              uiInstruction.shouldSplitIntoSeparateTxs,
+              formInstructionData.shouldSplitIntoSeparateTxs,
           }
         }),
       })
@@ -266,15 +267,17 @@ const New = () => {
             governance={governedAccount?.governance}
           />
 
-          <InstructionsForm
-            availableInstructions={availableInstructions}
-            onInstructionsChange={(
-              instructions: ComponentInstructionData[]
-            ) => {
-              setInstructions(instructions)
-            }}
-            governedAccount={governedAccount}
-          />
+          {governedAccount ? (
+            <InstructionsForm
+              availableInstructions={availableInstructions}
+              onInstructionsChange={(
+                instructions: ComponentInstructionData[]
+              ) => {
+                setInstructions(instructions)
+              }}
+              governedAccount={governedAccount}
+            />
+          ) : null}
 
           <div className="border-t border-fgd-4 flex justify-end pt-6 space-x-4">
             <SecondaryButton

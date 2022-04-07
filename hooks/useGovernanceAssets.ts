@@ -194,7 +194,7 @@ export default function useGovernanceAssets() {
     },
     [PackageEnum.Tribeca]: {
       name: 'Tribeca',
-      image: '/img/friktion.png',
+      image: '/img/tribeca.png',
     },
   }
 

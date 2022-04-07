@@ -42,9 +42,7 @@ function useInstructionFormBuilder<
     connection: Connection
     wallet: SignerWalletAdapter
     governedAccountPubkey: PublicKey
-  }) => Promise<
-    TransactionInstruction | SerializedInstruction
-  >
+  }) => Promise<TransactionInstruction | SerializedInstruction>
   getCustomHoldUpTime?: () => Promise<number>
 }) {
   const connection = useWalletStore((s) => s.connection)
@@ -86,20 +84,19 @@ function useInstructionFormBuilder<
     try {
       const transactionInstructionOrSerializedInstruction = buildInstruction
         ? await buildInstruction({
-          form,
-          connection: connection.current,
-          wallet,
-          governedAccountPubkey,
-        })
+            form,
+            connection: connection.current,
+            wallet,
+            governedAccountPubkey,
+          })
         : ''
 
       const serializedInstruction =
-        transactionInstructionOrSerializedInstruction instanceof
-          TransactionInstruction
-          ? serializeInstructionToBase64(
-            transactionInstructionOrSerializedInstruction
-          )
-          : transactionInstructionOrSerializedInstruction
+        typeof transactionInstructionOrSerializedInstruction === 'string'
+          ? transactionInstructionOrSerializedInstruction
+          : serializeInstructionToBase64(
+              transactionInstructionOrSerializedInstruction
+            )
 
       const customHoldUpTime = getCustomHoldUpTime
         ? await getCustomHoldUpTime()
