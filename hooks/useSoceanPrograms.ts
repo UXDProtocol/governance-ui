@@ -1,9 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Wallet } from '@project-serum/common'
-import {
-  SolanaAugmentedProvider,
-  SolanaProvider,
-} from '@saberhq/solana-contrib'
 import soceanConfiguration, {
   SoceanPrograms,
 } from '@tools/sdk/socean/configuration'
@@ -20,20 +15,16 @@ export default function useSoceanPrograms() {
       return
     }
 
-    const solanaProvider = SolanaProvider.init({
-      connection: connection.current,
-      wallet: wallet as Wallet,
-    })
-
     if (connection.cluster === 'localnet') {
       throw new Error('unsupported cluster for Socean programs loading')
     }
 
     setPrograms(
-      soceanConfiguration.loadPrograms(
-        new SolanaAugmentedProvider(solanaProvider),
-        connection.cluster
-      )
+      soceanConfiguration.getSoceanPrograms({
+        connection: connection.current,
+        wallet,
+        cluster: connection.cluster,
+      })
     )
   }, [connection, wallet])
 

@@ -1,9 +1,14 @@
 import { newProgramMap } from '@saberhq/anchor-contrib'
-import { SolanaAugmentedProvider } from '@saberhq/solana-contrib'
-import { PublicKey } from '@solana/web3.js'
+import {
+  SolanaAugmentedProvider,
+  SolanaProvider,
+} from '@saberhq/solana-contrib'
+import { Connection, PublicKey } from '@solana/web3.js'
 import { EndpointTypes } from '@models/types'
 import { BondingJSON, BondingProgram } from './programs/bonding'
 import { DescendingAuctionJSON, DescendingAuctionProgram } from './programs'
+import { Wallet } from '@project-serum/common'
+import { SignerWalletAdapter } from '@solana/wallet-adapter-base'
 
 export type SoceanPrograms = {
   Bonding: BondingProgram
@@ -57,6 +62,28 @@ class SoceanConfiguration {
         DescendingAuction: this.descendingAuctionProgramId[cluster],
       }
     )
+  }
+
+  public getSoceanPrograms({
+    connection,
+    wallet,
+    cluster,
+  }: {
+    connection: Connection
+    wallet: SignerWalletAdapter
+    cluster: EndpointTypes
+  }) {
+    if (cluster === 'localnet') {
+      throw new Error('unsupported cluster for Socean programs loading')
+    }
+    const programs = this.loadPrograms(
+      new SolanaAugmentedProvider(
+        SolanaProvider.init({ connection, wallet: wallet as Wallet })
+      ),
+      cluster as SupportedCluster
+    )
+    if (!programs) throw new Error('Socean Configuration error: no programs')
+    return programs
   }
 }
 
