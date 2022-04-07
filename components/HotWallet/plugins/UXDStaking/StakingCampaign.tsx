@@ -1,5 +1,4 @@
 import { StakingCampaignInfo } from '@hooks/useHotWalletPluginUXDStaking'
-import { BN } from '@project-serum/anchor'
 import { nativeAmountToFormattedUiAmount } from '@tools/sdk/units'
 import { getSplTokenNameByMint } from '@utils/splTokens'
 
@@ -73,7 +72,7 @@ const StakingCampaign = ({
 
       <div className="flex flex-col bg-bkg-1 p-2 rounded-md space-y-1">
         <div className="flex justify-between">
-          <span className="text-xs">initial reward amount:</span>
+          <span className="text-xs">total campaign rewards:</span>
           <span className="text-xs">
             {nativeAmountToFormattedUiAmount(
               stakingCampaignInfo.initialRewardAmount,
@@ -84,7 +83,7 @@ const StakingCampaign = ({
         </div>
 
         <div className="flex justify-between">
-          <span className="text-xs">remaining reward amount:</span>
+          <span className="text-xs">unallocated campaign rewards:</span>
           <span className="text-xs">
             {nativeAmountToFormattedUiAmount(
               stakingCampaignInfo.remainingRewardAmount,
@@ -95,15 +94,12 @@ const StakingCampaign = ({
         </div>
 
         <div className="flex justify-between">
-          <span className="text-xs">staked vault balance:</span>
+          <span className="text-xs">total staked amount:</span>
           <span className="text-xs">
             {stakingCampaignInfo.stakedVaultBalance
-              ? nativeAmountToFormattedUiAmount(
-                  new BN(stakingCampaignInfo.stakedVaultBalance),
-                  stakingCampaignInfo.stakedMintDecimals
-                )
-              : '-'}
-            <span className="ml-1">{stackedMintName}</span>
+              ? `${stakingCampaignInfo.stakedVaultBalance.toLocaleString()} ${stackedMintName}`
+              : 'unknown'}
+            <span className="ml-1">{rewardMintName}</span>
           </span>
         </div>
 
