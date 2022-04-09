@@ -5,14 +5,290 @@ import {
   getMintAccountLabelInfo,
   getSolAccountLabel,
   getTokenAccountLabelInfo,
+  GovernedMintInfoAccount,
   GovernedMultiTypeAccount,
+  GovernedTokenAccount,
 } from '@utils/tokens';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getProgramName } from '@components/instructions/programs/names';
 import { ChipIcon } from '@heroicons/react/solid';
-import { CogIcon, CurrencyDollarIcon } from '@heroicons/react/outline';
+import {
+  AcademicCapIcon,
+  CogIcon,
+  CurrencyDollarIcon,
+} from '@heroicons/react/outline';
+import ImageTextSelection from '@components/ImageTextSelection';
 
-const GovernedAccountSelect = ({
+function getMintAccountLabelComponent({
+  account,
+  tokenName,
+  mintAccountName,
+  amount,
+  imgUrl,
+}) {
+  return (
+    <div className="flex items-center">
+      <div className="flex">
+        <CogIcon className="w-8 h-8" />
+      </div>
+
+      <div className="mt-1 ml-2 flex flex-col">
+        <span className="mb-0.5">{mintAccountName}</span>
+
+        <div className="space-y-0.5 text-xs text-fgd-3 flex flex-col">
+          {account && <span className="mb-0.5">{account}</span>}
+
+          {tokenName && (
+            <div className="flex items-center">
+              Token: <img className="flex-shrink-0 h-4 w-4" src={imgUrl} />
+              {tokenName}
+            </div>
+          )}
+          <span>Supply: {amount}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function getTokenAccountLabelComponent({
+  tokenAccount,
+  tokenAccountName,
+  tokenName,
+  amount,
+}) {
+  return (
+    <div className="flex items-center">
+      <div className="flex">
+        <CurrencyDollarIcon className="w-8 h-8" />
+      </div>
+
+      <div className="mt-1 ml-2 flex flex-col">
+        {tokenAccountName && <div className="mb-0.5">{tokenAccountName}</div>}
+
+        <div className="mb-0.5 text-fgd-3 text-xs">{tokenAccount}</div>
+
+        <div className="flex space-x-3 text-xs text-fgd-3">
+          {tokenName && (
+            <div className="flex items-center">
+              Token:
+              <span className="ml-1 text-fgd-1">{tokenName}</span>
+            </div>
+          )}
+          <div>
+            Bal:<span className="ml-1 text-fgd-1">{amount}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function getGovernanceAccountLabel(val: ProgramAccount<Governance>) {
+  const name = val
+    ? getProgramName(val.account.governedAccount)
+    : 'Unknown Program';
+
+  return (
+    <div className="flex items-center">
+      <div className="flex">
+        <AcademicCapIcon className="w-8 h-8" />
+      </div>
+
+      <div className="mt-1 ml-2 flex flex-col">
+        <span className="">{name}</span>
+
+        <span className="text-fgd-3 text-xs">
+          {val?.account?.governedAccount?.toBase58()}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function getProgramAccountLabel(val: ProgramAccount<Governance>) {
+  const name = val
+    ? getProgramName(val.account.governedAccount)
+    : 'Unknown Program';
+
+  return (
+    <div className="flex items-center">
+      <div className="flex">
+        <ChipIcon className="w-8 h-8" />
+      </div>
+
+      <div className="mt-1 ml-2 flex flex-col">
+        <span className="">{name}</span>
+
+        <span className="text-fgd-3 text-xs">
+          {val?.account?.governedAccount?.toBase58()}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function getLabel<
+  T extends
+    | GovernedMultiTypeAccount
+    | GovernedTokenAccount
+    | GovernedMintInfoAccount
+>(value?: T) {
+  if (!value) {
+    return null;
+  }
+
+  if (!value.governance) {
+    return null;
+  }
+
+  const accountType = value.governance.account.accountType;
+
+  switch (accountType) {
+    case GovernanceAccountType.MintGovernanceV1:
+    case GovernanceAccountType.MintGovernanceV2: {
+      const governedAccount = value as GovernedMintInfoAccount;
+
+      return getMintAccountLabelComponent(
+        getMintAccountLabelInfo(governedAccount),
+      );
+    }
+
+    case GovernanceAccountType.TokenGovernanceV1:
+    case GovernanceAccountType.TokenGovernanceV2: {
+      const governedAccount = value as GovernedTokenAccount;
+
+      return getTokenAccountLabelComponent(
+        governedAccount.isSol
+          ? getSolAccountLabel(governedAccount)
+          : getTokenAccountLabelInfo(governedAccount),
+      );
+    }
+
+    case GovernanceAccountType.ProgramGovernanceV1:
+    case GovernanceAccountType.ProgramGovernanceV2:
+      return getProgramAccountLabel(value.governance);
+
+    case GovernanceAccountType.GovernanceV1:
+      return getGovernanceAccountLabel(value.governance);
+
+    default:
+      return value.governance.account.governedAccount.toBase58();
+  }
+}
+
+// Create governance groups to avoid duplicated buttons
+const governanceAccountsConfiguration = [
+  {
+    id: 1,
+    name: 'Treasury',
+    types: [
+      GovernanceAccountType.TokenGovernanceV1,
+      GovernanceAccountType.TokenGovernanceV2,
+    ],
+  },
+  {
+    id: 2,
+    name: 'Mint',
+    types: [
+      GovernanceAccountType.MintGovernanceV1,
+      GovernanceAccountType.MintGovernanceV2,
+    ],
+  },
+  {
+    id: 3,
+    name: 'Program',
+    types: [
+      GovernanceAccountType.ProgramGovernanceV1,
+      GovernanceAccountType.ProgramGovernanceV2,
+    ],
+  },
+  {
+    id: 4,
+    name: 'Governance',
+    types: [
+      GovernanceAccountType.GovernanceV1,
+      GovernanceAccountType.GovernanceV2,
+    ],
+  },
+  {
+    id: 5,
+    name: 'Others',
+    types: [
+      GovernanceAccountType.RealmV1,
+      GovernanceAccountType.TokenOwnerRecordV1,
+      GovernanceAccountType.ProposalV1,
+      GovernanceAccountType.SignatoryRecordV1,
+      GovernanceAccountType.VoteRecordV1,
+      GovernanceAccountType.ProposalInstructionV1,
+      GovernanceAccountType.RealmConfig,
+      GovernanceAccountType.VoteRecordV2,
+      GovernanceAccountType.ProposalTransactionV2,
+      GovernanceAccountType.ProposalV2,
+      GovernanceAccountType.ProgramMetadata,
+      GovernanceAccountType.RealmV2,
+      GovernanceAccountType.TokenOwnerRecordV2,
+      GovernanceAccountType.SignatoryRecordV2,
+    ],
+  },
+];
+
+// Look at the types of the selectable governed account
+function calculateAvailableGovernanceTypes<
+  T extends
+    | GovernedMultiTypeAccount
+    | GovernedTokenAccount
+    | GovernedMintInfoAccount
+>(governedAccounts: T[]) {
+  // Get all governance types used by a selectable governedAccount
+  const governanceTypes = Array.from(
+    governedAccounts.reduce((types, governedAccount) => {
+      if (!governedAccount.governance) return types;
+
+      types.add(governedAccount.governance.account.accountType);
+
+      return types;
+    }, new Set()),
+  ) as GovernanceAccountType[];
+
+  const filteredGovernanceAccountType = governanceAccountsConfiguration.filter(
+    (config) => config.types.some((type) => governanceTypes.includes(type)),
+  );
+
+  // Format the data so it fit ImageTextSelection format
+  return filteredGovernanceAccountType.map(({ types: _, ...other }) => ({
+    ...other,
+  }));
+}
+
+function sortFilteredGovernedAccounts<
+  T extends
+    | GovernedMultiTypeAccount
+    | GovernedTokenAccount
+    | GovernedMintInfoAccount
+>(filteredGovernedAccounts: T[]): T[] {
+  return filteredGovernedAccounts.sort((governedAcc1, governedAcc2) => {
+    if (!governedAcc1.governance || !governedAcc2.governance) {
+      return 1;
+    }
+
+    const index1 = governanceAccountsConfiguration.findIndex((config) =>
+      config.types.includes(governedAcc1.governance!.account.accountType),
+    );
+    const index2 = governanceAccountsConfiguration.findIndex((config) =>
+      config.types.includes(governedAcc2.governance!.account.accountType),
+    );
+
+    return index1 - index2;
+  });
+}
+
+export default function GovernedAccountSelect<
+  T extends
+    | GovernedMultiTypeAccount
+    | GovernedTokenAccount
+    | GovernedMintInfoAccount
+>({
   onChange,
   value,
   error,
@@ -22,167 +298,144 @@ const GovernedAccountSelect = ({
   label,
   noMaxWidth,
 }: {
-  onChange: (selected: GovernedMultiTypeAccount) => void;
-  value?: GovernedMultiTypeAccount;
+  onChange: (selected: T | null) => void;
+  value?: T;
   error?: string;
-  governedAccounts: GovernedMultiTypeAccount[];
+  governedAccounts: T[];
   shouldBeGoverned?: boolean;
   governance?: ProgramAccount<Governance> | null | undefined;
   label?: string;
   noMaxWidth?: boolean;
-}) => {
-  // TODO refactor both methods (getMintAccountLabelComponent, getTokenAccountLabelComponent) make it more common
-  function getMintAccountLabelComponent({
-    account,
-    tokenName,
-    mintAccountName,
-    amount,
-    imgUrl,
-  }) {
-    return (
-      <div className="flex items-center">
-        <div className="flex">
-          <CogIcon className="w-8 h-8" />
-        </div>
+}) {
+  const [
+    selectedGovernanceAccountConfigurationId,
+    setSelectedGovernanceAccountConfigurationId,
+  ] = useState<GovernanceAccountType | null>(null);
 
-        <div className="mt-1 ml-2 flex flex-col">
-          <span className="mb-0.5">{mintAccountName}</span>
+  const availableGovernanceTypes = calculateAvailableGovernanceTypes<T>(
+    governedAccounts,
+  );
 
-          <div className="space-y-0.5 text-xs text-fgd-3 flex flex-col">
-            {account && <span className="mb-0.5">{account}</span>}
+  const filteredGovernedAccounts = governedAccounts.filter(
+    (governedAccount) => {
+      if (shouldBeGoverned) {
+        return false;
+      }
 
-            {tokenName && (
-              <div className="flex items-center">
-                Token: <img className="flex-shrink-0 h-4 w-4" src={imgUrl} />
-                {tokenName}
-              </div>
-            )}
-            <span>Supply: {amount}</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      if (
+        governedAccount?.governance?.pubkey.toBase58() ===
+        governance?.pubkey?.toBase58()
+      ) {
+        return false;
+      }
 
-  function getTokenAccountLabelComponent({
-    tokenAccount,
-    tokenAccountName,
-    tokenName,
-    amount,
-  }) {
-    return (
-      <div className="flex items-center">
-        <div className="flex">
-          <CurrencyDollarIcon className="w-8 h-8" />
-        </div>
+      // Filter the governedAccount that do not match the selected governance account type
+      if (!selectedGovernanceAccountConfigurationId) {
+        return true;
+      }
 
-        <div className="mt-1 ml-2 flex flex-col">
-          {tokenAccountName && <div className="mb-0.5">{tokenAccountName}</div>}
+      if (!governedAccount.governance) {
+        return true;
+      }
 
-          <div className="mb-0.5 text-fgd-3 text-xs">{tokenAccount}</div>
+      const config = governanceAccountsConfiguration.find(
+        (config) => config.id === selectedGovernanceAccountConfigurationId,
+      );
 
-          <div className="flex space-x-3 text-xs text-fgd-3">
-            {tokenName && (
-              <div className="flex items-center">
-                Token:
-                <span className="ml-1 text-fgd-1">{tokenName}</span>
-              </div>
-            )}
-            <div>
-              Bal:<span className="ml-1 text-fgd-1">{amount}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      if (!config) {
+        return true;
+      }
 
-  function getProgramAccountLabel(val: ProgramAccount<Governance>) {
-    const name = val
-      ? getProgramName(val.account.governedAccount)
-      : 'Unknown Program';
+      return config.types.includes(
+        governedAccount.governance.account.accountType,
+      );
+    },
+  );
 
-    return (
-      <div className="flex items-center">
-        <div className="flex">
-          <ChipIcon className="w-8 h-8" />
-        </div>
+  const sortedFilteredGovernedAccounts = sortFilteredGovernedAccounts<T>(
+    filteredGovernedAccounts,
+  );
 
-        <div className="mt-1 ml-2 flex flex-col">
-          <span className="">{name}</span>
-
-          <span className="text-fgd-3 text-xs">
-            {val?.account?.governedAccount?.toBase58()}
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  function getLabel(value?: GovernedMultiTypeAccount) {
-    if (!value) {
-      return null;
-    }
-
-    const accountType = value.governance.account.accountType;
-
-    switch (accountType) {
-      case GovernanceAccountType.MintGovernanceV1:
-      case GovernanceAccountType.MintGovernanceV2:
-        return getMintAccountLabelComponent(getMintAccountLabelInfo(value));
-      case GovernanceAccountType.TokenGovernanceV1:
-      case GovernanceAccountType.TokenGovernanceV2:
-        return getTokenAccountLabelComponent(
-          value.isSol
-            ? getSolAccountLabel(value)
-            : getTokenAccountLabelInfo(value),
-        );
-      case GovernanceAccountType.ProgramGovernanceV1:
-      case GovernanceAccountType.ProgramGovernanceV2:
-        return getProgramAccountLabel(value.governance);
-      default:
-        return value.governance.account.governedAccount.toBase58();
-    }
-  }
-
+  // If the user select a new governance filter and the selected governance doesn't match the type
+  // unselect it
   useEffect(() => {
-    if (governedAccounts.length == 1) {
-      //wait for microtask queue to be empty
-      setTimeout(() => {
-        onChange(governedAccounts[0]);
-      });
+    // If nothing is selected, select the first available governance
+    if (!value && sortedFilteredGovernedAccounts.length) {
+      onChange(sortedFilteredGovernedAccounts[0]);
+      return;
     }
-  }, [JSON.stringify(governedAccounts)]);
+
+    if (
+      !selectedGovernanceAccountConfigurationId ||
+      !value ||
+      !value.governance
+    ) {
+      return;
+    }
+
+    const config = governanceAccountsConfiguration.find(
+      (config) => config.id === selectedGovernanceAccountConfigurationId,
+    );
+
+    if (!config) {
+      return;
+    }
+
+    if (config.types.includes(value.governance.account.accountType)) {
+      return;
+    }
+
+    onChange(
+      sortedFilteredGovernedAccounts.length
+        ? sortedFilteredGovernedAccounts[0]
+        : null,
+    );
+  }, [value, selectedGovernanceAccountConfigurationId]);
 
   return (
-    <Select
-      label={label}
-      onChange={onChange}
-      componentLabel={getLabel(value)}
-      placeholder="Please select..."
-      value={value?.governance?.account.governedAccount.toBase58()}
-      error={error}
-      noMaxWidth={noMaxWidth}
-    >
-      {governedAccounts
-        .filter((x) =>
-          !shouldBeGoverned
-            ? !shouldBeGoverned
-            : x?.governance?.pubkey.toBase58() ===
-              governance?.pubkey?.toBase58(),
-        )
-        .map((acc) => {
+    <div className="flex flex-col">
+      <div className="mb-2 flex items-center">
+        <span>{label}</span>
+
+        <span className="text-xs items-center flex items-center text-fgd-3 ml-3">
+          Filters by type
+        </span>
+
+        <ImageTextSelection
+          className="ml-3"
+          selected={selectedGovernanceAccountConfigurationId}
+          imageTextElements={availableGovernanceTypes}
+          onClick={(newSelection: GovernanceAccountType) => {
+            // Clicking on selected governance account type unselect it
+            if (selectedGovernanceAccountConfigurationId === newSelection) {
+              setSelectedGovernanceAccountConfigurationId(null);
+              return;
+            }
+
+            setSelectedGovernanceAccountConfigurationId(newSelection);
+          }}
+        />
+      </div>
+
+      <Select
+        onChange={onChange}
+        componentLabel={getLabel<T>(value)}
+        placeholder="Please select..."
+        value={value?.governance?.account.governedAccount.toBase58()}
+        error={error}
+        noMaxWidth={noMaxWidth}
+      >
+        {sortedFilteredGovernedAccounts.map((acc) => {
           return (
             <Select.Option
               key={acc.governance?.account.governedAccount.toBase58()}
               value={acc}
             >
-              {getLabel(acc)}
+              {getLabel<T>(acc)}
             </Select.Option>
           );
         })}
-    </Select>
+      </Select>
+    </div>
   );
-};
-
-export default GovernedAccountSelect;
+}

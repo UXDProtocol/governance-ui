@@ -4,7 +4,7 @@ import useGovernanceAssets, {
 } from '@hooks/useGovernanceAssets';
 import { PackageEnum } from '@utils/uiTypes/proposalCreationTypes';
 import { useCallback, useEffect, useState } from 'react';
-import PackageSelection from './PackageSelection';
+import ImageTextSelection from './ImageTextSelection';
 
 const SelectInstructionType = ({
   idx,
@@ -99,10 +99,10 @@ const SelectInstructionType = ({
           Filters by package:
         </span>
 
-        <PackageSelection
+        <ImageTextSelection
           className="ml-1"
           selected={packageId}
-          packages={availablePackages}
+          imageTextElements={availablePackages}
           onClick={(selectedPackageId: PackageEnum) => {
             // Clicking on selected packageName unselect it
             if (selectedPackageId === packageId) {

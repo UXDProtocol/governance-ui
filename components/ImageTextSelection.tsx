@@ -1,25 +1,28 @@
-import { PackageType } from '@hooks/useGovernanceAssets';
-import { PackageEnum } from '@utils/uiTypes/proposalCreationTypes';
+export type ImageTextElement<T> = {
+  id: T;
+  name: string;
+  image?: string;
+};
 
-const PackageSelection = ({
+export default function ImageTextSelection<T>({
   selected,
   className,
   onClick,
-  packages,
+  imageTextElements,
 }: {
-  selected: PackageEnum | null;
-  className?: string | undefined;
-  onClick: (selected: PackageEnum) => void;
-  packages: PackageType[];
-}) => {
+  selected: T | null;
+  className?: string;
+  onClick: (selected: T) => void;
+  imageTextElements: ImageTextElement<T>[];
+}) {
   return (
     <div className={`flex items-center space-x-3 ${className}`}>
-      {packages.map(({ id, name, image }) => {
+      {imageTextElements.map(({ id, name, image }, index) => {
         if (image) {
           return (
             <img
               title={name}
-              key={name}
+              key={index}
               style={{
                 boxShadow: selected === id ? '0 0 8px 4px #aeaeae' : 'none',
               }}
@@ -27,7 +30,7 @@ const PackageSelection = ({
               className={`h-6 max-w-6 p-0.5 rounded-full hover:grayscale-0 ${
                 selected !== id ? 'grayscale' : ''
               } cursor-pointer`}
-              onClick={() => onClick(Number(id) as PackageEnum)}
+              onClick={() => onClick(id)}
             />
           );
         }
@@ -41,8 +44,8 @@ const PackageSelection = ({
             className={`text-xs hover:text-white pl-2 pr-2 pt-0.5 pb-0.5 rounded-full cursor-pointer ${
               selected !== id ? 'text-gray-400' : 'text-white'
             }`}
-            onClick={() => onClick(Number(id) as PackageEnum)}
-            key={name}
+            onClick={() => onClick(id)}
+            key={index}
           >
             {name}
           </span>
@@ -50,6 +53,4 @@ const PackageSelection = ({
       })}
     </div>
   );
-};
-
-export default PackageSelection;
+}
