@@ -5,6 +5,7 @@ import { MintInfo } from '@solana/spl-token';
 import { PublicKey, Keypair, TransactionInstruction } from '@solana/web3.js';
 import { getNameOf } from '@tools/core/script';
 import { SupportedMintName } from '@tools/sdk/solend/configuration';
+import { SupportedMintName as QuarryMineSupportedMintName } from '@tools/sdk/quarryMine/configuration';
 import {
   GovernedMintInfoAccount,
   GovernedMultiTypeAccount,
@@ -209,6 +210,11 @@ export interface SaberPoolsWithdrawOneForm {
   uiMinimumTokenAmount?: number;
 }
 
+export interface SaberPeripheryRedeemAllTokensFromMintProxyForm {
+  governedAccount?: GovernedMultiTypeAccount;
+  mintName?: QuarryMineSupportedMintName;
+}
+
 export interface SoceanMintBondedTokensForm {
   governedAccount?: GovernedMultiTypeAccount;
   uiAmount?: number;
@@ -371,6 +377,7 @@ export enum InstructionEnum {
   RaydiumRemoveLiquidity,
   SaberPoolsDeposit,
   SaberPoolsWithdrawOne,
+  SaberPeripheryRedeemAllTokensFromMintProxy,
   SolendCreateObligationAccount,
   SolendInitObligationAccount,
   SolendDepositReserveLiquidityAndObligationCollateral,

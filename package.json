@@ -42,6 +42,7 @@
     "@saberhq/anchor-contrib": "^1.12.56",
     "@quarryprotocol/quarry-sdk": "^3.0.0",
     "@saberhq/stableswap-sdk": "^1.12.55",
+    "@saberhq/saber-periphery": "^1.1.1",
     "@saberhq/token-utils": "^1.12.55",
     "@soceanfi/bonding": "^0.3.0",
     "@soceanfi/descending-auction": "^0.2.1",

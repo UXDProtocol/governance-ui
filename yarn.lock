@@ -2011,6 +2011,14 @@
     colors "^1.4.0"
     tslib "^2.3.1"
 
+"@saberhq/saber-periphery@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@saberhq/saber-periphery/-/saber-periphery-1.1.1.tgz#48539ee11dcff6df07301631e49f6f25b9c48bbb"
+  integrity sha512-1ex2u3UOnsYuWxhXNC/RUTztPwUtUHA5JDpSABcw2gFeaE4VbnF+T0nmNhe5MU5gtBaZTfJaA7a8JV3fF31vEQ==
+  dependencies:
+    tiny-invariant "^1.2.0"
+    tslib "^2.3.1"
+
 "@saberhq/solana-contrib@^1.11.3", "@saberhq/solana-contrib@^1.12.48":
   version "1.12.48"
   resolved "https://registry.yarnpkg.com/@saberhq/solana-contrib/-/solana-contrib-1.12.48.tgz#313df4afbd6903997b15a551b99b5186a5f8ba9d"
