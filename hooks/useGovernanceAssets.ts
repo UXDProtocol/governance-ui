@@ -204,6 +204,10 @@ export default function useGovernanceAssets() {
       name: 'Socean',
       image: '/img/socean.png',
     },
+    [PackageEnum.Saber]: {
+      name: 'Saber',
+      image: '/img/saber.png',
+    },
   };
 
   const instructions: Instructions = {
@@ -326,6 +330,16 @@ export default function useGovernanceAssets() {
       name: 'Withdraw Funds',
       isVisible: canUseAnyInstruction,
       packageId: PackageEnum.Solend,
+    },
+    [InstructionEnum.SaberPoolsDeposit]: {
+      name: 'Pool Deposit',
+      isVisible: canUseAnyInstruction,
+      packageId: PackageEnum.Saber,
+    },
+    [InstructionEnum.SaberPoolsWithdrawOne]: {
+      name: 'Withdraw One From Pool',
+      isVisible: canUseAnyInstruction,
+      packageId: PackageEnum.Saber,
     },
     [InstructionEnum.UXDInitializeController]: {
       name: 'Initialize Controller',

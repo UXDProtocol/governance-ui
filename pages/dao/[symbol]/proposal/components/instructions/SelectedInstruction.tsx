@@ -10,6 +10,7 @@ import NativeEmpty from './Native/Empty';
 import NativeCustomBase64 from './Native/CustomBase64';
 import SetProgramAuthority from './Native/SetProgramAuthority';
 import SplTokenTransfer from './Native/SplTokenTransfer';
+import SaberPoolsDeposit from './SaberPools/Deposit';
 import SoceanCancelVest from './Socean/CancelVest';
 import SoceanCloseAuction from './Socean/CloseAuction';
 import SoceanDepositToAuctionPool from './Socean/DepositToAuctionPool';
@@ -124,6 +125,10 @@ const SelectedInstruction = ({
           index={index}
           governedAccount={governedAccount}
         />
+      );
+    case InstructionEnum.SaberPoolsDeposit:
+      return (
+        <SaberPoolsDeposit index={index} governedAccount={governedAccount} />
       );
     case InstructionEnum.UXDInitializeController:
       return (
