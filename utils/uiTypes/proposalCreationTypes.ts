@@ -373,6 +373,11 @@ export enum InstructionEnum {
   Clawback,
   CreateAssociatedTokenAccount,
   FriktionDepositIntoVolt,
+  QuarryClaimRewards,
+  QuarryCreateMiner,
+  QuarryCreateMinerVaultAccount,
+  QuarryStakeTokens,
+  QuarryWithdrawTokens,
   RaydiumAddLiquidity,
   RaydiumRemoveLiquidity,
   SaberPoolsDeposit,
@@ -425,6 +430,7 @@ export enum PackageEnum {
   Tribeca,
   Socean,
   Saber,
+  Quarry,
 }
 
 export type createParams = [
