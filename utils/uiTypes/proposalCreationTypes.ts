@@ -326,6 +326,35 @@ export interface TribecaGaugeSetVoteForm {
   weight?: number;
 }
 
+export interface QuarryMineCreateMinerForm {
+  governedAccount?: GovernedMultiTypeAccount;
+  mintName?: QuarryMineSupportedMintName;
+}
+
+export interface QuarryMineCreateMinerVaultAccountForm {
+  governedAccount?: GovernedMultiTypeAccount;
+  mintName?: QuarryMineSupportedMintName;
+}
+
+export interface QuarryMineStakeTokensForm {
+  governedAccount?: GovernedMultiTypeAccount;
+  sourceAccount?: string;
+  uiAmount?: number;
+  mintName?: QuarryMineSupportedMintName;
+}
+
+export interface QuarryMineWithdrawTokensForm {
+  governedAccount?: GovernedMultiTypeAccount;
+  destinationAccount?: string;
+  uiAmount?: number;
+  mintName?: QuarryMineSupportedMintName;
+}
+
+export interface QuarryMineClaimRewardsForm {
+  governedAccount?: GovernedMultiTypeAccount;
+  mintName?: QuarryMineSupportedMintName;
+}
+
 export interface UXDStakingInitializeStakingCampaignForm {
   governedAccount?: GovernedMultiTypeAccount;
   rewardMintUIName?: SplTokenUIName;
