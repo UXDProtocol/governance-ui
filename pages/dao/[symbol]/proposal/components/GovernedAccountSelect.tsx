@@ -11,13 +11,76 @@ import {
 } from '@utils/tokens';
 import React, { useEffect, useState } from 'react';
 import { getProgramName } from '@components/instructions/programs/names';
-import { ChipIcon } from '@heroicons/react/solid';
-import {
-  AcademicCapIcon,
-  CogIcon,
-  CurrencyDollarIcon,
-} from '@heroicons/react/outline';
-import ImageTextSelection from '@components/ImageTextSelection';
+import ImageTextSelection, {
+  ImageTextElement,
+} from '@components/ImageTextSelection';
+
+const treasuryImage = '/img/treasury.png';
+const mintImage = '/img/token.png';
+const programImage = '/img/program.png';
+const governanceImage = '/img/crown.png';
+
+// Create governance groups to avoid duplicated buttons
+const governanceAccountsConfiguration: ({
+  types: GovernanceAccountType[];
+} & ImageTextElement<number>)[] = [
+  {
+    id: 1,
+    name: 'Treasury',
+    image: treasuryImage,
+    types: [
+      GovernanceAccountType.TokenGovernanceV1,
+      GovernanceAccountType.TokenGovernanceV2,
+    ],
+  },
+  {
+    id: 2,
+    name: 'Mint',
+    image: mintImage,
+    types: [
+      GovernanceAccountType.MintGovernanceV1,
+      GovernanceAccountType.MintGovernanceV2,
+    ],
+  },
+  {
+    id: 3,
+    name: 'Program',
+    image: programImage,
+    types: [
+      GovernanceAccountType.ProgramGovernanceV1,
+      GovernanceAccountType.ProgramGovernanceV2,
+    ],
+  },
+  {
+    id: 4,
+    name: 'Governance',
+    image: governanceImage,
+    types: [
+      GovernanceAccountType.GovernanceV1,
+      GovernanceAccountType.GovernanceV2,
+    ],
+  },
+  {
+    id: 5,
+    name: 'Others',
+    types: [
+      GovernanceAccountType.RealmV1,
+      GovernanceAccountType.TokenOwnerRecordV1,
+      GovernanceAccountType.ProposalV1,
+      GovernanceAccountType.SignatoryRecordV1,
+      GovernanceAccountType.VoteRecordV1,
+      GovernanceAccountType.ProposalInstructionV1,
+      GovernanceAccountType.RealmConfig,
+      GovernanceAccountType.VoteRecordV2,
+      GovernanceAccountType.ProposalTransactionV2,
+      GovernanceAccountType.ProposalV2,
+      GovernanceAccountType.ProgramMetadata,
+      GovernanceAccountType.RealmV2,
+      GovernanceAccountType.TokenOwnerRecordV2,
+      GovernanceAccountType.SignatoryRecordV2,
+    ],
+  },
+];
 
 function getMintAccountLabelComponent({
   account,
@@ -29,7 +92,7 @@ function getMintAccountLabelComponent({
   return (
     <div className="flex items-center">
       <div className="flex">
-        <CogIcon className="w-8 h-8" />
+        <img src={mintImage} className="max-w-8 h-8" />
       </div>
 
       <div className="mt-1 ml-2 flex flex-col">
@@ -60,7 +123,7 @@ function getTokenAccountLabelComponent({
   return (
     <div className="flex items-center">
       <div className="flex">
-        <CurrencyDollarIcon className="w-8 h-8" />
+        <img src={treasuryImage} className="max-w-8 h-8" />
       </div>
 
       <div className="mt-1 ml-2 flex flex-col">
@@ -92,7 +155,7 @@ function getGovernanceAccountLabel(val: ProgramAccount<Governance>) {
   return (
     <div className="flex items-center">
       <div className="flex">
-        <AcademicCapIcon className="w-8 h-8" />
+        <img src={governanceImage} className="max-w-8 h-8" />
       </div>
 
       <div className="mt-1 ml-2 flex flex-col">
@@ -114,7 +177,7 @@ function getProgramAccountLabel(val: ProgramAccount<Governance>) {
   return (
     <div className="flex items-center">
       <div className="flex">
-        <ChipIcon className="w-8 h-8" />
+        <img src={programImage} className="max-w-8 h-8" />
       </div>
 
       <div className="mt-1 ml-2 flex flex-col">
@@ -177,62 +240,6 @@ function getLabel<
   }
 }
 
-// Create governance groups to avoid duplicated buttons
-const governanceAccountsConfiguration = [
-  {
-    id: 1,
-    name: 'Treasury',
-    types: [
-      GovernanceAccountType.TokenGovernanceV1,
-      GovernanceAccountType.TokenGovernanceV2,
-    ],
-  },
-  {
-    id: 2,
-    name: 'Mint',
-    types: [
-      GovernanceAccountType.MintGovernanceV1,
-      GovernanceAccountType.MintGovernanceV2,
-    ],
-  },
-  {
-    id: 3,
-    name: 'Program',
-    types: [
-      GovernanceAccountType.ProgramGovernanceV1,
-      GovernanceAccountType.ProgramGovernanceV2,
-    ],
-  },
-  {
-    id: 4,
-    name: 'Governance',
-    types: [
-      GovernanceAccountType.GovernanceV1,
-      GovernanceAccountType.GovernanceV2,
-    ],
-  },
-  {
-    id: 5,
-    name: 'Others',
-    types: [
-      GovernanceAccountType.RealmV1,
-      GovernanceAccountType.TokenOwnerRecordV1,
-      GovernanceAccountType.ProposalV1,
-      GovernanceAccountType.SignatoryRecordV1,
-      GovernanceAccountType.VoteRecordV1,
-      GovernanceAccountType.ProposalInstructionV1,
-      GovernanceAccountType.RealmConfig,
-      GovernanceAccountType.VoteRecordV2,
-      GovernanceAccountType.ProposalTransactionV2,
-      GovernanceAccountType.ProposalV2,
-      GovernanceAccountType.ProgramMetadata,
-      GovernanceAccountType.RealmV2,
-      GovernanceAccountType.TokenOwnerRecordV2,
-      GovernanceAccountType.SignatoryRecordV2,
-    ],
-  },
-];
-
 // Look at the types of the selectable governed account
 function calculateAvailableGovernanceTypes<
   T extends
@@ -256,9 +263,15 @@ function calculateAvailableGovernanceTypes<
   );
 
   // Format the data so it fit ImageTextSelection format
-  return filteredGovernanceAccountType.map(({ types: _, ...other }) => ({
-    ...other,
-  }));
+  return [
+    {
+      id: null,
+      name: 'All',
+    },
+    ...filteredGovernanceAccountType.map(({ types: _, ...other }) => ({
+      ...other,
+    })),
+  ];
 }
 
 function sortFilteredGovernedAccounts<
@@ -394,48 +407,38 @@ export default function GovernedAccountSelect<
 
   return (
     <div className="flex flex-col">
-      <div className="mb-2 flex items-center">
-        <span>{label}</span>
+      <span className="mb-2">{label}</span>
 
-        <span className="text-xs items-center flex items-center text-fgd-3 ml-3">
-          Filters by type
-        </span>
-
+      <div className="flex flex-col bg-bkg-1 w-full max-w-lg h-auto border border-fgd-3 default-transition rounded-md h-12">
         <ImageTextSelection
-          className="ml-3"
+          className="pl-4 pr-4 border-b border-fgd-3 w-full"
           selected={selectedGovernanceAccountConfigurationId}
           imageTextElements={availableGovernanceTypes}
-          onClick={(newSelection: GovernanceAccountType) => {
-            // Clicking on selected governance account type unselect it
-            if (selectedGovernanceAccountConfigurationId === newSelection) {
-              setSelectedGovernanceAccountConfigurationId(null);
-              return;
-            }
-
-            setSelectedGovernanceAccountConfigurationId(newSelection);
-          }}
+          onClick={setSelectedGovernanceAccountConfigurationId}
         />
-      </div>
 
-      <Select
-        onChange={onChange}
-        componentLabel={getLabel<T>(value)}
-        placeholder="Please select..."
-        value={value?.governance?.account.governedAccount.toBase58()}
-        error={error}
-        noMaxWidth={noMaxWidth}
-      >
-        {sortedFilteredGovernedAccounts.map((acc) => {
-          return (
-            <Select.Option
-              key={acc.governance?.account.governedAccount.toBase58()}
-              value={acc}
-            >
-              {getLabel<T>(acc)}
-            </Select.Option>
-          );
-        })}
-      </Select>
+        <Select
+          className="p-2 w-full"
+          onChange={onChange}
+          componentLabel={getLabel<T>(value)}
+          placeholder="Please select..."
+          value={value?.governance?.account.governedAccount.toBase58()}
+          error={error}
+          noMaxWidth={noMaxWidth}
+          useDefaultStyle={false}
+        >
+          {sortedFilteredGovernedAccounts.map((acc) => {
+            return (
+              <Select.Option
+                key={acc.governance?.account.governedAccount.toBase58()}
+                value={acc}
+              >
+                {getLabel<T>(acc)}
+              </Select.Option>
+            );
+          })}
+        </Select>
+      </div>
     </div>
   );
 }

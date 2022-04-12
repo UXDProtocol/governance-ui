@@ -12,43 +12,44 @@ export default function ImageTextSelection<T>({
 }: {
   selected: T | null;
   className?: string;
-  onClick: (selected: T) => void;
+  onClick: (selected: T | null) => void;
   imageTextElements: ImageTextElement<T>[];
 }) {
   return (
-    <div className={`flex items-center space-x-3 ${className}`}>
+    <div className={`flex items-center space-x-3 h-12 ${className}`}>
       {imageTextElements.map(({ id, name, image }, index) => {
-        if (image) {
-          return (
-            <img
-              title={name}
-              key={index}
-              style={{
-                boxShadow: selected === id ? '0 0 8px 4px #aeaeae' : 'none',
-              }}
-              src={image}
-              className={`h-6 max-w-6 p-0.5 rounded-full hover:grayscale-0 ${
-                selected !== id ? 'grayscale' : ''
-              } cursor-pointer`}
-              onClick={() => onClick(id)}
-            />
-          );
-        }
-
-        // There is no image, we use the text instead
         return (
-          <span
-            style={{
-              boxShadow: selected === id ? '0 0 8px 4px #aeaeae' : 'none',
-            }}
-            className={`text-xs hover:text-white pl-2 pr-2 pt-0.5 pb-0.5 rounded-full cursor-pointer ${
-              selected !== id ? 'text-gray-400' : 'text-white'
-            }`}
-            onClick={() => onClick(id)}
+          <div
+            className="relative h-full w-auto pt-2 pb-2 flex justify-center items-center"
             key={index}
           >
-            {name}
-          </span>
+            {image ? (
+              // Image
+              <img
+                title={name}
+                src={image}
+                className={`h-7 max-w-7 p-0.5 hover:grayscale-0 ${
+                  selected !== id ? 'grayscale' : ''
+                } cursor-pointer`}
+                onClick={() => onClick(id)}
+              />
+            ) : (
+              // Text
+              <span
+                className={`text-xs hover:text-white cursor-pointer ${
+                  selected !== id ? 'text-gray-400' : 'text-white'
+                }`}
+                onClick={() => onClick(id)}
+              >
+                {name}
+              </span>
+            )}
+
+            {selected === id ? (
+              // Selected visual
+              <div className="p-0 absolute bottom-0 w-full h-0.5 flex justify-center bg-fgd-3 rounded-tl rounded-tr" />
+            ) : null}
+          </div>
         );
       })}
     </div>
