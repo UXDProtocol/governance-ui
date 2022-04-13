@@ -15,10 +15,10 @@ import ImageTextSelection, {
   ImageTextElement,
 } from '@components/ImageTextSelection';
 
-const treasuryImage = '/img/treasury.png';
-const mintImage = '/img/token.png';
-const programImage = '/img/program.png';
-const governanceImage = '/img/crown.png';
+const treasuryImage = '/img/treasury.svg';
+const mintImage = '/img/mint.svg';
+const programImage = '/img/program.svg';
+const governanceImage = '/img/governance.svg';
 
 // Create governance groups to avoid duplicated buttons
 const governanceAccountsConfiguration: ({
@@ -114,7 +114,7 @@ function getMintAccountLabelComponent({
   );
 }
 
-function getTokenAccountLabelComponent({
+function getTreasuryLabelComponent({
   tokenAccount,
   tokenAccountName,
   tokenName,
@@ -221,7 +221,7 @@ function getLabel<
     case GovernanceAccountType.TokenGovernanceV2: {
       const governedAccount = value as GovernedTokenAccount;
 
-      return getTokenAccountLabelComponent(
+      return getTreasuryLabelComponent(
         governedAccount.isSol
           ? getSolAccountLabel(governedAccount)
           : getTokenAccountLabelInfo(governedAccount),
