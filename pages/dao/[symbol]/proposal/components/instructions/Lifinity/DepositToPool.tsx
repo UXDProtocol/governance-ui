@@ -26,7 +26,10 @@ const schema = yup.object().shape({
     .number()
     .moreThan(0, 'Token B Amount to deposit must be more than 0')
     .required('Token B Amount to deposit value is required'),
-  amountTokenLP: yup.number(),
+  amountTokenLP: yup
+    .number()
+    .moreThan(0, 'Token LP Amount to deposit must be more than 0')
+    .required('Token LP Amount to deposit value is required'),
   slippage: yup.number().required('Slippage value is required'),
 });
 
@@ -58,11 +61,6 @@ const DepositToPool = ({
       form,
       governedAccountPubkey,
     }) {
-      console.log('form', form);
-      if (!form.amountTokenLP)
-        throw new Error(
-          `error with amount of LP, cannot be ${form.amountTokenLP}`,
-        );
       return depositToPool({
         connection,
         authority: governedAccountPubkey,
@@ -136,7 +134,7 @@ const DepositToPool = ({
       {form.liquidityPool && (
         <>
           <Input
-            label={`Amount of Token A to deposit`}
+            label="Amount of Token A to deposit"
             value={form.amountTokenA}
             type="number"
             min="0"
