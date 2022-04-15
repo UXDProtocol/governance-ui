@@ -76,84 +76,6 @@ const getWalletNftAccounts = async ({
   return { lifinityTokenAccount, lifinityMetaAccount };
 };
 
-export const depositAllTokenTypesItx = async ({
-  connection,
-  liquidityPool,
-  amountTokenA,
-  amountTokenB,
-  amountTokenLP,
-  userTransferAuthority,
-  wallet,
-}: {
-  connection: Connection;
-  liquidityPool: string;
-  amountTokenA: number;
-  amountTokenB: number;
-  amountTokenLP: number;
-  userTransferAuthority: PublicKey;
-  wallet: Wallet;
-}) => {
-  const program = buildLifinity({ connection, wallet });
-
-  const pool = getPoolByLabel(liquidityPool);
-  const [authority] = await PublicKey.findProgramAddress(
-    [new PublicKey(pool.amm).toBuffer()],
-    program.programId,
-  );
-  const [sourceAInfo] = findATAAddrSync(
-    userTransferAuthority,
-    new PublicKey(pool.poolCoinMint),
-  );
-  const [sourceBInfo] = findATAAddrSync(
-    userTransferAuthority,
-    new PublicKey(pool.poolPcMint),
-  );
-  const [destination] = findATAAddrSync(
-    userTransferAuthority,
-    new PublicKey(pool.poolMint),
-  );
-  console.log('destination', destination.toBase58());
-
-  const {
-    lifinityTokenAccount,
-    lifinityMetaAccount,
-  } = await getWalletNftAccounts({
-    connection,
-    //TODO -> have the Lifinity holder be the governance instead of the user wallet
-    wallet: wallet.publicKey,
-  });
-  if (!lifinityTokenAccount || !lifinityMetaAccount)
-    throw new Error('Wallet does not hold Lifinity Igniter');
-
-  const itx = program.instruction.depositAllTokenTypes(
-    uiAmountToNativeBN(amountTokenLP, pool.poolMintDecimal),
-    uiAmountToNativeBN(amountTokenA, pool.poolCoinDecimal),
-    uiAmountToNativeBN(amountTokenB, pool.poolPcDecimal),
-    {
-      accounts: {
-        amm: new PublicKey(pool.amm),
-        authority: authority,
-        userTransferAuthorityInfo: userTransferAuthority,
-        sourceAInfo,
-        sourceBInfo,
-        tokenA: new PublicKey(pool.poolCoinTokenAccount),
-        tokenB: new PublicKey(pool.poolPcTokenAccount),
-        poolMint: new PublicKey(pool.poolMint),
-        destination,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        configAccount: new PublicKey(pool.configAccount),
-        holderAccountInfo: wallet.publicKey,
-        lifinityNftAccount: new PublicKey(lifinityTokenAccount),
-        lifinityNftMetaAccount: new PublicKey(lifinityMetaAccount),
-      },
-      instructions: [],
-      signers: [],
-    },
-  );
-
-  return itx;
-};
-
 export const getLPTokenBalance = async ({
   connection,
   liquidityPool,
@@ -261,3 +183,81 @@ export const getDepositOut = async ({
 export const poolLabels = Object.keys(PoolList);
 
 export const getPoolByLabel = (label: string) => PoolList[label];
+
+export const depositAllTokenTypesItx = async ({
+  connection,
+  liquidityPool,
+  amountTokenA,
+  amountTokenB,
+  amountTokenLP,
+  userTransferAuthority,
+  wallet,
+}: {
+  connection: Connection;
+  liquidityPool: string;
+  amountTokenA: number;
+  amountTokenB: number;
+  amountTokenLP: number;
+  userTransferAuthority: PublicKey;
+  wallet: Wallet;
+}) => {
+  const program = buildLifinity({ connection, wallet });
+
+  const pool = getPoolByLabel(liquidityPool);
+  const [authority] = await PublicKey.findProgramAddress(
+    [new PublicKey(pool.amm).toBuffer()],
+    program.programId,
+  );
+  const [sourceAInfo] = findATAAddrSync(
+    userTransferAuthority,
+    new PublicKey(pool.poolCoinMint),
+  );
+  const [sourceBInfo] = findATAAddrSync(
+    userTransferAuthority,
+    new PublicKey(pool.poolPcMint),
+  );
+  const [destination] = findATAAddrSync(
+    userTransferAuthority,
+    new PublicKey(pool.poolMint),
+  );
+  console.log('destination', destination.toBase58());
+
+  const {
+    lifinityTokenAccount,
+    lifinityMetaAccount,
+  } = await getWalletNftAccounts({
+    connection,
+    //TODO -> have the Lifinity holder be the governance instead of the user wallet
+    wallet: userTransferAuthority,
+  });
+  if (!lifinityTokenAccount || !lifinityMetaAccount)
+    throw new Error('Wallet does not hold Lifinity Igniter');
+
+  const itx = program.instruction.depositAllTokenTypes(
+    uiAmountToNativeBN(amountTokenLP, pool.poolMintDecimal),
+    uiAmountToNativeBN(amountTokenA, pool.poolCoinDecimal),
+    uiAmountToNativeBN(amountTokenB, pool.poolPcDecimal),
+    {
+      accounts: {
+        amm: new PublicKey(pool.amm),
+        authority: authority,
+        userTransferAuthorityInfo: userTransferAuthority,
+        sourceAInfo,
+        sourceBInfo,
+        tokenA: new PublicKey(pool.poolCoinTokenAccount),
+        tokenB: new PublicKey(pool.poolPcTokenAccount),
+        poolMint: new PublicKey(pool.poolMint),
+        destination,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        configAccount: new PublicKey(pool.configAccount),
+        holderAccountInfo: userTransferAuthority,
+        lifinityNftAccount: new PublicKey(lifinityTokenAccount),
+        lifinityNftMetaAccount: new PublicKey(lifinityMetaAccount),
+      },
+      instructions: [],
+      signers: [],
+    },
+  );
+
+  return itx;
+};
