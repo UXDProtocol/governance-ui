@@ -111,7 +111,7 @@ const SelectInstructionType = ({
         />
 
         <Select
-          className="p-2 w-full"
+          className="p-2 w-full text-sm"
           disabled={!filteredInstructionTypes.length}
           placeholder={`${
             filteredInstructionTypes.length

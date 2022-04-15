@@ -418,7 +418,7 @@ export default function GovernedAccountSelect<
         />
 
         <Select
-          className="p-2 w-full"
+          className="p-2 w-full text-sm"
           onChange={onChange}
           componentLabel={getLabel<T>(value)}
           placeholder="Please select..."
