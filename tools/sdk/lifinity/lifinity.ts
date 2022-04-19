@@ -1,16 +1,15 @@
+import BigNumber from 'bignumber.js';
+import * as mplCore from '@metaplex-foundation/mpl-core';
+import * as mplTokenMetadata from '@metaplex-foundation/mpl-token-metadata';
+import { Program, Provider } from '@project-serum/anchor';
+import { Wallet } from '@project-serum/sol-wallet-adapter';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { SignerWalletAdapter } from '@solana/wallet-adapter-base';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { findATAAddrSync } from '@utils/ataTools';
-import { SignerWalletAdapter } from '@solana/wallet-adapter-base';
-import { Lifinity } from './lib';
-import { PoolList } from './poolList';
-import { Program, Provider } from '@project-serum/anchor';
+import { uiAmountToNativeBigN, uiAmountToNativeBN } from '../units';
 import { LifinityAmmIDL } from './idl/lifinity_amm_idl';
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import * as mplTokenMetadata from '@metaplex-foundation/mpl-token-metadata';
-import * as mplCore from '@metaplex-foundation/mpl-core';
-import { Wallet } from '@project-serum/sol-wallet-adapter';
-import { uiAmountToNativeBN } from '../units';
-import BigNumber from 'bignumber.js';
+import { IPoolInfo, PoolList } from './poolList';
 
 export const AMM_PROGRAM_ADDR = 'EewxydAPCCVuNEyrVN68PuSYdQ7wKn27V9Gjeoi8dy3S';
 
@@ -120,14 +119,14 @@ export const getWithdrawOut = async ({
   const poolAccountTokenB = await connection.getTokenAccountBalance(
     new PublicKey(pool.poolPcTokenAccount),
   );
-  const minimumTokenAAmount = calculateMinimumTokenAmountFromLP({
+  const minimumTokenAAmount = calculateMinimumTokenWithdrawAmountFromLP({
     tokenBalance: poolAccountTokenA.value.amount,
     tokenDecimals: pool.poolCoinDecimal,
     lpAmount: lpTokenAmount.toString(),
     lpSupply: lpAccount.value.amount,
     slippage,
   });
-  const minimumTokenBAmount = calculateMinimumTokenAmountFromLP({
+  const minimumTokenBAmount = calculateMinimumTokenWithdrawAmountFromLP({
     tokenBalance: poolAccountTokenB.value.amount,
     tokenDecimals: pool.poolCoinDecimal,
     lpAmount: lpTokenAmount.toString(),
@@ -140,7 +139,7 @@ export const getWithdrawOut = async ({
   };
 };
 
-const calculateMinimumTokenAmountFromLP = ({
+const calculateMinimumTokenWithdrawAmountFromLP = ({
   tokenBalance,
   tokenDecimals,
   lpAmount,
@@ -165,24 +164,114 @@ const calculateMinimumTokenAmountFromLP = ({
     .decimalPlaces(tokenDecimals);
 };
 
+const getOutAmount = (
+  poolInfo: IPoolInfo,
+  amount: number | string,
+  fromCoinMint: string,
+  toCoinMint: string,
+  slippage: number,
+  coinBalance: BigNumber,
+  pcBalance: BigNumber,
+) => {
+  const price = pcBalance.dividedBy(coinBalance);
+  const fromAmount = new BigNumber(amount);
+  let outAmount = new BigNumber(0);
+  const percent = new BigNumber(100)
+    .plus(new BigNumber(slippage))
+    .dividedBy(new BigNumber(100));
+  if (!coinBalance || !pcBalance) {
+    return outAmount;
+  }
+  if (
+    fromCoinMint === poolInfo.poolCoinMint &&
+    toCoinMint === poolInfo.poolPcMint
+  ) {
+    // outcoin is pc
+    outAmount = fromAmount.multipliedBy(price);
+    outAmount = outAmount.multipliedBy(percent);
+  } else if (
+    fromCoinMint === poolInfo.poolPcMint &&
+    toCoinMint === poolInfo.poolCoinMint
+  ) {
+    // outcoin is coin
+    outAmount = fromAmount.dividedBy(percent);
+    outAmount = outAmount.dividedBy(price);
+  }
+  return outAmount;
+};
+
 export const getDepositOut = async ({
   connection,
-  wallet,
   amountTokenA,
   slippage,
+  poolLabel,
 }: {
   connection: Connection;
   wallet: SignerWalletAdapter;
   amountTokenA: number;
   slippage: number;
+  poolLabel: string;
 }) => {
-  const lfty = await Lifinity.build(connection, wallet);
-  return lfty.getDepositAmountOut(connection, amountTokenA, slippage);
+  const pool = getPoolByLabel(poolLabel);
+  const amount = new BigNumber(amountTokenA.toString());
+  const lpSup = await connection.getTokenSupply(new PublicKey(pool.poolMint));
+  const lpSupply = uiAmountToNativeBigN(
+    lpSup.value.amount,
+    lpSup.value.decimals,
+  );
+
+  const coin = await connection.getTokenAccountBalance(
+    new PublicKey(pool.poolCoinTokenAccount),
+  );
+  const coinBalance = uiAmountToNativeBigN(
+    coin.value.amount,
+    coin.value.decimals,
+  );
+
+  const pc = await connection.getTokenAccountBalance(
+    new PublicKey(pool.poolPcTokenAccount),
+  );
+  const pcBalance = uiAmountToNativeBigN(pc.value.amount, pc.value.decimals);
+
+  const coinAddress = pool.poolCoinMint;
+  const pcAddress = pool.poolPcMint;
+
+  const outAmount = getOutAmount(
+    pool,
+    amount.toString(),
+    coinAddress,
+    pcAddress,
+    slippage,
+    coinBalance,
+    pcBalance,
+  );
+  // Bruh
+  const lpRecive =
+    Math.floor(
+      ((amount.toNumber() * Math.pow(10, pool.poolCoinDecimal)) /
+        coinBalance.toNumber()) *
+        lpSupply.toNumber(),
+    ) / Math.pow(10, pool.poolMintDecimal);
+  const amountOut =
+    Math.floor(outAmount.toNumber() * Math.pow(10, pool.poolPcDecimal)) /
+    Math.pow(10, pool.poolPcDecimal);
+  return {
+    amountIn: amountTokenA,
+    amountOut,
+    lpRecive,
+  };
 };
 
 export const poolLabels = Object.keys(PoolList);
 
 export const getPoolByLabel = (label: string) => PoolList[label];
+
+export const getPoolLabelByPoolMint = (mint: string) => {
+  const [label] = Object.entries(PoolList).find(
+    ([, data]) => data.poolMint === mint,
+  ) ?? ['not found'];
+  return label;
+};
 
 export const depositAllTokenTypesItx = async ({
   connection,
@@ -227,7 +316,6 @@ export const depositAllTokenTypesItx = async ({
     lifinityMetaAccount,
   } = await getWalletNftAccounts({
     connection,
-    //TODO -> have the Lifinity holder be the governance instead of the user wallet
     wallet: userTransferAuthority,
   });
   if (!lifinityTokenAccount || !lifinityMetaAccount)
@@ -240,7 +328,7 @@ export const depositAllTokenTypesItx = async ({
     {
       accounts: {
         amm: new PublicKey(pool.amm),
-        authority: authority,
+        authority,
         userTransferAuthorityInfo: userTransferAuthority,
         sourceAInfo,
         sourceBInfo,

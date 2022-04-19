@@ -82,6 +82,7 @@ const DepositToPool = ({
         wallet,
         amountTokenA: form.amountTokenA,
         slippage: form.slippage,
+        poolLabel: form.liquidityPool,
       });
       handleSetForm({
         value: depositAmountOut.amountOut,
@@ -104,6 +105,7 @@ const DepositToPool = ({
         wallet,
         amountTokenA: form.amountTokenA,
         slippage: form.slippage,
+        poolLabel: form.liquidityPool,
       });
       console.log('depositAmountOut', depositAmountOut);
       handleSetForm({
@@ -147,7 +149,7 @@ const DepositToPool = ({
             error={formErrors['amountTokenA']}
           />
           <Input
-            label="Amount of Token B to deposit"
+            label="Maximum Amount of Token B to deposit"
             value={form.amountTokenB}
             type="number"
             min={0}

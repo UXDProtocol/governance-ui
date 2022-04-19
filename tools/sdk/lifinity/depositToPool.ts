@@ -15,8 +15,8 @@ const depositToPool = async ({
   authority: PublicKey;
   liquidityPool: string;
   wallet: SignerWalletAdapter;
-  amountTokenA: number; // amount in UXD
-  amountTokenB: number; // amount in USDC
+  amountTokenA: number;
+  amountTokenB: number;
   amountTokenLP: number;
   slippage: number;
 }) => {
