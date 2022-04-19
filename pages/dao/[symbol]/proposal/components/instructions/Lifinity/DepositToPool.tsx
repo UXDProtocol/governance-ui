@@ -26,10 +26,6 @@ const schema = yup.object().shape({
     .number()
     .moreThan(0, 'Token B Amount to deposit must be more than 0')
     .required('Token B Amount to deposit value is required'),
-  amountTokenLP: yup
-    .number()
-    .moreThan(0, 'Token LP Amount to deposit must be more than 0')
-    .required('Token LP Amount to deposit value is required'),
   slippage: yup.number().required('Slippage value is required'),
 });
 
@@ -61,14 +57,22 @@ const DepositToPool = ({
       form,
       governedAccountPubkey,
     }) {
+      // let's recalculate at the last moment to get the LP amount.
+      const depositAmountOut = await getDepositOut({
+        connection: connection,
+        wallet,
+        amountTokenA: form.amountTokenA!,
+        slippage: form.slippage,
+        poolLabel: form.liquidityPool!,
+      });
       return depositToPool({
         connection,
         authority: governedAccountPubkey,
         wallet,
         liquidityPool: form.liquidityPool!,
         amountTokenA: form.amountTokenA!,
-        amountTokenB: form.amountTokenB!,
-        amountTokenLP: form.amountTokenLP!,
+        amountTokenB: depositAmountOut.amountOut,
+        amountTokenLP: depositAmountOut.lpRecive,
         slippage: form.slippage,
       });
     },
@@ -90,30 +94,6 @@ const DepositToPool = ({
       });
     });
   }, [form.amountTokenA, form.slippage]);
-
-  useEffect(() => {
-    debounce.debounceFcn(async () => {
-      if (
-        !form.amountTokenA ||
-        !form.amountTokenB ||
-        !form.liquidityPool ||
-        !wallet
-      )
-        return;
-      const depositAmountOut = await getDepositOut({
-        connection: connection.current,
-        wallet,
-        amountTokenA: form.amountTokenA,
-        slippage: form.slippage,
-        poolLabel: form.liquidityPool,
-      });
-      console.log('depositAmountOut', depositAmountOut);
-      handleSetForm({
-        value: depositAmountOut.lpRecive,
-        propertyName: 'amountTokenLP',
-      });
-    });
-  }, [form.amountTokenB]);
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
