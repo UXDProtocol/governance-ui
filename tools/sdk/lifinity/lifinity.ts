@@ -134,8 +134,8 @@ export const getWithdrawOut = async ({
     slippage,
   });
   return {
-    amountTokenA: minimumTokenAAmount.toNumber(),
-    amountTokenB: minimumTokenBAmount.toNumber(),
+    uiAmountTokenA: minimumTokenAAmount.toNumber(),
+    uiAmountTokenB: minimumTokenBAmount.toNumber(),
   };
 };
 
@@ -174,46 +174,50 @@ const getOutAmount = (
   pcBalance: BigNumber,
 ) => {
   const price = pcBalance.dividedBy(coinBalance);
+
   const fromAmount = new BigNumber(amount);
-  let outAmount = new BigNumber(0);
+
   const percent = new BigNumber(100)
     .plus(new BigNumber(slippage))
     .dividedBy(new BigNumber(100));
+
   if (!coinBalance || !pcBalance) {
-    return outAmount;
+    return new BigNumber(0);
   }
+
   if (
     fromCoinMint === poolInfo.poolCoinMint &&
     toCoinMint === poolInfo.poolPcMint
   ) {
     // outcoin is pc
-    outAmount = fromAmount.multipliedBy(price);
-    outAmount = outAmount.multipliedBy(percent);
-  } else if (
+    return fromAmount.multipliedBy(price).multipliedBy(percent);
+  }
+
+  if (
     fromCoinMint === poolInfo.poolPcMint &&
     toCoinMint === poolInfo.poolCoinMint
   ) {
     // outcoin is coin
-    outAmount = fromAmount.dividedBy(percent);
-    outAmount = outAmount.dividedBy(price);
+    return fromAmount.dividedBy(percent).dividedBy(price);
   }
-  return outAmount;
+
+  return new BigNumber(0);
 };
 
 export const getDepositOut = async ({
   connection,
-  amountTokenA,
+  uiAmountTokenA,
   slippage,
   poolLabel,
 }: {
   connection: Connection;
   wallet: SignerWalletAdapter;
-  amountTokenA: number;
+  uiAmountTokenA: number;
   slippage: number;
   poolLabel: string;
 }) => {
   const pool = getPoolByLabel(poolLabel);
-  const amount = new BigNumber(amountTokenA.toString());
+  const amount = new BigNumber(uiAmountTokenA.toString());
   const lpSup = await connection.getTokenSupply(new PublicKey(pool.poolMint));
   const lpSupply = uiAmountToNativeBigN(
     lpSup.value.amount,
@@ -246,7 +250,7 @@ export const getDepositOut = async ({
     pcBalance,
   );
   // Bruh
-  const lpRecive =
+  const lpReceived =
     Math.floor(
       ((amount.toNumber() * Math.pow(10, pool.poolCoinDecimal)) /
         coinBalance.toNumber()) *
@@ -256,9 +260,9 @@ export const getDepositOut = async ({
     Math.floor(outAmount.toNumber() * Math.pow(10, pool.poolPcDecimal)) /
     Math.pow(10, pool.poolPcDecimal);
   return {
-    amountIn: amountTokenA,
+    amountIn: uiAmountTokenA,
     amountOut,
-    lpRecive,
+    lpReceived,
   };
 };
 
@@ -276,17 +280,17 @@ export const getPoolLabelByPoolMint = (mint: string) => {
 export const depositAllTokenTypesItx = async ({
   connection,
   liquidityPool,
-  amountTokenA,
-  amountTokenB,
-  amountTokenLP,
+  uiAmountTokenA,
+  uiAmountTokenB,
+  uiAmountTokenLP,
   userTransferAuthority,
   wallet,
 }: {
   connection: Connection;
   liquidityPool: string;
-  amountTokenA: number;
-  amountTokenB: number;
-  amountTokenLP: number;
+  uiAmountTokenA: number;
+  uiAmountTokenB: number;
+  uiAmountTokenLP: number;
   userTransferAuthority: PublicKey;
   wallet: Wallet;
 }) => {
@@ -322,9 +326,9 @@ export const depositAllTokenTypesItx = async ({
     throw new Error('Wallet does not hold Lifinity Igniter');
 
   const itx = program.instruction.depositAllTokenTypes(
-    uiAmountToNativeBN(amountTokenLP, pool.poolMintDecimal),
-    uiAmountToNativeBN(amountTokenA, pool.poolCoinDecimal),
-    uiAmountToNativeBN(amountTokenB, pool.poolPcDecimal),
+    uiAmountToNativeBN(uiAmountTokenLP, pool.poolMintDecimal),
+    uiAmountToNativeBN(uiAmountTokenA, pool.poolCoinDecimal),
+    uiAmountToNativeBN(uiAmountTokenB, pool.poolPcDecimal),
     {
       accounts: {
         amm: new PublicKey(pool.amm),

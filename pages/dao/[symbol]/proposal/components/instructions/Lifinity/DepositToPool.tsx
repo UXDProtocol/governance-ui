@@ -18,11 +18,11 @@ const schema = yup.object().shape({
     .nullable()
     .required('Governed account is required'),
   liquidityPool: yup.string().required('Liquidity Pool is required'),
-  amountTokenA: yup
+  uiAmountTokenA: yup
     .number()
     .moreThan(0, 'Token A Amount to deposit must be more than 0')
     .required('Token A Amount to deposit value is required'),
-  amountTokenB: yup
+  uiAmountTokenB: yup
     .number()
     .moreThan(0, 'Token B Amount to deposit must be more than 0')
     .required('Token B Amount to deposit value is required'),
@@ -46,8 +46,8 @@ const DepositToPool = ({
     index,
     initialFormValues: {
       governedAccount,
-      amountTokenA: 0,
-      amountTokenB: 0,
+      uiAmountTokenA: 0,
+      uiAmountTokenB: 0,
       slippage: 0.5,
     },
     schema,
@@ -61,7 +61,7 @@ const DepositToPool = ({
       const depositAmountOut = await getDepositOut({
         connection: connection,
         wallet,
-        amountTokenA: form.amountTokenA!,
+        uiAmountTokenA: form.uiAmountTokenA!,
         slippage: form.slippage,
         poolLabel: form.liquidityPool!,
       });
@@ -70,9 +70,9 @@ const DepositToPool = ({
         authority: governedAccountPubkey,
         wallet,
         liquidityPool: form.liquidityPool!,
-        amountTokenA: form.amountTokenA!,
-        amountTokenB: depositAmountOut.amountOut,
-        amountTokenLP: depositAmountOut.lpRecive,
+        uiAmountTokenA: form.uiAmountTokenA!,
+        uiAmountTokenB: depositAmountOut.amountOut,
+        uiAmountTokenLP: depositAmountOut.lpReceived,
         slippage: form.slippage,
       });
     },
@@ -80,20 +80,20 @@ const DepositToPool = ({
 
   useEffect(() => {
     debounce.debounceFcn(async () => {
-      if (!form.amountTokenA || !form.liquidityPool || !wallet) return;
+      if (!form.uiAmountTokenA || !form.liquidityPool || !wallet) return;
       const depositAmountOut = await getDepositOut({
         connection: connection.current,
         wallet,
-        amountTokenA: form.amountTokenA,
+        uiAmountTokenA: form.uiAmountTokenA,
         slippage: form.slippage,
         poolLabel: form.liquidityPool,
       });
       handleSetForm({
         value: depositAmountOut.amountOut,
-        propertyName: 'amountTokenB',
+        propertyName: 'uiAmountTokenB',
       });
     });
-  }, [form.amountTokenA, form.slippage]);
+  }, [form.uiAmountTokenA, form.slippage]);
 
   // Hardcoded gate used to be clear about what cluster is supported for now
   if (connection.cluster !== 'mainnet') {
@@ -117,20 +117,20 @@ const DepositToPool = ({
         <>
           <Input
             label="Amount of Token A to deposit"
-            value={form.amountTokenA}
+            value={form.uiAmountTokenA}
             type="number"
             min="0"
             onChange={(evt) =>
               handleSetForm({
                 value: evt.target.value,
-                propertyName: 'amountTokenA',
+                propertyName: 'uiAmountTokenA',
               })
             }
-            error={formErrors['amountTokenA']}
+            error={formErrors['uiAmountTokenA']}
           />
           <Input
             label="Maximum Amount of Token B to deposit"
-            value={form.amountTokenB}
+            value={form.uiAmountTokenB}
             type="number"
             min={0}
             disabled={true}
