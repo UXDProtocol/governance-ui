@@ -1,8 +1,8 @@
 import * as yup from 'yup';
-import { Wallet } from '@project-serum/common';
 import {
   SolanaAugmentedProvider,
   SolanaProvider,
+  Wallet,
 } from '@saberhq/solana-contrib';
 import Select from '@components/inputs/Select';
 import useInstructionFormBuilder from '@hooks/useInstructionFormBuilder';

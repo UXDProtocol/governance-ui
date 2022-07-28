@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   SolanaAugmentedProvider,
   SolanaProvider,
+  Wallet,
 } from '@saberhq/solana-contrib';
-import { Wallet } from '@project-serum/common';
 import useWalletStore from 'stores/useWalletStore';
 import {
   findMinerAddress,
@@ -60,9 +60,8 @@ const useSaberStats = (hotWalletAccount: HotWalletAccount) => {
 
       const sdk = QuarrySDK.load({
         provider: new SolanaAugmentedProvider(
-          SolanaProvider.load({
+          SolanaProvider.init({
             connection: connection.current,
-            sendConnection: connection.current,
             wallet: wallet as Wallet,
           }),
         ),

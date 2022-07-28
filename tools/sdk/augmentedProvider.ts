@@ -1,7 +1,7 @@
-import { Wallet } from '@project-serum/common';
 import {
   SolanaAugmentedProvider,
   SolanaProvider,
+  Wallet,
 } from '@saberhq/solana-contrib';
 import { SignerWalletAdapter } from '@solana/wallet-adapter-base';
 import { Connection } from '@solana/web3.js';

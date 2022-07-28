@@ -39,7 +39,6 @@
     "@nfteyez/sol-rayz": "^0.8.0",
     "@project-serum/anchor": "^0.22.1",
     "@project-serum/borsh": "^0.2.5",
-    "@project-serum/common": "^0.0.1-beta.3",
     "@project-serum/sol-wallet-adapter": "^0.2.0",
     "@quarryprotocol/quarry-sdk": "^3.0.0",
     "@raydium-io/raydium-sdk": "^1.0.1-beta.34",
