@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 
@@ -30,6 +30,7 @@ const ChevronRightIcon = ({ className }) => (
 
 interface LinkProps {
   className?: string;
+  children: ReactNode;
 }
 
 const Link: FunctionComponent<LinkProps> = ({

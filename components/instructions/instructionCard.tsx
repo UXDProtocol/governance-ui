@@ -243,15 +243,18 @@ export function InstructionAccount({
     // TODO: Extend to other well known account types
   }
 
+  const accountName =
+    typeof descriptor?.accounts[index] === 'string'
+      ? descriptor.accounts[index]
+      : descriptor?.accounts[index]?.name;
+
   return (
     <div className="border-t border-bkg-4 flex flex-col lg:flex-row lg:items-center lg:justify-between py-3">
       <div className="pb-1 lg:pb-0">
         <p className="font-bold text-fgd-1">{`Account ${index + 1}`}</p>
         {descriptor?.accounts && (
           <div className="mt-0.5 text-fgd-3 text-xs">
-            {typeof descriptor.accounts[index] === 'string'
-              ? descriptor.accounts[index]
-              : descriptor.accounts[index]?.name}
+            {accountName as string}
           </div>
         )}
       </div>

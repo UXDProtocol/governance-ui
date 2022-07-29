@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import Loading from './Loading';
 import Tooltip from './Tooltip';
 
@@ -10,6 +10,7 @@ interface ButtonProps {
   small?: boolean;
   tooltipMessage?: string;
   style?: any;
+  children: ReactNode;
 }
 
 const Button: FunctionComponent<ButtonProps> = ({

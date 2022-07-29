@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/outline';
 
 interface InlineNotificationProps {
-  desc?: string | (() => string);
+  desc?: string;
   title?: string;
   type: string;
 }

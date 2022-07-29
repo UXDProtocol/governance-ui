@@ -1,9 +1,10 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 
 interface SwitchProps {
   checked: boolean;
   className?: string;
   onChange: (x: boolean) => void;
+  children?: ReactNode;
 }
 
 const Switch: FunctionComponent<SwitchProps> = ({
