@@ -42,7 +42,7 @@
     "@project-serum/sol-wallet-adapter": "^0.2.0",
     "@quarryprotocol/quarry-sdk": "^3.0.0",
     "@raydium-io/raydium-sdk": "^1.0.1-beta.34",
-    "@saberhq/anchor-contrib": "^1.12.56",
+    "@saberhq/anchor-contrib": "1.12.56",
     "@saberhq/saber-periphery": "^1.1.1",
     "@saberhq/stableswap-sdk": "^1.12.55",
     "@saberhq/token-utils": "^1.12.55",

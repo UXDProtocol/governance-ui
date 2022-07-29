@@ -27,6 +27,9 @@ module.exports = withBundleAnalyzer(
       DEVNET_RPC: process.env.DEVNET_RPC,
       DEFAULT_GOVERNANCE_PROGRAM_ID: process.env.DEFAULT_GOVERNANCE_PROGRAM_ID,
     },
+    typescript: {
+      ignoreBuildErrors: true,
+    },
     async redirects() {
       return [
         {
