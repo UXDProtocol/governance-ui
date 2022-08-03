@@ -1,6 +1,5 @@
 import { UserCircleIcon, LogoutIcon } from '@heroicons/react/outline';
 import useRealm from '@hooks/useRealm';
-import { PublicKey } from '@solana/web3.js';
 import { tryParsePublicKey } from '@tools/core/pubkey';
 import { fmtMintAmount } from '@tools/sdk/units';
 import { abbreviateAddress } from '@utils/formatting';
@@ -41,9 +40,9 @@ const MemberItem = ({ item }: { item: Member }) => {
         ])
       : null;
 
-  const walletAddressFormatted = abbreviateAddress(
-    walletPublicKey as PublicKey,
-  );
+  const walletAddressFormatted = walletPublicKey
+    ? abbreviateAddress(walletPublicKey)
+    : '-';
 
   async function handleGoToMemberOverview() {
     setCurrentCompactView(ViewState.MemberOverview);

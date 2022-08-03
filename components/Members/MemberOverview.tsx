@@ -69,9 +69,9 @@ const MemberOverview = () => {
         ])
       : null;
 
-  const walletAddressFormatted = abbreviateAddress(
-    walletPublicKey as PublicKey,
-  );
+  const walletAddressFormatted = walletPublicKey
+    ? abbreviateAddress(walletPublicKey)
+    : '-';
 
   const handleGoBackToMainView = async () => {
     setCurrentCompactView(ViewState.MainView);

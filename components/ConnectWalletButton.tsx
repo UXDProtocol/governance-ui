@@ -37,22 +37,26 @@ const ConnectWalletButton = (props) => {
     }
   };
 
+  if (!provider) {
+    return null;
+  }
+
   return (
     <div className="flex">
       <button
-        className={`bg-transparent border border-fgd-3 border-r-0 default-transition flex h-12 items-center pl-3 pr-4 rounded-l-full rounded-r-none w-36 hover:bg-bkg-3 focus:outline-none`}
+        className="bg-transparent border border-fgd-3 border-r-0 default-transition flex h-12 items-center pl-3 pr-4 rounded-l-full rounded-r-none w-36 hover:bg-bkg-3 focus:outline-none"
         onClick={handleConnectDisconnect}
         {...props}
       >
         <div className="flex font-bold items-center text-fgd-1 text-left text-sm">
           <div className="pr-2">
-            <img src={provider?.icon} className="h-5 w-5" />
+            <img src={provider.icon} className="h-5 w-5" />
           </div>
 
           <div>
             {connected ? 'Disconnect' : 'Connect'}
             <StyledWalletProviderLabel className="font-normal text-fgd-3">
-              {provider?.name}
+              {provider.name}
             </StyledWalletProviderLabel>
           </div>
         </div>
@@ -62,9 +66,7 @@ const ConnectWalletButton = (props) => {
         <Menu>
           {({ open }) => (
             <>
-              <Menu.Button
-                className={`border border-fgd-3 cursor-pointer default-transition h-12 w-12 py-2 px-2 rounded-r-full hover:bg-bkg-3 focus:outline-none`}
-              >
+              <Menu.Button className="border border-fgd-3 cursor-pointer default-transition h-12 w-12 py-2 px-2 rounded-r-full hover:bg-bkg-3 focus:outline-none">
                 <ChevronDownIcon
                   className={`${
                     open ? 'transform rotate-180' : 'transform rotate-360'
@@ -72,7 +74,6 @@ const ConnectWalletButton = (props) => {
                 />
               </Menu.Button>
               <Menu.Items className="absolute bg-bkg-1 border border-fgd-4 p-2 right-0 top-14 shadow-md outline-none rounded-md w-48 z-20">
-                {' '}
                 {WALLET_PROVIDERS.map(({ name, url, icon }) => (
                   <Menu.Item key={name}>
                     <button
@@ -85,7 +86,7 @@ const ConnectWalletButton = (props) => {
                     >
                       <img src={icon} className="h-4 w-4 mr-2" />
                       <span className="text-sm">{name}</span>
-                      {provider?.url === url ? (
+                      {provider.url === url ? (
                         <CheckCircleIcon className="h-5 ml-2 text-green w-5" />
                       ) : null}
                     </button>
