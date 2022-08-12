@@ -9,12 +9,12 @@ import { ConfirmedSignatureInfo, PublicKey } from '@solana/web3.js';
 import { notify } from '@utils/notifications';
 import { NFTWithMint } from '@utils/uiTypes/nfts';
 import { Connection } from '@solana/web3.js';
-import { TokenInfo } from '@solana/spl-token-registry';
 import { WSOL_MINT } from '@components/instructions/tools';
+import { SplTokenInformation } from '@utils/splTokens';
 interface TreasuryAccountStore extends State {
   currentAccount: GovernedTokenAccount | null;
   mintAddress: string;
-  tokenInfo: TokenInfo | null;
+  tokenInfo: (SplTokenInformation & { symbol: string }) | null;
   recentActivity: ConfirmedSignatureInfo[];
 
   allNfts: NFTWithMint[];

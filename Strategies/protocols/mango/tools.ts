@@ -86,9 +86,10 @@ export async function tvl(timestamp, connection: ConnectionContext) {
     if (assetDeposits.length > 0) {
       const info = tokenService.getTokenInfoFromCoingeckoId(mangoTokens);
       const handledMint =
-        (info?.address === MANGO_MINT && connection.cluster === 'devnet'
+        (info?.mint.equals(new PublicKey(MANGO_MINT)) &&
+        connection.cluster === 'devnet'
           ? MANGO_MINT_DEVNET
-          : info?.address) || '';
+          : info?.mint.toBase58()) || '';
       const closestVal = findClosestToDate(assetDeposits, date);
       balances.push({
         liquidity:
