@@ -1,7 +1,7 @@
 import {
-  ConnectedVoltSDK,
   FriktionSDK,
   FriktionSnapshot,
+  toConnectedSDK,
   VoltSnapshot,
 } from '@friktion-labs/friktion-sdk';
 import { Wallet } from '@project-serum/sol-wallet-adapter';
@@ -57,10 +57,10 @@ export const buildVoltSDK = async ({
     },
   });
 
-  return new ConnectedVoltSDK(
+  return toConnectedSDK(
+    await sdk.loadVoltSDKWithExtraDataByKey(new PublicKey(voltVaultId)),
     connection,
     wallet.publicKey,
-    await sdk.loadVoltAndExtraDataByKey(new PublicKey(voltVaultId)),
     governancePubkey,
   );
 };
@@ -116,7 +116,13 @@ const fetchVoltRound = async ({
   });
   const balances = await cVoltSDK.getBalancesForUser(governancePubkey);
   const epochInfo = await cVoltSDK.getCurrentEpochInfo();
-
+  console.log('data', {
+    pendingDeposit: balances?.pendingDeposits.toString() ?? '0',
+    pendingWithdrawal: balances?.pendingWithdrawals.toString() ?? '0',
+    deposited: balances?.totalBalance.toString() ?? '0',
+    claimable: balances?.claimableUnderlying.toString() ?? '0',
+    tokenPrice: (epochInfo.vaultTokenPrice as string) ?? '0',
+  });
   return {
     pendingDeposit: balances?.pendingDeposits.toString() ?? '0',
     pendingWithdrawal: balances?.pendingWithdrawals.toString() ?? '0',
