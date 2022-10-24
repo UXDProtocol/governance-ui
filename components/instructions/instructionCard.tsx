@@ -128,7 +128,7 @@ export default function InstructionCard({
   const isSol = tokenImgUrl.includes(WSOL_MINT);
   const proposalAuthority = tokenRecords[proposal.owner.toBase58()];
 
-  const isInstructionAboutOrcaWhirlpoolOpenPosition = ((): boolean => {
+  const isInstructionRequireAdditionalSigner = ((): boolean => {
     if (!proposal) {
       return false;
     }
@@ -137,32 +137,73 @@ export default function InstructionCard({
       return false;
     }
 
+    // MANGO REIMBURSE TODO
+    // UXD program - mango reimburse devnet
     if (
-      !proposalInstruction.account
+      proposalInstruction.account
+        .getSingleInstruction()
+        .programId.equals(
+          new PublicKey('HtBAjXoadvKg8KBAtcUL1BjgxM55itScsZYe9LHt3NiP'),
+        ) &&
+      Number(
+        proposalInstruction.account.getSingleInstruction().data.slice(0, 1),
+      ) === 232
+    ) {
+      return true;
+    }
+
+    // UXD program - mango reimburse mainnet test program
+    if (
+      proposalInstruction.account
+        .getSingleInstruction()
+        .programId.equals(
+          new PublicKey('EmXCGBmeZ7vTZu1NcuR5Cod8438aQdghhVa69zcBVF23'),
+        ) &&
+      Number(
+        proposalInstruction.account.getSingleInstruction().data.slice(0, 1),
+      ) === 232
+    ) {
+      return true;
+    }
+
+    // Orca whirlpool - open position
+    if (
+      proposalInstruction.account
+        .getSingleInstruction()
+        .programId.equals(OrcaConfiguration.WhirlpoolProgramId) &&
+      // Compare the first byte of the anchor discriminator
+      Number(
+        proposalInstruction.account.getSingleInstruction().data.slice(0, 1),
+      ) === OrcaConfiguration.instructionsCode.WhirlpoolOpenPositionWithMetadata
+    ) {
+      return true;
+    }
+
+    return false;
+  })();
+
+  const checkIsPayerForAdditionalSigner = (): boolean => {
+    if (
+      proposalInstruction.account
         .getSingleInstruction()
         .programId.equals(OrcaConfiguration.WhirlpoolProgramId)
     ) {
-      return false;
+      // We are on orca
+      return proposalInstruction.account
+        .getSingleInstruction()
+        .accounts[0].pubkey.equals(wallet?.publicKey as PublicKey);
     }
 
-    // Compare the first byte of the anchor discriminator
-    if (
-      Number(
-        proposalInstruction.account.getSingleInstruction().data.slice(0, 1),
-      ) !== OrcaConfiguration.instructionsCode.WhirlpoolOpenPositionWithMetadata
-    ) {
-      return false;
-    }
-
-    return true;
-  })();
+    // We are on UXD Protocol - mango reimburse
+    return proposalInstruction.account
+      .getSingleInstruction()
+      .accounts[1].pubkey.equals(wallet?.publicKey as PublicKey);
+  };
 
   // Say if the connected wallet is the payer of the open position instruction
-  const isPayerOfOrcaWhirlpoolOpenPositionIx =
-    isInstructionAboutOrcaWhirlpoolOpenPosition && wallet?.publicKey
-      ? proposalInstruction.account
-          .getSingleInstruction()
-          .accounts[0].pubkey.equals(wallet.publicKey)
+  const isPayerTheOneWithConnectedWallet =
+    isInstructionRequireAdditionalSigner && wallet?.publicKey
+      ? checkIsPayerForAdditionalSigner()
       : false;
 
   return (
@@ -216,10 +257,10 @@ export default function InstructionCard({
       )}
 
       {
-        // In the very particular case it is about Orca Whirlpool Open Position Instruction
+        // In the very particular case it is about Orca Whirlpool Open Position Instruction or other
         // We ask the users for the secret key of the position mint
-        isInstructionAboutOrcaWhirlpoolOpenPosition &&
-        isPayerOfOrcaWhirlpoolOpenPositionIx ? (
+        isInstructionRequireAdditionalSigner &&
+        isPayerTheOneWithConnectedWallet ? (
           <div className="flex flex-col mt-6 mb-8">
             <strong>
               Provide the <em>positionMint</em> secret key shown during the
@@ -249,9 +290,7 @@ export default function InstructionCard({
         {proposal &&
         proposal.account.state !== ProposalState.ExecutingWithErrors ? (
           <ExecuteInstructionButton
-            disabled={
-              isInstructionAboutOrcaWhirlpoolOpenPosition && !additionalSigner
-            }
+            disabled={isInstructionRequireAdditionalSigner && !additionalSigner}
             proposal={proposal}
             proposalInstruction={proposalInstruction}
             playing={playing}

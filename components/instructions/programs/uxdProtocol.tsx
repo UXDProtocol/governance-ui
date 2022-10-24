@@ -10,7 +10,149 @@ import { tryGetTokenMint } from '@utils/tokens';
 import { ANCHOR_DISCRIMINATOR_LAYOUT } from '@utils/helpers';
 
 export const UXD_PROGRAM_INSTRUCTIONS = {
+  EmXCGBmeZ7vTZu1NcuR5Cod8438aQdghhVa69zcBVF23: {
+    232: {
+      name: 'UXD - Mango reimburse',
+      accounts: [
+        'authority',
+        'payer',
+        'controller',
+        'depository',
+        'token_mint',
+        'authority_token_account',
+        'depository_token_account',
+        'mango_account',
+        'mango_reimbursement_group',
+        'mango_reimbursement_vault',
+        'mango_reimbursement_account',
+        'mango_reimbursement_claim_mint_token_account',
+        'mango_reimbursement_claim_mint',
+        'mango_reimbursement_table',
+        'system',
+        'token_program',
+        'mango_reimbursement_program',
+        'rent',
+      ],
+      getDataUI: (
+        _connection: Connection,
+        data: Uint8Array,
+        _accounts: AccountMetaData[],
+      ) => {
+        const dataLayout = struct([
+          u8('instruction'),
+          ...ANCHOR_DISCRIMINATOR_LAYOUT,
+          u64('tokenIndex'),
+          u64('indexIntoTable'),
+        ]);
+
+        const { tokenIndex, indexIntoTable } = dataLayout.decode(
+          Buffer.from(data),
+        ) as any;
+
+        return (
+          <>
+            <p>{`token_index: ${tokenIndex}`}</p>
+            <p>{`index_into_table: ${indexIntoTable}`}</p>
+          </>
+        );
+      },
+    },
+  },
+  HtBAjXoadvKg8KBAtcUL1BjgxM55itScsZYe9LHt3NiP: {
+    232: {
+      name: 'UXD - Mango reimburse',
+      accounts: [
+        'authority',
+        'payer',
+        'controller',
+        'depository',
+        'token_mint',
+        'authority_token_account',
+        'depository_token_account',
+        'mango_account',
+        'mango_reimbursement_group',
+        'mango_reimbursement_vault',
+        'mango_reimbursement_account',
+        'mango_reimbursement_claim_mint_token_account',
+        'mango_reimbursement_claim_mint',
+        'mango_reimbursement_table',
+        'system',
+        'token_program',
+        'mango_reimbursement_program',
+        'rent',
+      ],
+      getDataUI: (
+        _connection: Connection,
+        data: Uint8Array,
+        _accounts: AccountMetaData[],
+      ) => {
+        const dataLayout = struct([
+          u8('instruction'),
+          ...ANCHOR_DISCRIMINATOR_LAYOUT,
+          u64('tokenIndex'),
+          u64('indexIntoTable'),
+        ]);
+
+        const { tokenIndex, indexIntoTable } = dataLayout.decode(
+          Buffer.from(data),
+        ) as any;
+
+        return (
+          <>
+            <p>{`token_index: ${tokenIndex}`}</p>
+            <p>{`index_into_table: ${indexIntoTable}`}</p>
+          </>
+        );
+      },
+    },
+  },
   UXD8m9cvwk4RcSxnX2HZ9VudQCEeDH6fRnB4CAP57Dr: {
+    232: {
+      name: 'UXD - Mango reimburse',
+      accounts: [
+        'authority',
+        'payer',
+        'controller',
+        'depository',
+        'token_mint',
+        'authority_token_account',
+        'depository_token_account',
+        'mango_account',
+        'mango_reimbursement_group',
+        'mango_reimbursement_vault',
+        'mango_reimbursement_account',
+        'mango_reimbursement_claim_mint_token_account',
+        'mango_reimbursement_claim_mint',
+        'mango_reimbursement_table',
+        'system',
+        'token_program',
+        'mango_reimbursement_program',
+        'rent',
+      ],
+      getDataUI: (
+        _connection: Connection,
+        data: Uint8Array,
+        _accounts: AccountMetaData[],
+      ) => {
+        const dataLayout = struct([
+          u8('instruction'),
+          ...ANCHOR_DISCRIMINATOR_LAYOUT,
+          u64('tokenIndex'),
+          u64('indexIntoTable'),
+        ]);
+
+        const { tokenIndex, indexIntoTable } = dataLayout.decode(
+          Buffer.from(data),
+        ) as any;
+
+        return (
+          <>
+            <p>{`token_index: ${tokenIndex}`}</p>
+            <p>{`index_into_table: ${indexIntoTable}`}</p>
+          </>
+        );
+      },
+    },
     216: {
       name: 'UXD - Set Mango Depository Quote Mint and Redeem Soft Cap',
       accounts: ['Authority', 'Controller'],

@@ -57,6 +57,7 @@ import UXDQuoteMintWithMangoDepository from './UXD/QuoteMintWithMangoDepository'
 import UXDQuoteRedeemWithMangoDepository from './UXD/QuoteRedeemWithMangoDepository';
 import UXDSetMangoDepositoryQuoteMintAndRedeemFee from './UXD/SetMangoDepositoryQuoteMintAndRedeemFee';
 import UXDSetMangoDepositoryQuoteMintAndRedeemSoftCap from './UXD/SetMangoDepositoryQuoteMintAndRedeemSoftCap';
+import UXDMangoReimburse from './UXD/MangoReimburse';
 import UXDStakingInitializeStakingCampaign from './UXDStaking/InitializeStakingCampaign';
 import UXDStakingMigrateStakingCampaignFromV1ToV2 from './UXDStaking/MigrateStakingCampaignFromV1ToV2';
 import UXDStakingFinalizeStakingCampaign from './UXDStaking/FinalizeStakingCampaign';
@@ -290,6 +291,10 @@ const SelectedInstruction = ({
           index={index}
           governedAccount={governedAccount}
         />
+      );
+    case InstructionEnum.UXDMangoReimburse:
+      return (
+        <UXDMangoReimburse index={index} governedAccount={governedAccount} />
       );
     case InstructionEnum.UXDStakingMigrateStakingCampaignFromV1ToV2:
       return (

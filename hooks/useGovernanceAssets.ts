@@ -478,6 +478,12 @@ export default function useGovernanceAssets() {
       packageId: PackageEnum.UXD,
       tag: 'beta',
     },
+    [InstructionEnum.UXDMangoReimburse]: {
+      name: 'Mango reimburse',
+      isVisible: canUseAnyInstruction,
+      packageId: PackageEnum.UXD,
+      tag: 'beta',
+    },
     [InstructionEnum.RaydiumAddLiquidity]: {
       name: 'Add To Liquidity Pool',
       isVisible: canUseAnyInstruction,
