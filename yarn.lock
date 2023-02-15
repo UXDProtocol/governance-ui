@@ -1880,7 +1880,7 @@
     bn.js "^5.1.2"
     buffer-layout "^1.2.0"
 
-"@project-serum/sol-wallet-adapter@^0.2.0":
+"@project-serum/sol-wallet-adapter@0.2.0", "@project-serum/sol-wallet-adapter@^0.2.0":
   version "0.2.0"
   resolved "https://registry.npmjs.org/@project-serum/sol-wallet-adapter/-/sol-wallet-adapter-0.2.0.tgz"
   dependencies:
@@ -2359,6 +2359,13 @@
   dependencies:
     eventemitter3 "^4.0.7"
 
+"@solana/wallet-adapter-base@^0.9.20":
+  version "0.9.20"
+  resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-base/-/wallet-adapter-base-0.9.20.tgz#42a3a2f42db9f6a41e36a132ee5a06a0bd3784f0"
+  integrity sha512-ZvnhJ4EJk61oyuBH/a9tMpUfeWQ3g3Cc0Nzl1NzE4SdqEhiNoEW8HXDig9HMemZ9bIEUxIpPWxp+SwjVl0u+rg==
+  dependencies:
+    eventemitter3 "^4.0.0"
+
 "@solana/wallet-adapter-base@^0.9.5":
   version "0.9.16"
   resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-base/-/wallet-adapter-base-0.9.16.tgz#7b67e145f47a9cdc8e702eacc02fa867084a9bf4"
@@ -2370,6 +2377,14 @@
   version "0.7.0"
   resolved "https://registry.npmjs.org/@solana/wallet-adapter-phantom/-/wallet-adapter-phantom-0.7.0.tgz"
   integrity sha512-u2SkJ6LO+A2MKTgN9bsG5Ro0Vn9KL7NKsGPT0JrYI2rvXm3yZnhlAE0i0oq+/nFAjkL/+Onm9boOaYF0/Z7vBQ==
+
+"@solana/wallet-adapter-solflare@0.6.22":
+  version "0.6.22"
+  resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-solflare/-/wallet-adapter-solflare-0.6.22.tgz#7799c7399dcd7710688197e5d318162bbfd068de"
+  integrity sha512-bmcAG86HQqa4tl4qdYQ/WePyXJ41UvvuqjWCyAcSkMqduJbhDbWzt9XzpFRHMtWScoVViSrdMHLePKich4b6HQ==
+  dependencies:
+    "@solana/wallet-adapter-base" "^0.9.20"
+    "@solflare-wallet/sdk" "^1.2.0"
 
 "@solana/wallet-adapter-sollet@^0.8.0":
   version "0.8.0"
@@ -2691,6 +2706,16 @@
     buffer "^6.0.3"
     buffer-layout "^1.2.0"
     isomorphic-fetch "^3.0.0"
+
+"@solflare-wallet/sdk@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@solflare-wallet/sdk/-/sdk-1.2.0.tgz#3ba412f316cc6ea324679cd6233d363296770ead"
+  integrity sha512-J3KZJdeYJ2R7jPHa0F53iCtkQEdcD1j7yeFQ4oa6Kk6gU1MOqSEWZxrr56sVDKWuPT/gunzEXGrgcwjd7nxwjg==
+  dependencies:
+    "@project-serum/sol-wallet-adapter" "0.2.0"
+    bs58 "^4.0.1"
+    eventemitter3 "^4.0.7"
+    uuid "^8.3.2"
 
 "@switchboard-xyz/switchboard-api@^0.2.150", "@switchboard-xyz/switchboard-api@^0.2.152":
   version "0.2.201"

@@ -1,5 +1,6 @@
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import { SolletWalletAdapter } from '@solana/wallet-adapter-sollet';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
 
 const ASSET_URL =
   'https://cdn.jsdelivr.net/gh/solana-labs/oyster@main/assets/wallets';
@@ -16,6 +17,12 @@ export const WALLET_PROVIDERS = [
     url: 'https://www.sollet.io',
     icon: `${ASSET_URL}/sollet.svg`,
     adapter: new SolletWalletAdapter({ provider: 'https://www.sollet.io' }),
+  },
+  {
+    name: 'Solflare',
+    url: 'https://solflare.com',
+    icon: `${ASSET_URL}/solflare.svg`,
+    adapter: new SolflareWalletAdapter(),
   },
 ];
 

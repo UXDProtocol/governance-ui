@@ -17,8 +17,16 @@ export function isYesVote(voteRecord: VoteRecord) {
         case VoteKind.Deny: {
           return false;
         }
-        default:
-          throw new Error('Invalid voteKind');
+        case 2 as any /*VoteKind.Abstain*/: {
+          return false;
+        }
+        case 3 as any /*VoteKind.Veto*/: {
+          return false;
+        }
+        default: {
+          throw new Error(`Invalid voteKind ${voteRecord.vote?.voteType}`);
+          return false;
+        }
       }
     }
     default:
