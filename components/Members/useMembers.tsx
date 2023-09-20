@@ -58,13 +58,17 @@ export default function useMembers() {
         )
         .map((x) => x.walletAddress);
       for (const walletAddress of communityTokenRecordsWallets) {
-        const ata = await Token.getAssociatedTokenAddress(
-          ASSOCIATED_TOKEN_PROGRAM_ID, // always ASSOCIATED_TOKEN_PROGRAM_ID
-          TOKEN_PROGRAM_ID, // always TOKEN_PROGRAM_ID
-          realm!.account.communityMint, // mint
-          new PublicKey(walletAddress), // owner
-        );
-        ATAS.push(ata);
+        try {
+          const ata = await Token.getAssociatedTokenAddress(
+            ASSOCIATED_TOKEN_PROGRAM_ID, // always ASSOCIATED_TOKEN_PROGRAM_ID
+            TOKEN_PROGRAM_ID, // always TOKEN_PROGRAM_ID
+            realm!.account.communityMint, // mint
+            new PublicKey(walletAddress), // owner
+          );
+          ATAS.push(ata);
+        } catch {
+          // ignore err
+        }
       }
       const ownersAtas = await getMultipleAccountInfoChunked(
         connection.current,

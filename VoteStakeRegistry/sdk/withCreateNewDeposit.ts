@@ -5,7 +5,10 @@ import {
   SYSVAR_RENT_PUBKEY,
   TransactionInstruction,
 } from '@solana/web3.js';
-import { withCreateTokenOwnerRecord } from '@solana/spl-governance';
+import {
+  PROGRAM_VERSION_V3,
+  withCreateTokenOwnerRecord,
+} from '@solana/spl-governance';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   Token,
@@ -81,6 +84,7 @@ export const withCreateNewDeposit = async ({
     tokenOwnerRecordPubKey = await withCreateTokenOwnerRecord(
       instructions,
       programId,
+      PROGRAM_VERSION_V3,
       realmPk,
       walletPk,
       mintPk,

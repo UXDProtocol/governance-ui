@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import {
   ChatMessageBody,
   ChatMessageBodyType,
-  GoverningTokenType,
   ProgramAccount,
   TokenOwnerRecord,
   YesNoVote,
@@ -37,10 +36,10 @@ const VoteCommentModal = ({
   const [comment, setComment] = useState('');
   const wallet = useWalletStore((s) => s.current);
   const connection = useWalletStore((s) => s.connection);
-  const { proposal, tokenType } = useWalletStore((s) => s.selectedProposal);
+  const { proposal } = useWalletStore((s) => s.selectedProposal);
   const { fetchChatMessages } = useWalletStore((s) => s.actions);
   const { fetchVoteRecords } = useWalletStore((s) => s.actions);
-  const { realm, realmInfo, mint, councilMint } = useRealm();
+  const { realm, realmInfo } = useRealm();
   const { fetchRealm } = useWalletStore((s) => s.actions);
 
   const submitVote = async (vote: YesNoVote) => {
@@ -65,13 +64,6 @@ const VoteCommentModal = ({
       : undefined;
 
     try {
-      const usedMint =
-        tokenType === GoverningTokenType.Community ? mint : councilMint;
-
-      if (!usedMint) {
-        throw new Error('Mint not found');
-      }
-
       await castVotes({
         rpcContext,
         realm: realm!,

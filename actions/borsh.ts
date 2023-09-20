@@ -42,9 +42,10 @@ declare class EnhancedBinaryWriter extends borsh.BinaryWriter {
     return VoteType.SINGLE_CHOICE;
   }
 
-  const choiceCount = this.buf.readUInt16LE(this.offset);
+  const multiChoiceType = this.buf.readUInt16LE(this.offset);
 
-  return VoteType.MULTI_CHOICE(choiceCount);
+  // WE DO NOT HANDLE MULTO CHOICE CORRECTLY
+  return VoteType.MULTI_CHOICE(multiChoiceType, 0, 0, 0);
 };
 
 (borsh.BinaryWriter
@@ -57,8 +58,9 @@ declare class EnhancedBinaryWriter extends borsh.BinaryWriter {
 
   this.length += 1;
 
+  // WE DO NOT HANDLE MULTO CHOICE CORRECTLY
   if (value.type === VoteTypeKind.MultiChoice) {
-    this.buf.writeUInt16LE(value.choiceCount, this.length);
+    this.buf.writeUInt16LE(value.choiceType, this.length);
 
     this.length += 2;
   }

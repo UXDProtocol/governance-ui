@@ -4,7 +4,6 @@ import useRealm from '@hooks/useRealm';
 import { getTokenOwnerRecordAddress, Proposal } from '@solana/spl-governance';
 import useWalletStore from '../../../stores/useWalletStore';
 import { Option } from '@tools/core/option';
-import { GoverningTokenType } from '@solana/spl-governance';
 import { fmtMintAmount } from '@tools/sdk/units';
 import { getMintMetadata } from '@components/instructions/programs/splToken';
 import useQueryContext from '@hooks/useQueryContext';
@@ -97,7 +96,7 @@ const LockPluginTokenBalanceCard = ({
           {communityDepositVisible && (
             <TokenDeposit
               mint={mint}
-              tokenType={GoverningTokenType.Community}
+              tokenType={'Community'}
               councilVote={false}
             />
           )}
@@ -105,7 +104,7 @@ const LockPluginTokenBalanceCard = ({
             <div className="mt-4">
               <TokenDeposit
                 mint={councilMint}
-                tokenType={GoverningTokenType.Council}
+                tokenType={'Council'}
                 councilVote={true}
               />
             </div>
@@ -126,7 +125,7 @@ const TokenDeposit = ({
   tokenType,
 }: {
   mint: MintInfo | undefined;
-  tokenType: GoverningTokenType;
+  tokenType: 'Community' | 'Council';
   councilVote?: boolean;
 }) => {
   const { realm, realmTokenAccount, councilTokenAccount } = useRealm();
@@ -155,19 +154,17 @@ const TokenDeposit = ({
   }
 
   const depositTokenAccount =
-    tokenType === GoverningTokenType.Community
-      ? realmTokenAccount
-      : councilTokenAccount;
+    tokenType === 'Community' ? realmTokenAccount : councilTokenAccount;
 
   const depositMint =
-    tokenType === GoverningTokenType.Community
+    tokenType === 'Community'
       ? realm?.account.communityMint
       : realm?.account.config.councilMint;
 
   const tokenName = getMintMetadata(depositMint)?.name ?? realm?.account.name;
 
   const depositTokenName = `${tokenName} ${
-    tokenType === GoverningTokenType.Community ? '' : 'Council'
+    tokenType === 'Community' ? '' : 'Council'
   }`;
 
   const hasTokensInWallet =

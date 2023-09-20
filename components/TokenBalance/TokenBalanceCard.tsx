@@ -24,7 +24,6 @@ import { sendTransaction } from '@utils/send';
 import { approveTokenTransfer } from '@utils/tokens';
 import Button from '../Button';
 import { Option } from '@tools/core/option';
-import { GoverningTokenType } from '@solana/spl-governance';
 import { fmtMintAmount } from '@tools/sdk/units';
 import { getMintMetadata } from '../instructions/programs/splToken';
 import { withFinalizeVote } from '@solana/spl-governance';
@@ -88,14 +87,14 @@ const TokenBalanceCard = ({ proposal }: { proposal?: Option<Proposal> }) => {
           {communityDepositVisible && (
             <TokenDeposit
               mint={mint}
-              tokenType={GoverningTokenType.Community}
+              tokenType={'Community'}
               councilVote={false}
             />
           )}
           {councilDepositVisible && (
             <TokenDeposit
               mint={councilMint}
-              tokenType={GoverningTokenType.Council}
+              tokenType={'Council'}
               councilVote={true}
             />
           )}
@@ -116,7 +115,7 @@ const TokenDeposit = ({
   councilVote,
 }: {
   mint: MintInfo | undefined;
-  tokenType: GoverningTokenType;
+  tokenType: 'Community' | 'Council';
   councilVote?: boolean;
 }) => {
   const wallet = useWalletStore((s) => s.current);
@@ -181,13 +180,13 @@ const TokenDeposit = ({
   const delegatedAccounts = getDelegatedAccounts().map(
     ({ address: delegatedAccountAddress }) => ({
       tokenRecord:
-        tokenType === GoverningTokenType.Community
+        tokenType === 'Community'
           ? tokenRecords[delegatedAccountAddress]
           : councilTokenOwnerRecords[delegatedAccountAddress],
       voterWeight: new VoterWeight(ownTokenRecord, ownCouncilTokenRecord),
       voteRecord: voteRecordsByVoter[delegatedAccountAddress],
       voterTokenRecord:
-        tokenType === GoverningTokenType.Community
+        tokenType === 'Community'
           ? tokenRecords[delegatedAccountAddress]
           : councilTokenOwnerRecords[delegatedAccountAddress],
     }),
@@ -200,24 +199,20 @@ const TokenDeposit = ({
   );
 
   const depositTokenRecord =
-    tokenType === GoverningTokenType.Community
-      ? ownTokenRecord
-      : ownCouncilTokenRecord;
+    tokenType === 'Community' ? ownTokenRecord : ownCouncilTokenRecord;
 
   const depositTokenAccount =
-    tokenType === GoverningTokenType.Community
-      ? realmTokenAccount
-      : councilTokenAccount;
+    tokenType === 'Community' ? realmTokenAccount : councilTokenAccount;
 
   const depositMint =
-    tokenType === GoverningTokenType.Community
+    tokenType === 'Community'
       ? realm?.account.communityMint
       : realm?.account.config.councilMint;
 
   const tokenName = getMintMetadata(depositMint)?.name ?? realm?.account.name;
 
   const depositTokenName = `${tokenName} ${
-    tokenType === GoverningTokenType.Community ? '' : 'Council'
+    tokenType === 'Community' ? '' : 'Council'
   }`;
 
   const depositTokens = async function (amount: BN) {
@@ -324,6 +319,8 @@ const TokenDeposit = ({
         withRelinquishVote(
           instructions,
           realmInfo!.programId,
+          getProgramVersionForRealm(realmInfo!),
+          realm!.pubkey,
           proposal.account.governance,
           proposal.pubkey,
           depositTokenRecord!.pubkey,
@@ -338,6 +335,7 @@ const TokenDeposit = ({
     await withWithdrawGoverningTokens(
       instructions,
       realmInfo!.programId,
+      getProgramVersionForRealm(realmInfo!),
       realm!.pubkey,
       depositTokenAccount!.publicKey,
       depositTokenRecord!.account.governingTokenMint,

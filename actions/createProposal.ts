@@ -115,7 +115,10 @@ export async function createProposalInstruction({
         // Same as what is coded in governance-ui
         voteType: new VoteType({
           type: VoteTypeKind.SingleChoice,
-          choiceCount: undefined,
+          choiceType: undefined,
+          minVoterOptions: undefined,
+          maxVoterOptions: undefined,
+          maxWinningOptions: undefined,
         }),
         // Same as what is coded in governance-ui
         options: ['Approve'],

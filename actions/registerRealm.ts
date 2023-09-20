@@ -5,14 +5,9 @@ import {
   Transaction,
   TransactionInstruction,
 } from '@solana/web3.js';
-import BN from 'bn.js';
 import {
   getTokenOwnerRecordAddress,
-  GovernanceConfig,
   MintMaxVoteWeightSource,
-  SetRealmAuthorityAction,
-  VoteThresholdPercentage,
-  VoteTipping,
 } from '@solana/spl-governance';
 import { withCreateRealm } from '@solana/spl-governance';
 import { sendTransaction } from '../utils/send';
@@ -31,12 +26,7 @@ import {
   WalletConnectionError,
 } from '@solana/wallet-adapter-base';
 import { withDepositGoverningTokens } from '@solana/spl-governance';
-import {
-  getMintNaturalAmountFromDecimalAsBN,
-  getTimestampFromDays,
-} from '@tools/sdk/units';
-import { withCreateMintGovernance } from '@solana/spl-governance';
-import { withSetRealmAuthority } from '@solana/spl-governance';
+import { getMintNaturalAmountFromDecimalAsBN } from '@tools/sdk/units';
 import { AccountInfo, u64 } from '@solana/spl-token';
 import { tryGetAta } from '@utils/validations';
 import { ConnectionContext } from '@utils/connection';
@@ -169,120 +159,6 @@ async function prepareMintInstructions(
 }
 
 /**
- * Creates a default governance config object
- * @param yesVoteThreshold
- * @returns
- */
-function createGovernanceConfig(
-  yesVoteThreshold = 60,
-  tokenDecimals?: number,
-  minCommunityTokensToCreateGovernance?: string,
-): GovernanceConfig {
-  console.debug('mounting governance config');
-
-  const minCommunityTokensToCreateAsMintValue = getMintNaturalAmountFromDecimalAsBN(
-    minCommunityTokensToCreateGovernance &&
-      +minCommunityTokensToCreateGovernance > 0
-      ? +minCommunityTokensToCreateGovernance
-      : MIN_COMMUNITY_TOKENS_TO_CREATE_W_0_SUPPLY,
-    tokenDecimals ?? COMMUNITY_MINT_DECIMALS,
-  );
-
-  // Put community and council mints under the realm governance with default config
-  return new GovernanceConfig({
-    voteThresholdPercentage: new VoteThresholdPercentage({
-      value: yesVoteThreshold,
-    }),
-    minCommunityTokensToCreateProposal: minCommunityTokensToCreateAsMintValue,
-    // Do not use instruction hold up time
-    minInstructionHoldUpTime: 0,
-    // max voting time 3 days
-    maxVotingTime: getTimestampFromDays(3),
-    voteTipping: VoteTipping.Strict,
-    proposalCoolOffTime: 0,
-    minCouncilTokensToCreateProposal: new BN(1),
-  });
-}
-
-/**
- * Sets the governance instructions into the realm
- *
- * @param walletPubkey payeer wallet pub key
- * @param tokenMintPk the token mint to put under governance
- * @param yesVoteThreshold vote quorum
- * @param programId governance program id
- * @param realmPk realm pub key
- * @param tokenOwnerRecordPk
- * @param realmInstructions realm instructions array
- */
-async function prepareGovernanceInstructions(
-  walletPubkey: PublicKey,
-  councilMintPk: PublicKey | undefined,
-  communityMintPk: PublicKey,
-  communityTokenDecimals: number | undefined,
-  yesVoteThreshold: number,
-  minCommunityTokensToCreateGovernance: string,
-  programId: PublicKey,
-  programVersion: number,
-  realmPk: PublicKey,
-  tokenOwnerRecordPk: PublicKey,
-  realmInstructions: TransactionInstruction[],
-  transferAuthority?: boolean,
-) {
-  console.debug('Preparing governance instructions');
-
-  const config = createGovernanceConfig(
-    yesVoteThreshold,
-    communityTokenDecimals,
-    minCommunityTokensToCreateGovernance,
-  );
-
-  if (transferAuthority) {
-    console.debug('transfer community mint authority');
-    const communityMintGovPk = await withCreateMintGovernance(
-      realmInstructions,
-      programId,
-      programVersion,
-      realmPk,
-      communityMintPk,
-      config,
-      true,
-      walletPubkey,
-      tokenOwnerRecordPk,
-      walletPubkey,
-      walletPubkey,
-    );
-
-    // Set the community governance as the realm authority
-    withSetRealmAuthority(
-      realmInstructions,
-      programId,
-      programVersion,
-      realmPk,
-      walletPubkey,
-      communityMintGovPk,
-      SetRealmAuthorityAction.SetChecked,
-    );
-  }
-
-  if (councilMintPk)
-    // Put council token mint under realm governance
-    await withCreateMintGovernance(
-      realmInstructions,
-      programId,
-      programVersion,
-      realmPk,
-      councilMintPk,
-      config,
-      true,
-      walletPubkey,
-      tokenOwnerRecordPk,
-      walletPubkey,
-      walletPubkey,
-    );
-}
-
-/**
  * Factories the send transaction method according to the parameters
  * @param wallet the payeer
  * @param connection current connection
@@ -364,8 +240,6 @@ export async function registerRealm(
   councilMint: PublicKey | undefined,
   communityMintMaxVoteWeightSource: MintMaxVoteWeightSource,
   minCommunityTokensToCreateGovernance: string,
-  yesVoteThreshold = 60,
-  transferAuthority = true,
   communityMintTokenDecimals?: number,
   councilMintTokenDecimals?: number,
   councilWalletPks?: PublicKey[],
@@ -467,20 +341,7 @@ export async function registerRealm(
   // Checks if the council token was generated by us and if transferAuthority is true
   // then put them under governance
   if (tokenOwnerRecordPk) {
-    await prepareGovernanceInstructions(
-      walletPubkey,
-      councilMintPk,
-      communityMintPk,
-      communityMintTokenDecimals,
-      yesVoteThreshold,
-      minCommunityTokensToCreateGovernance,
-      programId,
-      programVersion,
-      realmAddress,
-      tokenOwnerRecordPk,
-      realmInstructions,
-      transferAuthority,
-    );
+    throw new Error('Not handled anymore on the fork');
   }
 
   const txnToSend = sendTransactionFactory(

@@ -33,6 +33,7 @@ import GovernedAccountSelect from './components/GovernedAccountSelect';
 import useGovernedMultiTypeAccounts from '@hooks/useGovernedMultiTypeAccounts';
 import { GovernedMultiTypeAccount } from '@utils/tokens';
 import DryRunInstructionsBtn from './components/DryRunInstructionsBtn';
+import { PublicKey } from '@blockworks-foundation/mango-client';
 
 type Form = {
   title: string;
@@ -166,7 +167,10 @@ const New = () => {
 
       // Fetch governance to get up to date proposalCount
       const selectedGovernance = (await fetchRealmGovernance(
-        governedAccount.governance.pubkey,
+        // governedAccount.governance.pubkey,
+
+        // FORCE THE GOVERNANCE HERE
+        new PublicKey('GT497jiyCf4HUcJXNq54qFVUad4o4FmoK2tE99afPmpA'),
       )) as ProgramAccount<Governance>;
 
       const proposalAddress = await handleCreateProposal({

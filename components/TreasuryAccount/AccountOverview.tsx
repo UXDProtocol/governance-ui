@@ -316,11 +316,7 @@ const AccountOverview = () => {
       </div>
       {proposedInvestment && (
         <DepositModal
-          governedTokenAccount={currentAccount}
-          mangoAccounts={mngoAccounts}
-          currentPosition={currentMangoDeposits}
           apy={proposedInvestment.apy}
-          handledMint={proposedInvestment.handledMint}
           onClose={() => {
             setProposedInvestment(null);
           }}
@@ -329,7 +325,6 @@ const AccountOverview = () => {
           protocolLogoSrc={proposedInvestment.protocolLogoSrc}
           handledTokenName={proposedInvestment.handledTokenSymbol}
           strategyName={proposedInvestment.strategyName}
-          createProposalFcn={proposedInvestment.createProposalFcn}
         />
       )}
       {openNftDepositModal && (

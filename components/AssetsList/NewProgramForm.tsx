@@ -2,28 +2,17 @@ import Button from 'components/Button';
 import Input from 'components/inputs/Input';
 import PreviousRouteBtn from 'components/PreviousRouteBtn';
 import Tooltip from 'components/Tooltip';
-import useQueryContext from 'hooks/useQueryContext';
-import useRealm from 'hooks/useRealm';
-import { RpcContext } from '@solana/spl-governance';
-import { PublicKey } from '@solana/web3.js';
 import { tryParseKey } from 'tools/validators/pubkey';
 import { isFormValid } from 'utils/formValidation';
-import { getGovernanceConfig } from 'utils/GovernanceTools';
-import { notify } from 'utils/notifications';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import useWalletStore from 'stores/useWalletStore';
 import * as yup from 'yup';
 import BaseGovernanceForm, {
   BaseGovernanceFormFields,
 } from './BaseGovernanceForm';
-import { registerProgramGovernance } from 'actions/registerProgramGovernance';
-import { GovernanceType } from '@solana/spl-governance';
 import Switch from 'components/Switch';
 import { debounce } from '@utils/debounce';
 import { MIN_COMMUNITY_TOKENS_TO_CREATE_W_0_SUPPLY } from '@tools/constants';
-import { getProgramVersionForRealm } from '@models/registry/api';
-import useVoteStakeRegistryClientStore from 'VoteStakeRegistry/stores/voteStakeRegistryClientStore';
 interface NewProgramForm extends BaseGovernanceFormFields {
   programId: string;
   transferAuthority: boolean;
@@ -41,90 +30,19 @@ const defaultFormValues = {
   transferAuthority: true,
 };
 const NewProgramForm = () => {
-  const router = useRouter();
-  const { fmtUrlWithCluster } = useQueryContext();
-  const client = useVoteStakeRegistryClientStore((s) => s.state.client);
-  const {
-    realmInfo,
-    realm,
-    mint: realmMint,
-    symbol,
-    ownVoterWeight,
-  } = useRealm();
-  const wallet = useWalletStore((s) => s.current);
   const connection = useWalletStore((s) => s.connection);
   const connected = useWalletStore((s) => s.connected);
-  const { fetchRealm } = useWalletStore((s) => s.actions);
   const [form, setForm] = useState<NewProgramForm>({
     ...defaultFormValues,
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-  const tokenOwnerRecord = ownVoterWeight.canCreateGovernanceUsingCouncilTokens()
-    ? ownVoterWeight.councilTokenRecord
-    : realm && ownVoterWeight.canCreateGovernanceUsingCommunityTokens(realm)
-    ? ownVoterWeight.communityTokenRecord
-    : undefined;
-
   const handleSetForm = ({ propertyName, value }) => {
     setFormErrors({});
     setForm({ ...form, [propertyName]: value });
   };
   const handleCreate = async () => {
-    try {
-      if (!realm) {
-        throw 'No realm selected';
-      }
-      if (!connected) {
-        throw 'Please connect your wallet';
-      }
-      if (!tokenOwnerRecord) {
-        throw "You don't have enough governance power to create a new program governance";
-      }
-      const { isValid, validationErrors } = await isFormValid(schema, form);
-      setFormErrors(validationErrors);
-      if (isValid && realmMint) {
-        setIsLoading(true);
-
-        const rpcContext = new RpcContext(
-          new PublicKey(realm.owner.toString()),
-          getProgramVersionForRealm(realmInfo!),
-          wallet!,
-          connection.current,
-          connection.endpoint,
-        );
-
-        const governanceConfigValues = {
-          minTokensToCreateProposal: form.minCommunityTokensToCreateProposal,
-          minInstructionHoldUpTime: form.minInstructionHoldUpTime,
-          maxVotingTime: form.maxVotingTime,
-          voteThresholdPercentage: form.voteThreshold,
-          mintDecimals: realmMint.decimals,
-        };
-        const governanceConfig = getGovernanceConfig(governanceConfigValues);
-        await registerProgramGovernance(
-          rpcContext,
-          GovernanceType.Program,
-          realm,
-          new PublicKey(form.programId),
-          governanceConfig,
-          form.transferAuthority,
-          tokenOwnerRecord!.pubkey,
-          client,
-        );
-        setIsLoading(false);
-        fetchRealm(realmInfo!.programId, realmInfo!.realmId);
-        router.push(fmtUrlWithCluster(`/dao/${symbol}/`));
-      }
-    } catch (e) {
-      //TODO how do we present errors maybe something more generic ?
-      notify({
-        type: 'error',
-        message: `Can't create governance`,
-        description: `Transaction error ${e}`,
-      });
-      setIsLoading(false);
-    }
+    throw new Error('Not handled anymore in the fork');
   };
   //if you altering this look at useEffect for form.programId
   const schema = yup.object().shape({

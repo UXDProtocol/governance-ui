@@ -38,6 +38,7 @@ import { getRegistrarPDA } from 'VoteStakeRegistry/sdk/accounts';
 import { tryGetRegistrar } from 'VoteStakeRegistry/sdk/api';
 import useVoteStakeRegistryClientStore from 'VoteStakeRegistry/stores/voteStakeRegistryClientStore';
 import dayjs from 'dayjs';
+import useProgramVersion from '@hooks/useProgramVersion';
 
 const Grant = ({
   index,
@@ -56,6 +57,7 @@ const Grant = ({
   const [startDate, setStartDate] = useState(dayjs().format('DD-MM-YYYY'));
   const [endDate, setEndDate] = useState('');
   const [useableGrantMints, setUseableGrantMints] = useState<string[]>([]);
+  const programVersion = useProgramVersion();
   const [form, setForm] = useState<GrantForm>({
     destinationAccount: '',
     // No default transfer amount
@@ -128,6 +130,7 @@ const Grant = ({
         await withCreateTokenOwnerRecord(
           prerequisiteInstructions,
           realm!.owner,
+          programVersion,
           realm!.pubkey,
           destinationAccount,
           realm!.account.communityMint,

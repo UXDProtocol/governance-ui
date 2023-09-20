@@ -23,7 +23,7 @@ import { getRealmExplorerHost } from 'tools/routing';
 import { EnhancedProposalState } from 'stores/useWalletStore';
 
 const Proposal = () => {
-  const { realmInfo } = useRealm();
+  const { realmInfo, realm } = useRealm();
   const { proposal, descriptionLink } = useProposal();
   const [description, setDescription] = useState('');
   const { yesVoteProgress, yesVotesRequired } = useProposalVotes(
@@ -139,7 +139,19 @@ const Proposal = () => {
           </div>
         ) : null}
 
-        <VotePanel />
+        {proposal?.account.governingTokenMint &&
+        realm?.account.config.councilMint ? (
+          <VotePanel
+            tokenType={
+              proposal.account.governingTokenMint.equals(
+                realm.account.config.councilMint,
+              )
+                ? 'Council'
+                : 'Community'
+            }
+          />
+        ) : null}
+
         <ProposalActionsPanel />
       </div>
     </div>

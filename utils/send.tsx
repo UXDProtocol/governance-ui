@@ -42,6 +42,8 @@ export async function sendTransaction({
   successMessage?: string;
   timeout?: number;
 }) {
+  transaction.feePayer = wallet.publicKey;
+
   const signedTransaction = await signTransaction({
     transaction,
     wallet,
@@ -76,11 +78,15 @@ export async function signTransaction({
   transaction.recentBlockhash = (
     await connection.getLatestBlockhash('max')
   ).blockhash;
+
+  /*
   transaction.setSigners(wallet.publicKey, ...signers.map((s) => s.publicKey));
+  */
+
   if (signers.length > 0) {
     transaction.partialSign(...signers);
   }
-  return await wallet.signTransaction(transaction);
+  return wallet.signTransaction(transaction);
 }
 
 export async function signTransactions({

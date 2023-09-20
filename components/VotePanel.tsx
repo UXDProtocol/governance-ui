@@ -11,7 +11,6 @@ import relinquishVotes from '../actions/relinquishVotes';
 import { useHasVoteTimeExpired } from '../hooks/useHasVoteTimeExpired';
 import useRealm from '../hooks/useRealm';
 import { RpcContext } from '@solana/spl-governance';
-import { GoverningTokenType } from '@solana/spl-governance';
 
 import useWalletStore, {
   EnhancedProposalState,
@@ -144,16 +143,13 @@ function sortAccountsToVoteFor(
   );
 }
 
-const VotePanel = () => {
+const VotePanel = ({ tokenType }: { tokenType: 'Community' | 'Council' }) => {
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [vote, setVote] = useState<YesNoVote | null>(null);
 
-  const {
-    governance,
-    proposal,
-    voteRecordsByVoter,
-    tokenType,
-  } = useWalletStore((s) => s.selectedProposal);
+  const { governance, proposal, voteRecordsByVoter } = useWalletStore(
+    (s) => s.selectedProposal,
+  );
 
   const {
     ownTokenRecord,
@@ -162,7 +158,6 @@ const VotePanel = () => {
     realm,
     ownVoterWeight,
     tokenRecords,
-    councilMint,
     mint,
     councilTokenOwnerRecords,
   } = useRealm();
@@ -174,8 +169,7 @@ const VotePanel = () => {
   const fetchRealm = useWalletStore((s) => s.actions.fetchRealm);
   const hasVoteTimeExpired = useHasVoteTimeExpired(governance, proposal!);
 
-  const usedMint =
-    tokenType === GoverningTokenType.Community ? mint : councilMint;
+  const usedMint = mint;
 
   // Look for accounts where the user is the delegate
   const getDelegatedAccounts = (): {
@@ -217,35 +211,31 @@ const VotePanel = () => {
   }
 
   const delegatedAccounts =
-    tokenType === GoverningTokenType.Community ? getDelegatedAccounts() : [];
+    tokenType === 'Community' ? getDelegatedAccounts() : [];
 
   // Holds accounts we can vote for
   const accountsToVoteFor: AccountsToVoteFor = [
     // The user own account first
     {
       tokenRecord:
-        tokenType === GoverningTokenType.Community
-          ? ownTokenRecord
-          : ownCouncilTokenRecord,
+        tokenType === 'Community' ? ownTokenRecord : ownCouncilTokenRecord,
       voterWeight: ownVoterWeight,
       voteRecord: voteRecordsByVoter[wallet.publicKey.toBase58()],
       voterTokenRecord:
-        tokenType === GoverningTokenType.Community
-          ? ownTokenRecord
-          : ownCouncilTokenRecord,
+        tokenType === 'Community' ? ownTokenRecord : ownCouncilTokenRecord,
       beneficiary: wallet.publicKey,
     },
 
     // Then the delegated accounts
     ...delegatedAccounts.map(({ address: delegatedAccountAddress }) => ({
       tokenRecord:
-        tokenType === GoverningTokenType.Community
+        tokenType === 'Community'
           ? tokenRecords[delegatedAccountAddress]
           : councilTokenOwnerRecords[delegatedAccountAddress],
       voterWeight: new VoterWeight(ownTokenRecord, ownCouncilTokenRecord),
       voteRecord: voteRecordsByVoter[delegatedAccountAddress],
       voterTokenRecord:
-        tokenType === GoverningTokenType.Community
+        tokenType === 'Community'
           ? tokenRecords[delegatedAccountAddress]
           : councilTokenOwnerRecords[delegatedAccountAddress],
       beneficiary: new PublicKey(delegatedAccountAddress),

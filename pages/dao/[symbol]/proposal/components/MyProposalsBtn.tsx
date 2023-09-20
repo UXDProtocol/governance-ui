@@ -16,6 +16,7 @@ import useGovernanceAssets from '@hooks/useGovernanceAssets';
 import dayjs from 'dayjs';
 import { notify } from '@utils/notifications';
 import Loading from '@components/Loading';
+import { getProgramVersionForRealm } from '@models/registry/api';
 
 const MyProposalsBn = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -61,7 +62,7 @@ const MyProposalsBn = () => {
         ? 0 // If vote is finalized then set the timestamp to 0 to make it expired
         : x.account.votingAt && governance
         ? x.account.votingAt.toNumber() +
-          governance.account.config.maxVotingTime
+          governance.account.config.baseVotingTime
         : undefined
       : undefined;
     return (
@@ -156,6 +157,8 @@ const MyProposalsBn = () => {
       return withRelinquishVote(
         instructions,
         realm!.owner,
+        getProgramVersionForRealm(realmInfo!),
+        realm!.pubkey,
         proposal.account.governance,
         proposal.pubkey,
         voterTokenRecord!.pubkey,

@@ -1,14 +1,8 @@
-import { useProgramVersionByIdQuery } from './queries/useProgramVersionQuery';
-import { useRealmQuery } from './queries/realm';
+import { PROGRAM_VERSION_V3 } from '@solana/spl-governance';
 
 const useProgramVersion = () => {
-  const realm = useRealmQuery().data?.result;
-  const queriedVersion = useProgramVersionByIdQuery(realm?.owner).data as
-    | 1
-    | 2
-    | 3
-    | undefined;
-  return queriedVersion;
+  // HARDCODED
+  return PROGRAM_VERSION_V3;
 };
 
 export default useProgramVersion;

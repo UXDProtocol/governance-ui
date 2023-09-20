@@ -40,6 +40,11 @@ export function ExecuteAllInstructionButton({
   const fetchRealm = useWalletStore((s) => s.actions.fetchRealm);
   const connected = useWalletStore((s) => s.connected);
 
+  console.log(
+    'proposalInstructions',
+    JSON.stringify(proposalInstructions, null, 10),
+  );
+
   const [currentSlot, setCurrentSlot] = useState(0);
 
   const canExecuteAt = proposal?.account.votingCompletedAt

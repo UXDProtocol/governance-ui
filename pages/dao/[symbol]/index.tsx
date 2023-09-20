@@ -228,7 +228,8 @@ const REALM = () => {
                       .map(([k, v]) => {
                         // FIX: DO NOT LOAD MULTI CHOICE PROPOSALS
                         if (
-                          v.account.voteType.type === VoteTypeKind.MultiChoice
+                          v.account.voteType === undefined ||
+                          v.account.voteType?.type === VoteTypeKind.MultiChoice
                         ) {
                           return null;
                         }

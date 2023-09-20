@@ -1,4 +1,5 @@
 import { BN } from '@project-serum/anchor';
+import { MultiChoiceType } from '@solana/spl-governance';
 import { PublicKey } from '@solana/web3.js';
 
 export enum VoteTypeKind {
@@ -45,24 +46,50 @@ export class RelinquishVoteArgs {
 
 export class VoteType {
   public type: VoteTypeKind;
-  public choiceCount: number | undefined;
+  public choiceType: MultiChoiceType | undefined;
+  public minVoterOptions: number | undefined;
+  public maxVoterOptions: number | undefined;
+  public maxWinningOptions: number | undefined;
 
-  constructor(args: { type: VoteTypeKind; choiceCount: number | undefined }) {
+  constructor(args: {
+    type: VoteTypeKind;
+    choiceType: MultiChoiceType | undefined;
+    minVoterOptions: number | undefined;
+    maxVoterOptions: number | undefined;
+    maxWinningOptions: number | undefined;
+  }) {
     this.type = args.type;
-    this.choiceCount = args.choiceCount;
+    this.choiceType = args.choiceType;
+    this.minVoterOptions = args.minVoterOptions;
+    this.maxVoterOptions = args.maxVoterOptions;
+    this.maxWinningOptions = args.maxWinningOptions;
   }
 
   public static SINGLE_CHOICE: VoteType = new VoteType({
     type: VoteTypeKind.SingleChoice,
-    choiceCount: undefined,
+    choiceType: undefined,
+    minVoterOptions: undefined,
+    maxVoterOptions: undefined,
+    maxWinningOptions: undefined,
   });
 
-  public static MULTI_CHOICE: (choiceCount: number) => VoteType = (
-    choiceCount,
+  public static MULTI_CHOICE: (
+    choiceType: MultiChoiceType,
+    minVoterOptions: number,
+    maxVoterOptions: number,
+    maxWinningOptions: number,
+  ) => VoteType = (
+    choiceType,
+    minVoterOptions,
+    maxVoterOptions,
+    maxWinningOptions,
   ) =>
     new VoteType({
       type: VoteTypeKind.MultiChoice,
-      choiceCount,
+      choiceType,
+      minVoterOptions,
+      maxVoterOptions,
+      maxWinningOptions,
     });
 
   public isSingleChoice(): boolean {

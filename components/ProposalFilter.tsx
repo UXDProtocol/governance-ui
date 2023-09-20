@@ -19,6 +19,7 @@ const initialFilterSettings: Filters = {
   [EnhancedProposalState.Cancelled]: false,
   [EnhancedProposalState.Defeated]: true,
   [EnhancedProposalState.ExecutingWithErrors]: true,
+  [EnhancedProposalState.Vetoed]: true,
 };
 
 const StyledAlertCount = styled.span`
@@ -164,6 +165,15 @@ const ProposalFilter = ({ filters, setFilters }) => {
                   checked={filterSettings[EnhancedProposalState.Voting]}
                   onChange={(checked) =>
                     handleFilters(EnhancedProposalState.Voting, checked)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                Vetoed
+                <Switch
+                  checked={filterSettings[EnhancedProposalState.Vetoed]}
+                  onChange={(checked) =>
+                    handleFilters(EnhancedProposalState.Vetoed, checked)
                   }
                 />
               </div>
