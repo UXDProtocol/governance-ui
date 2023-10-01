@@ -1,3 +1,4 @@
+import { u8 } from 'buffer-layout'
 import { AccountInfo, Connection, PublicKey } from '@solana/web3.js'
 import { gistApi } from './github'
 import { arweaveDescriptionApi } from './arweave'
@@ -106,3 +107,6 @@ export const getProposalDepositPk = (
   )
   return proposalDeposit
 }
+
+// Anchor instruction adds a 7 byte discriminator prefix on instruction data
+export const ANCHOR_DISCRIMINATOR_LAYOUT = Array.from(new Array(7)).map(u8)
