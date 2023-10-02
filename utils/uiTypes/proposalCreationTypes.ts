@@ -10,6 +10,7 @@ import { consts as foresightConsts } from '@foresight-tmp/foresight-sdk'
 import { AssetAccount, StakeAccount } from '@utils/uiTypes/assets'
 import { RealmInfo } from '@models/registry/api'
 import * as PaymentStreaming from '@mean-dao/payment-streaming'
+import { SplTokenUIName } from '@utils/splTokens'
 
 // Alphabetical order
 export enum PackageEnum {
@@ -25,6 +26,8 @@ export enum PackageEnum {
   Serum,
   Solend,
   Switchboard,
+  UXDProtocol,
+  UXDStaking,
   VsrPlugin,
 }
 
@@ -311,6 +314,86 @@ export interface JoinDAOForm {
   amount?: number
 }
 
+export interface UXDInitializeControllerForm {
+  governedAccount?: AssetAccount
+  mintDecimals: number
+}
+
+export interface UXDEditControllerForm {
+  governedAccount?: AssetAccount
+  redeemableGlobalSupplyCap?: number
+}
+
+export interface UXDInitializeIdentityDepositoryForm {
+  governedAccount?: AssetAccount
+}
+
+export interface UXDEditIdentityDepositoryForm {
+  governedAccount?: AssetAccount
+  redeemableAmountUnderManagementCap: number
+  mintingDisabled: boolean
+}
+
+export interface UXDMintWithIdentityDepositoryForm {
+  governedAccount?: AssetAccount
+  uxdProgram: string
+  collateralAmount: number
+  user: string
+}
+
+export interface UXDRedeemWithIdentityDepositoryForm {
+  governedAccount?: AssetAccount
+  uxdProgram: string
+  redeemableAmount: number
+  user: string
+}
+
+export interface UXDRegisterDepositoryForm {
+  governedAccount?: AssetAccount
+  depositoryType: string
+  collateralName?: string
+  redeemableDepositorySupplyCap: number
+  mintingFeeInBps: number
+  redeemingFeeInBps: number
+}
+
+export interface UXDEditDepositoryForm {
+  governedAccount?: AssetAccount
+  depositoryType: string
+  collateralName?: string
+  redeemableAmountUnderManagementCap: number
+  mintingFeeInBps: number
+  redeemingFeeInBps: number
+  profitsBeneficiaryCollateralChange: string
+}
+
+export interface UXDMintForm {
+  governedAccount?: AssetAccount
+  depositoryType: string
+  uxdProgram: string
+  collateralName?: string
+  collateralAmount: number
+  user: string
+}
+
+export interface UXDRedeemForm {
+  governedAccount?: AssetAccount
+  depositoryType: string
+  uxdProgram: string
+  collateralName?: string
+  redeemableAmount: number
+  user: string
+}
+
+export interface UXDInitializeStakingCampaignForm {
+  governedAccount?: AssetAccount
+  rewardMintUIName?: SplTokenUIName
+  stakedMintUIName?: SplTokenUIName
+  startTs?: number
+  endTs?: number
+  uiRewardAmountToDeposit?: number
+}
+
 export enum Instructions {
   Base64,
   ChangeMakeDonation,
@@ -405,6 +488,17 @@ export enum Instructions {
   RemoveServiceFromDID,
   RevokeGoverningTokens,
   SetMintAuthority,
+  UXDInitializeController,
+  UXDEditController,
+  UXDInitializeIdentityDepository,
+  UXDEditIdentityDepository,
+  UXDMintWithIdentityDepository,
+  UXDRedeemWithIdentityDepository,
+  UXDRegisterDepository,
+  UXDEditDepository,
+  UXDMint,
+  UXDRedeem,
+  UXDStakingInitializeStakingCampaign,
 }
 
 export interface ComponentInstructionData {
