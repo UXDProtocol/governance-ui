@@ -144,6 +144,7 @@ import UXDRegisterDepository from './components/instructions/UXDProtocol/Registe
 import UXDEditDepository from './components/instructions/UXDProtocol/EditDepository'
 import UXDMint from './components/instructions/UXDProtocol/Mint'
 import UXDRedeem from './components/instructions/UXDProtocol/Redeem'
+import UXDInitializeStakingCampaign from './components/instructions/UXDStaking/InitializeStakingCampaign'
 import MultiChoiceForm from '../../../../components/MultiChoiceForm'
 
 const TITLE_LENGTH_LIMIT = 130
@@ -604,6 +605,7 @@ const New = () => {
       [Instructions.UXDEditDepository]: UXDEditDepository,
       [Instructions.UXDMint]: UXDMint,
       [Instructions.UXDRedeem]: UXDRedeem,
+      [Instructions.UXDStakingInitializeStakingCampaign]: UXDInitializeStakingCampaign,
     }),
     [governance?.pubkey?.toBase58()]
   )

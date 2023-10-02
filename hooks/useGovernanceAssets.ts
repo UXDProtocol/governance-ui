@@ -195,6 +195,10 @@ export default function useGovernanceAssets() {
       name: 'UXD Protocol',
       image: '/img/uxd.png',
     },
+    [PackageEnum.UXDStaking]: {
+      name: 'UXD Staking',
+      image: '/img/uxd-staking.png',
+    },
     [PackageEnum.VsrPlugin]: {
       name: 'Vsr Plugin',
       isVisible:
@@ -790,6 +794,36 @@ export default function useGovernanceAssets() {
       isVisible: canUseAnyInstruction,
       packageId: PackageEnum.UXDProtocol,
     },
+    // [InstructionEnum.UXDStakingMigrateStakingCampaignFromV1ToV2]: {
+    //   name: 'Migrate Staking Campaign From v1 to v2',
+    //   isVisible: canUseAnyInstruction,
+    //   packageId: PackageEnum.UXDStaking,
+    // },
+    [Instructions.UXDStakingInitializeStakingCampaign]: {
+      name: 'Initialize Staking Campaign',
+      isVisible: canUseAnyInstruction,
+      packageId: PackageEnum.UXDStaking,
+    },
+    // [InstructionEnum.UXDStakingFinalizeStakingCampaign]: {
+    //   name: 'Finalize Staking Campaign',
+    //   isVisible: canUseAnyInstruction,
+    //   packageId: PackageEnum.UXDStaking,
+    // },
+    // [InstructionEnum.UXDStakingAddStakingOption]: {
+    //   name: 'Add Staking Option',
+    //   isVisible: canUseAnyInstruction,
+    //   packageId: PackageEnum.UXDStaking,
+    // },
+    // [InstructionEnum.UXDStakingActivateStakingOption]: {
+    //   name: 'Activate Staking Option',
+    //   isVisible: canUseAnyInstruction,
+    //   packageId: PackageEnum.UXDStaking,
+    // },
+    // [InstructionEnum.UXDStakingRefillRewardVault]: {
+    //   name: 'Refill Reward Vault',
+    //   isVisible: canUseAnyInstruction,
+    //   packageId: PackageEnum.UXDStaking,
+    // },
 
     /*
       ██    ██ ███████ ██████      ██████  ██      ██    ██  ██████  ██ ███    ██

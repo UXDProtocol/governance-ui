@@ -100,6 +100,23 @@ export const SPL_TOKENS: {
   ...solendConfiguration.getSupportedCollateralMintsInformation(),
 } as const
 
+export type SplTokenUIName = typeof SPL_TOKENS[keyof typeof SPL_TOKENS]['name']
+
+export function getSplTokenInformationByUIName(
+  nameToMatch: SplTokenUIName
+): SplTokenInformation {
+  const item = Object.entries(SPL_TOKENS).find(
+    ([_, { name }]) => name === nameToMatch
+  )
+
+  // theoretically impossible case
+  if (!item) {
+    throw new Error('Unable to find SPL token mint address by UI name')
+  }
+
+  return item[1]
+}
+
 export function getSplTokenNameByMint(mint: PublicKey): string {
   return (
     Object.values(SPL_TOKENS).find(

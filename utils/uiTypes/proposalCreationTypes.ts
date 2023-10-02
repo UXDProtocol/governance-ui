@@ -10,6 +10,7 @@ import { consts as foresightConsts } from '@foresight-tmp/foresight-sdk'
 import { AssetAccount, StakeAccount } from '@utils/uiTypes/assets'
 import { RealmInfo } from '@models/registry/api'
 import * as PaymentStreaming from '@mean-dao/payment-streaming'
+import { SplTokenUIName } from '@utils/splTokens'
 
 // Alphabetical order
 export enum PackageEnum {
@@ -26,6 +27,7 @@ export enum PackageEnum {
   Solend,
   Switchboard,
   UXDProtocol,
+  UXDStaking,
   VsrPlugin,
 }
 
@@ -383,6 +385,15 @@ export interface UXDRedeemForm {
   user: string
 }
 
+export interface UXDInitializeStakingCampaignForm {
+  governedAccount?: AssetAccount
+  rewardMintUIName?: SplTokenUIName
+  stakedMintUIName?: SplTokenUIName
+  startTs?: number
+  endTs?: number
+  uiRewardAmountToDeposit?: number
+}
+
 export enum Instructions {
   Base64,
   ChangeMakeDonation,
@@ -487,6 +498,7 @@ export enum Instructions {
   UXDEditDepository,
   UXDMint,
   UXDRedeem,
+  UXDStakingInitializeStakingCampaign,
 }
 
 export interface ComponentInstructionData {
