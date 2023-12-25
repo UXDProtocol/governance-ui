@@ -38,11 +38,15 @@ const schema = yup.object().shape({
     credixLpDepositoryWeightBps: yup
       .number()
       .min(0, 'weight bps should be min 0'),
+    alloyxVaultDepositoryWeightBps: yup
+      .number()
+      .min(0, 'weight bps should be min 0'),
   }),
   routerDepositories: yup.object().shape({
     identityDepository: yup.string(),
     mercurialVaultDepository: yup.string(),
     credixLpDepository: yup.string(),
+    alloyxVaultDepository: yup.string(),
   }),
   outflowLimitPerEpochAmount: yup
     .number()
@@ -133,26 +137,31 @@ const EditController = ({
     const slotsPerEpoch = slotsPerEpochChange ? form.slotsPerEpoch : undefined
     const depositoriesRoutingWeightBps =
       depositoriesRoutingWeightBpsChange &&
-      form.depositoriesRoutingWeightBps?.credixLpDepositoryWeightBps &&
       form.depositoriesRoutingWeightBps.identityDepositoryWeightBps &&
-      form.depositoriesRoutingWeightBps.mercurialVaultDepositoryWeightBps
+      form.depositoriesRoutingWeightBps.mercurialVaultDepositoryWeightBps &&
+      form.depositoriesRoutingWeightBps.credixLpDepositoryWeightBps &&
+      form.depositoriesRoutingWeightBps.alloyxVaultDepositoryWeightBps
         ? form.depositoriesRoutingWeightBps
         : undefined
 
     const routerDepositories =
       routerDepositoriesChange &&
-      form.routerDepositories?.credixLpDepository &&
       form.routerDepositories.identityDepository &&
-      form.routerDepositories.mercurialVaultDepository
+      form.routerDepositories.credixLpDepository &&
+      form.routerDepositories.mercurialVaultDepository &&
+      form.routerDepositories.alloyxVaultDepository
         ? {
-            credixLpDepository: new PublicKey(
-              form.routerDepositories.credixLpDepository
-            ),
             identityDepository: new PublicKey(
               form.routerDepositories.identityDepository
             ),
             mercurialVaultDepository: new PublicKey(
               form.routerDepositories.mercurialVaultDepository
+            ),
+            credixLpDepository: new PublicKey(
+              form.routerDepositories.credixLpDepository
+            ),
+            alloyxVaultDepository: new PublicKey(
+              form.routerDepositories.alloyxVaultDepository
             ),
           }
         : undefined
@@ -298,6 +307,25 @@ const EditController = ({
             }
             error={formErrors['depositoriesRoutingWeightBps']}
           />
+          <Input
+            label="Alloyx Vault Depository Routing Weight in Bps"
+            value={
+              form.depositoriesRoutingWeightBps?.alloyxVaultDepositoryWeightBps
+            }
+            type="number"
+            min={0}
+            max={10 ** 12}
+            onChange={(evt) =>
+              handleSetForm({
+                value: {
+                  ...form.depositoriesRoutingWeightBps,
+                  alloyxVaultDepositoryWeightBps: evt.target.value,
+                },
+                propertyName: 'depositoriesRoutingWeightBps',
+              })
+            }
+            error={formErrors['depositoriesRoutingWeightBps']}
+          />
         </>
       ) : null}
 
@@ -348,6 +376,21 @@ const EditController = ({
                 value: {
                   ...form.routerDepositories,
                   credixLpDepository: evt.target.value,
+                },
+                propertyName: 'routerDepositories',
+              })
+            }
+            error={formErrors['routerDepositories']}
+          />
+          <Input
+            label="Alloyx Vault Depository"
+            value={form.routerDepositories?.alloyxVaultDepository}
+            type="string"
+            onChange={(evt) =>
+              handleSetForm({
+                value: {
+                  ...form.routerDepositories,
+                  alloyxVaultDepository: evt.target.value,
                 },
                 propertyName: 'routerDepositories',
               })
