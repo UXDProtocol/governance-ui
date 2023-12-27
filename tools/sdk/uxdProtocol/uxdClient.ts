@@ -59,7 +59,6 @@ export const getDepositoryTypes = (
 export const getDepositoryMintSymbols = (cluster: EndpointTypes): string[] => [
   ...Object.keys(DEPOSITORY_MINTS[cluster]),
 ]
-
 export const getDepositoryMintInfo = (
   cluster: EndpointTypes,
   symbol: string

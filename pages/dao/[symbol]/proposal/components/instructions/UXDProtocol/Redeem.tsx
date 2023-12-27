@@ -59,7 +59,7 @@ const Redeem = ({
 
   const [form, setForm] = useState<UXDRedeemForm>({
     governedAccount: undefined,
-    depositoryType: DEPOSITORY_TYPES.ALLOYX_VAULT,
+    depositoryType: DEPOSITORY_TYPES.MERCURIAL_VAULT,
     redeemableAmount: 0,
     uxdProgram: 'UXD8m9cvwk4RcSxnX2HZ9VudQCEeDH6fRnB4CAP57Dr',
     user: '',

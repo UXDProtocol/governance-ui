@@ -114,7 +114,6 @@ const registerAlloyxVaultDepositoryIx = async ({
   )
 }
 
-
 export const registerUXDDepositoryIx = async (
   connection: ConnectionContext,
   uxdProgramId: PublicKey,
@@ -150,6 +149,6 @@ export const registerUXDDepositoryIx = async (
         params,
       })
     default:
-      throw new Error('Depository type not handled')
+      throw new Error('Register depository type not handled: ' + depositoryType)
   }
 }

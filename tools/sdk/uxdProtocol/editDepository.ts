@@ -162,6 +162,6 @@ export const editUXDDepositoryIx = async (
         params,
       })
     default:
-      throw new Error("Unsupported edit depository type:" + depositoryType)
+      throw new Error("Edit depository type unknown:" + depositoryType)
   }
 }

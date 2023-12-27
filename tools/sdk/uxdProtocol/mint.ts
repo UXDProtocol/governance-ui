@@ -107,6 +107,6 @@ export const mintUXDIx = async (
         params,
       })
     default:
-      throw new Error("Invalid mint depository type: " + depositoryType)
+      throw new Error("Mint depository type unknown: " + depositoryType)
   }
 }
