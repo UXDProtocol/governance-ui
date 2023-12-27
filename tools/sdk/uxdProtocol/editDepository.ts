@@ -1,9 +1,5 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import {
-  UXDClient,
-  Controller,
-  UXD_DECIMALS,
-} from '@uxd-protocol/uxd-client'
+import { UXDClient, Controller, UXD_DECIMALS } from '@uxd-protocol/uxd-client'
 import { ConnectionContext } from '@utils/connection'
 import {
   DEPOSITORY_TYPES,
@@ -162,6 +158,6 @@ export const editUXDDepositoryIx = async (
         params,
       })
     default:
-      throw new Error("Edit depository type unknown:" + depositoryType)
+      throw new Error('Edit depository type unknown: ' + depositoryType)
   }
 }

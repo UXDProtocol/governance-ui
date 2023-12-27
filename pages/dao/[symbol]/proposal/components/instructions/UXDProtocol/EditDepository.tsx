@@ -57,14 +57,11 @@ const EditDepository = ({
   index: number
   governance: ProgramAccount<Governance> | null
 }) => {
-  const [mintingFeesInBpsChange, setMintingFeesInBpsChange] = useState<boolean>(
-    false
-  )
+  const [mintingFeesInBpsChange, setMintingFeesInBpsChange] =
+    useState<boolean>(false)
 
-  const [
-    redeemingFeesInBpsChange,
-    setRedeemingFeesInBpsChange,
-  ] = useState<boolean>(false)
+  const [redeemingFeesInBpsChange, setRedeemingFeesInBpsChange] =
+    useState<boolean>(false)
 
   const [
     redeemableAmountUnderManagementCapChange,
@@ -131,9 +128,10 @@ const EditDepository = ({
       ? form.redeemingFeeInBps
       : undefined
 
-    const redeemableAmountUnderManagementCap = redeemableAmountUnderManagementCapChange
-      ? form.redeemableAmountUnderManagementCap
-      : undefined
+    const redeemableAmountUnderManagementCap =
+      redeemableAmountUnderManagementCapChange
+        ? form.redeemableAmountUnderManagementCap
+        : undefined
 
     const profitsBeneficiaryCollateral = profitsBeneficiaryCollateralChange
       ? new PublicKey(form.profitsBeneficiaryCollateralChange)

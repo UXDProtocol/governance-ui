@@ -1,9 +1,5 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import {
-  UXD_DECIMALS,
-  Controller,
-  UXDClient,
-} from '@uxd-protocol/uxd-client'
+import { UXD_DECIMALS, Controller, UXDClient } from '@uxd-protocol/uxd-client'
 import { ConnectionContext } from '@utils/connection'
 import {
   DEPOSITORY_TYPES,
@@ -106,6 +102,6 @@ export const redeemUXDIx = async (
         params,
       })
     default:
-      throw new Error("Invalid redeem depository type: " + depositoryType)
+      throw new Error('Redeem depository type unknown: ' + depositoryType)
   }
 }

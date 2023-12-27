@@ -1,9 +1,5 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import {
-  UXD_DECIMALS,
-  Controller,
-  UXDClient,
-} from '@uxd-protocol/uxd-client'
+import { UXD_DECIMALS, Controller, UXDClient } from '@uxd-protocol/uxd-client'
 import { ConnectionContext } from '@utils/connection'
 import {
   DEPOSITORY_TYPES,
@@ -107,6 +103,6 @@ export const mintUXDIx = async (
         params,
       })
     default:
-      throw new Error("Mint depository type unknown: " + depositoryType)
+      throw new Error('Mint depository type unknown: ' + depositoryType)
   }
 }

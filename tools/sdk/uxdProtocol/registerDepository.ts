@@ -1,9 +1,5 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js'
-import {
-  UXDClient,
-  UXD_DECIMALS,
-  Controller,
-} from '@uxd-protocol/uxd-client'
+import { UXDClient, UXD_DECIMALS, Controller } from '@uxd-protocol/uxd-client'
 import { ConnectionContext } from '@utils/connection'
 import {
   getCredixLpDepository,
@@ -149,6 +145,6 @@ export const registerUXDDepositoryIx = async (
         params,
       })
     default:
-      throw new Error('Register depository type not handled: ' + depositoryType)
+      throw new Error('Register depository type unknown: ' + depositoryType)
   }
 }

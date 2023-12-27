@@ -39,7 +39,7 @@ export enum DEPOSITORY_TYPES {
   IDENTITY = 'Identity',
   MERCURIAL_VAULT = 'MercurialVault',
   CREDIX_LP = 'CredixLp',
-  ALLOYX_VAULT = "AlloyxVault"
+  ALLOYX_VAULT = 'AlloyxVault',
 }
 
 export const getDepositoryTypes = (
@@ -76,14 +76,18 @@ export const getMercurialVaultDepository = (
   uxdProgramId: PublicKey,
   depositoryMintName: string
 ) => {
-  const collateralMintAddress = getDepositoryMintInfo(
+  const collateralMint = getDepositoryMintInfo(
     connection.cluster,
     depositoryMintName
-  ).address
+  )
   return MercurialVaultDepository.initialize({
     connection: connection.current,
-    collateralMint: collateralMintAddress,
-    collateralSymbol: depositoryMintName,
+    collateralMint: {
+      mint: collateralMint.address,
+      name: depositoryMintName,
+      symbol: depositoryMintName,
+      decimals: collateralMint.decimals,
+    },
     uxdProgramId,
   })
 }
@@ -119,10 +123,31 @@ export const getAlloyxVaultDepository = (
     connection.cluster,
     depositoryMintName
   ).address
+  const vaultInfo =
+    connection.cluster == 'devnet'
+      ? {
+          vaultId: 'uxd-debug',
+          vaultMint: new PublicKey(
+            'CBQcnyoVjdCyPf2nnhPjbMJL18FEtTuPA9nQPrS7wJPF'
+          ),
+        }
+      : {
+          vaultId: 'diversified_public_credit',
+          vaultMint: new PublicKey(
+            'EF6UUehY8YHUiNBp9yp6HVj1nknK1vW2kgTdZwZT2px7'
+          ),
+        }
+  const alloyxProgramId =
+    connection.cluster == 'devnet'
+      ? new PublicKey('8U29WVwDFLxFud36okhqrngUquaZqVnVL9uE5G8DzX5c')
+      : new PublicKey('5fuCN8tquSXRJ97f5TP31cLwViuzHmdkyqiprqtz2DTx')
   return AlloyxVaultDepository.initialize({
     connection: connection.current,
     collateralMint: collateralMintAddress,
     collateralSymbol: depositoryMintName,
+    alloyxVaultId: vaultInfo.vaultId,
+    alloyxVaultMint: vaultInfo.vaultMint,
+    alloyxProgramId: alloyxProgramId,
     uxdProgramId,
   })
 }

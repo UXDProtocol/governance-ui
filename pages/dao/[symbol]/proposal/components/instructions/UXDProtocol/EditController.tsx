@@ -69,27 +69,21 @@ const EditController = ({
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
   const { assetAccounts } = useGovernanceAssets()
-  const [
-    redeemableGlobalSupplyCapChange,
-    setRedeemableGlobalSupplyCapChange,
-  ] = useState<boolean>(false)
+  const [redeemableGlobalSupplyCapChange, setRedeemableGlobalSupplyCapChange] =
+    useState<boolean>(false)
   const [
     depositoriesRoutingWeightBpsChange,
     setDepositoriesRoutingWeightBpsChange,
   ] = useState<boolean>(false)
-  const [
-    routerDepositoriesChange,
-    setRouterDepositoriesChange,
-  ] = useState<boolean>(false)
+  const [routerDepositoriesChange, setRouterDepositoriesChange] =
+    useState<boolean>(false)
 
   const [
     outflowLimitPerEpochAmountChange,
     setOutflowLimitPerEpochAmountChange,
   ] = useState<boolean>(false)
-  const [
-    outflowLimitPerEpochBpsChange,
-    setOutflowLimitPerEpochBpsChange,
-  ] = useState<boolean>(false)
+  const [outflowLimitPerEpochBpsChange, setOutflowLimitPerEpochBpsChange] =
+    useState<boolean>(false)
   const [slotsPerEpochChange, setSlotsPerEpochChange] = useState<boolean>(false)
 
   const [form, setForm] = useState<UXDEditControllerForm>({
@@ -137,6 +131,7 @@ const EditController = ({
     const slotsPerEpoch = slotsPerEpochChange ? form.slotsPerEpoch : undefined
     const depositoriesRoutingWeightBps =
       depositoriesRoutingWeightBpsChange &&
+      form.depositoriesRoutingWeightBps &&
       form.depositoriesRoutingWeightBps.identityDepositoryWeightBps &&
       form.depositoriesRoutingWeightBps.mercurialVaultDepositoryWeightBps &&
       form.depositoriesRoutingWeightBps.credixLpDepositoryWeightBps &&
@@ -146,6 +141,7 @@ const EditController = ({
 
     const routerDepositories =
       routerDepositoriesChange &&
+      form.routerDepositories &&
       form.routerDepositories.identityDepository &&
       form.routerDepositories.credixLpDepository &&
       form.routerDepositories.mercurialVaultDepository &&
