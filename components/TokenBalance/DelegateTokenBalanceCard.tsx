@@ -1,4 +1,3 @@
-import { DisplayAddress } from '@cardinal/namespaces-components'
 import Select from '@components/inputs/Select'
 import useWalletOnePointOh from '@hooks/useWalletOnePointOh'
 import {
@@ -149,15 +148,9 @@ const DelegateBalanceCard = () => {
                 componentLabel={
                   ownCouncilTokenRecord ? (
                     <div className="relative">
-                      <DisplayAddress
-                        connection={connection.current}
-                        address={
-                          ownCouncilTokenRecord.account.governingTokenOwner
-                        }
-                        height="12px"
-                        width="100px"
-                        dark={true}
-                      />
+                      <span>
+                        {ownCouncilTokenRecord.account.governingTokenOwner.toBase58()}
+                      </span>
                       <div className="absolute bg-bkg-1 bottom-0 left-0 w-full h-full opacity-0	" />
                     </div>
                   ) : (
@@ -174,13 +167,9 @@ const DelegateBalanceCard = () => {
                     value={councilDelegate.account.governingTokenOwner.toBase58()}
                   >
                     <div className="relative">
-                      <DisplayAddress
-                        connection={connection.current}
-                        address={councilDelegate.account.governingTokenOwner}
-                        height="12px"
-                        width="100px"
-                        dark={true}
-                      />
+                      <span>
+                        {councilDelegate.account.governingTokenOwner.toBase58()}
+                      </span>
                       <div className="absolute bg-bkg-1 bottom-0 left-0 w-full h-full opacity-0	" />
                     </div>
                   </Select.Option>
@@ -222,13 +211,9 @@ const DelegateBalanceCard = () => {
                           ownTokenRecord.account.governingTokenOwner.toBase58()
                         ]
                       ) : (
-                        <DisplayAddress
-                          connection={connection.current}
-                          address={ownTokenRecord.account.governingTokenOwner}
-                          height="12px"
-                          width="100px"
-                          dark={true}
-                        />
+                        <span>
+                          {ownTokenRecord.account.governingTokenOwner.toBase58()}
+                        </span>
                       )}
                       <div className="absolute bg-bkg-1 bottom-0 left-0 w-full h-full opacity-0	" />
                     </div>
@@ -257,15 +242,9 @@ const DelegateBalanceCard = () => {
                           }
                         </>
                       ) : (
-                        <DisplayAddress
-                          connection={connection.current}
-                          address={
-                            communityDelegate.account.governingTokenOwner
-                          }
-                          height="12px"
-                          width="100px"
-                          dark={true}
-                        />
+                        <span>
+                          {communityDelegate.account.governingTokenOwner.toBase58()}
+                        </span>
                       )}
                       <div className="absolute bg-bkg-1 bottom-0 left-0 w-full h-full opacity-0	" />
                     </div>

@@ -104,11 +104,11 @@ import UpdateConfigAuthority from './components/instructions/Serum/UpdateConfigA
 import UpdateConfigParams from './components/instructions/Serum/UpdateConfigParams'
 import { StyledLabel, inputClasses } from '@components/inputs/styles'
 import SelectInstructionType from '@components/SelectInstructionType'
-import MapleFinanceLenderDeposit from './components/instructions/MapleFinance/LenderDeposit'
-import MapleFinanceLendingUnlockDeposit from './components/instructions/MapleFinance/LenderUnlockDeposit'
-import MapleFinanceWithdrawalRequestInitialize from './components/instructions/MapleFinance/WithdrawalRequestInitialize'
-import MapleFinanceWithdrawalRequestExecute from './components/instructions/MapleFinance/WithdrawalRequestExecute'
-import MapleFinanceWithdrawalRequestClose from './components/instructions/MapleFinance/WithdrawalRequestClose'
+// import MapleFinanceLenderDeposit from './components/instructions/MapleFinance/LenderDeposit'
+// import MapleFinanceLendingUnlockDeposit from './components/instructions/MapleFinance/LenderUnlockDeposit'
+// import MapleFinanceWithdrawalRequestInitialize from './components/instructions/MapleFinance/WithdrawalRequestInitialize'
+// import MapleFinanceWithdrawalRequestExecute from './components/instructions/MapleFinance/WithdrawalRequestExecute'
+// import MapleFinanceWithdrawalRequestClose from './components/instructions/MapleFinance/WithdrawalRequestClose'
 import AddKeyToDID from './components/instructions/Identity/AddKeyToDID'
 import RemoveKeyFromDID from './components/instructions/Identity/RemoveKeyFromDID'
 import AddServiceToDID from './components/instructions/Identity/AddServiceToDID'
@@ -512,11 +512,11 @@ const New = () => {
       [Instructions.DualFinanceVote]: DualVote,
       [Instructions.DistributionCloseVaults]: CloseVaults,
       [Instructions.DistributionFillVaults]: FillVaults,
-      [Instructions.MapleFinanceLendingDeposit]: MapleFinanceLenderDeposit,
-      [Instructions.MapleFinanceLendingUnlockDeposit]: MapleFinanceLendingUnlockDeposit,
-      [Instructions.MapleFinanceWithdrawalRequestInitialize]: MapleFinanceWithdrawalRequestInitialize,
-      [Instructions.MapleFinanceWithdrawalRequestExecute]: MapleFinanceWithdrawalRequestExecute,
-      [Instructions.MapleFinanceWithdrawalRequestClose]: MapleFinanceWithdrawalRequestClose,
+      // [Instructions.MapleFinanceLendingDeposit]: MapleFinanceLenderDeposit,
+      // [Instructions.MapleFinanceLendingUnlockDeposit]: MapleFinanceLendingUnlockDeposit,
+      // [Instructions.MapleFinanceWithdrawalRequestInitialize]: MapleFinanceWithdrawalRequestInitialize,
+      // [Instructions.MapleFinanceWithdrawalRequestExecute]: MapleFinanceWithdrawalRequestExecute,
+      // [Instructions.MapleFinanceWithdrawalRequestClose]: MapleFinanceWithdrawalRequestClose,
       [Instructions.MeanCreateAccount]: MeanCreateAccount,
       [Instructions.MeanFundAccount]: MeanFundAccount,
       [Instructions.MeanWithdrawFromAccount]: MeanWithdrawFromAccount,

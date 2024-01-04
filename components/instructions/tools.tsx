@@ -35,7 +35,7 @@ import { MANGO_V4_INSTRUCTIONS } from './programs/mangoV4'
 import { DUAL_INSTRUCTIONS } from './programs/dual'
 import { SWITCHBOARD_INSTRUCTIONS } from './programs/switchboard'
 import { STAKE_INSTRUCTIONS } from './programs/stake'
-import { MAPLE_FINANCE_PROGRAM_INSTRUCTIONS } from './programs/mapleFinance'
+//import { MAPLE_FINANCE_PROGRAM_INSTRUCTIONS } from './programs/mapleFinance'
 import dayjs from 'dayjs'
 import { JUPITER_REF } from './programs/jupiterRef'
 import { UXD_PROGRAM_INSTRUCTIONS } from './programs/uxdProtocol'
@@ -455,7 +455,7 @@ export const INSTRUCTION_DESCRIPTORS = {
   ...MANGO_V4_INSTRUCTIONS,
   ...DUAL_INSTRUCTIONS,
   ...STAKE_INSTRUCTIONS,
-  ...MAPLE_FINANCE_PROGRAM_INSTRUCTIONS,
+  // ...MAPLE_FINANCE_PROGRAM_INSTRUCTIONS,
   ...JUPITER_REF,
   ...UXD_PROGRAM_INSTRUCTIONS,
 }

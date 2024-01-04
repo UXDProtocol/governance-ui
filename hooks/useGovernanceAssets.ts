@@ -171,10 +171,10 @@ export default function useGovernanceAssets() {
       name: 'Mango Market v4',
       image: '/img/mango.png',
     },
-    [PackageEnum.MapleFinance]: {
-      name: 'Maple Finance',
-      image: '/img/maplefinance.png',
-    },
+    // [PackageEnum.MapleFinance]: {
+    //   name: 'Maple Finance',
+    //   image: '/img/maplefinance.png',
+    // },
     [PackageEnum.MeanFinance]: {
       name: 'Mean Finance',
       image: '/img/meanfinance.png',
@@ -612,26 +612,26 @@ export default function useGovernanceAssets() {
       ██      ██ ██   ██ ██      ███████ ███████     ██      ██ ██   ████ ██   ██ ██   ████  ██████ ███████ 
     */
 
-    [Instructions.MapleFinanceLendingDeposit]: {
-      name: 'Lending Deposit',
-      packageId: PackageEnum.MapleFinance,
-    },
-    [Instructions.MapleFinanceLendingUnlockDeposit]: {
-      name: 'Lending Unlock Deposit',
-      packageId: PackageEnum.MapleFinance,
-    },
-    [Instructions.MapleFinanceWithdrawalRequestInitialize]: {
-      name: 'Withdrawal Request Initialize',
-      packageId: PackageEnum.MapleFinance,
-    },
-    [Instructions.MapleFinanceWithdrawalRequestExecute]: {
-      name: 'Withdrawal Request Execute',
-      packageId: PackageEnum.MapleFinance,
-    },
-    [Instructions.MapleFinanceWithdrawalRequestClose]: {
-      name: 'Withdrawal Request Close',
-      packageId: PackageEnum.MapleFinance,
-    },
+    // [Instructions.MapleFinanceLendingDeposit]: {
+    //   name: 'Lending Deposit',
+    //   packageId: PackageEnum.MapleFinance,
+    // },
+    // [Instructions.MapleFinanceLendingUnlockDeposit]: {
+    //   name: 'Lending Unlock Deposit',
+    //   packageId: PackageEnum.MapleFinance,
+    // },
+    // [Instructions.MapleFinanceWithdrawalRequestInitialize]: {
+    //   name: 'Withdrawal Request Initialize',
+    //   packageId: PackageEnum.MapleFinance,
+    // },
+    // [Instructions.MapleFinanceWithdrawalRequestExecute]: {
+    //   name: 'Withdrawal Request Execute',
+    //   packageId: PackageEnum.MapleFinance,
+    // },
+    // [Instructions.MapleFinanceWithdrawalRequestClose]: {
+    //   name: 'Withdrawal Request Close',
+    //   packageId: PackageEnum.MapleFinance,
+    // },
 
     /*
       ███    ███ ███████  █████  ███    ██     ███████ ██ ███    ██  █████  ███    ██  ██████ ███████

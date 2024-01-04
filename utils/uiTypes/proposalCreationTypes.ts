@@ -24,7 +24,7 @@ export enum PackageEnum {
   Identity,
   NftPlugin,
   MangoMarketV4,
-  MapleFinance,
+  //MapleFinance,
   MeanFinance,
   PsyFinance,
   Serum,
@@ -212,7 +212,7 @@ export interface ForesightHasCategoryId extends ForesightHasGovernedAccount {
 
 export interface ForesightMakeAddMarketListToCategoryParams
   extends ForesightHasCategoryId,
-  ForesightHasMarketListId { }
+    ForesightHasMarketListId {}
 
 export interface ForesightMakeResolveMarketParams extends ForesightHasMarketId {
   winner: number
@@ -455,11 +455,11 @@ export enum Instructions {
   MangoV4TokenAddBank,
   MangoV4AdminWithdrawTokenFees,
   MangoV4WithdrawPerpFees,
-  MapleFinanceLendingDeposit,
-  MapleFinanceLendingUnlockDeposit,
-  MapleFinanceWithdrawalRequestInitialize,
-  MapleFinanceWithdrawalRequestExecute,
-  MapleFinanceWithdrawalRequestClose,
+  // MapleFinanceLendingDeposit,
+  // MapleFinanceLendingUnlockDeposit,
+  // MapleFinanceWithdrawalRequestInitialize,
+  // MapleFinanceWithdrawalRequestExecute,
+  // MapleFinanceWithdrawalRequestClose,
   MeanCreateAccount,
   MeanCreateStream,
   MeanFundAccount,
