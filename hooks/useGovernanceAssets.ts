@@ -196,6 +196,10 @@ export default function useGovernanceAssets() {
       name: 'Switchboard',
       image: '/img/switchboard.png',
     },
+    [PackageEnum.UxdRedemption]: {
+      name: 'UXD Redemption',
+      image: '/img/uxd.svg',
+    },
     [PackageEnum.VsrPlugin]: {
       name: 'Vsr Plugin',
       isVisible:
@@ -747,6 +751,32 @@ export default function useGovernanceAssets() {
     [Instructions.WithdrawFromOracle]: {
       name: 'Withdraw from Oracle',
       packageId: PackageEnum.Switchboard,
+    },
+
+    /*
+      ██    ██ ██   ██ ██████      ██████  ███████ ██████  ███████ ███    ███ ██████  ████████ ██  ██████  ███    ██ 
+      ██    ██  ██ ██  ██   ██     ██   ██ ██      ██   ██ ██      ████  ████ ██   ██    ██    ██ ██    ██ ████   ██ 
+      ██    ██   ███   ██   ██     ██████  █████   ██   ██ █████   ██ ████ ██ ██████     ██    ██ ██    ██ ██ ██  ██ 
+      ██    ██  ██ ██  ██   ██     ██   ██ ██      ██   ██ ██      ██  ██  ██ ██         ██    ██ ██    ██ ██  ██ ██ 
+       ██████  ██   ██ ██████      ██   ██ ███████ ██████  ███████ ██      ██ ██         ██    ██  ██████  ██   ████ 
+    */
+
+    // UxdRedemptionStartPhaseTwo,
+    [Instructions.UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc]: {
+      name: 'Deposit Illiquid Insurance Fund into Realm USDC',
+      packageId: PackageEnum.UxdRedemption,
+    },
+    [Instructions.UxdRedemptionInitializeRealm]: {
+      name: 'Initialize Realm',
+      packageId: PackageEnum.UxdRedemption,
+    },
+    [Instructions.UxdRedemptionStartPhaseOne]: {
+      name: 'Start Phase One',
+      packageId: PackageEnum.UxdRedemption,
+    },
+    [Instructions.UxdRedemptionStartPhaseTwo]: {
+      name: 'Start Phase Two',
+      packageId: PackageEnum.UxdRedemption,
     },
 
     /*

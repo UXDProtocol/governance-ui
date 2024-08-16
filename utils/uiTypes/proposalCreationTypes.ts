@@ -26,6 +26,7 @@ export enum PackageEnum {
   Solend,
   Squads,
   Switchboard,
+  UxdRedemption,
   VsrPlugin,
 }
 
@@ -380,6 +381,10 @@ export enum Instructions {
   Transfer,
   TransferDomainName,
   UpdateTokenMetadata,
+  UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc,
+  UxdRedemptionInitializeRealm,
+  UxdRedemptionStartPhaseOne,
+  UxdRedemptionStartPhaseTwo,
   VotingMintConfig,
   WithdrawObligationCollateralAndRedeemReserveLiquidity,
   WithdrawValidatorStake,
