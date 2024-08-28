@@ -54,10 +54,10 @@ import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 
 const additionalPossibleMintAccounts = {
   Mango: [
-    new PublicKey('EGk8Gw7Z484mzAKb7GwCcqrZd4KwwsyU2Dv9woY6uDQu'),
-    new PublicKey('8gjzxiqcU87cvRc7hFiUJgxqLSV7AQnSttfWC5fD9aim'),
-    new PublicKey('G1Yc5696GcfL28uAWG6iCaKJwZd8sQzwPJTc2UacsjHN'),
-    new PublicKey('oW7juZxrhaGvWw5giRp3P3qTHEZpg2t8n8aXTCpBjNK'),
+    // new PublicKey('EGk8Gw7Z484mzAKb7GwCcqrZd4KwwsyU2Dv9woY6uDQu'),
+    // new PublicKey('8gjzxiqcU87cvRc7hFiUJgxqLSV7AQnSttfWC5fD9aim'),
+    // new PublicKey('G1Yc5696GcfL28uAWG6iCaKJwZd8sQzwPJTc2UacsjHN'),
+    // new PublicKey('oW7juZxrhaGvWw5giRp3P3qTHEZpg2t8n8aXTCpBjNK'),
   ],
 }
 const tokenAccountOwnerOffset = 32
@@ -157,12 +157,18 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
     if (additionalMintAccounts) {
       possibleMintAccountPks.push(...additionalMintAccounts)
     }
+
+    console.log('>>> possibleMintAccountPks', possibleMintAccountPks.length)
+
     // 1 - Load token accounts behind any type of governance
     const governedTokenAccounts = await loadGovernedTokenAccounts(
       connection,
       realm,
       governancesWithNativeTreasuryAddress
     )
+
+    console.log('>>> governedTokenAccounts', governedTokenAccounts.length)
+
     // 2 - Call to fetch token prices for every token account's mints
     await tokenPriceService.fetchTokenPrices(
       governedTokenAccounts.reduce((mints, governedTokenAccount) => {
@@ -185,6 +191,8 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
     )
     accounts.push(...stakeAccounts)
 
+    console.log('>>> accounts', accounts.length)
+
     set((s) => {
       s.loadTokenAccounts = false
       s.governedTokenAccounts = accounts
@@ -204,6 +212,9 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       governancesWithNativeTreasuryAddress,
       possibleMintAccountPks
     )
+
+    console.log('>>> mintAccounts', mintAccounts.length)
+
     accounts.push(...mintAccounts)
     set((s) => {
       s.loadMintAccounts = false
@@ -215,6 +226,9 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       connection,
       governancesWithNativeTreasuryAddress
     )
+
+    console.log('>>> programAccounts', programAccounts.length)
+
     accounts.push(...programAccounts)
     set((s) => {
       s.loadProgramAccounts = false
@@ -231,6 +245,9 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
           )
       )
     )
+
+    console.log('>>> genericGovernances', genericGovernances.length)
+
     accounts.push(...genericGovernances)
 
     set((s) => {
@@ -690,6 +707,8 @@ const getTokenAccountsInfo = async (
   }
 
   return tokenAccountsInfoJson.reduce((tokenAccountsInfo, { result }) => {
+    if (!result) return tokenAccountsInfo
+
     result.forEach(
       ({
         account: {
@@ -817,23 +836,36 @@ const loadGovernedTokenAccounts = async (
     ...auxiliaryTokenAccounts.map((x) => new PublicKey(x.owner)),
   ])
 
-  const tokenAccountsInfo = (
-    await Promise.all(
-      // Load infos in batch, cannot load 9999 accounts within one request
-      group(tokenAccountsOwnedByGovernances, 100).map((group) =>
-        getTokenAccountsInfo(connection, group)
-      )
-    )
-  ).flat()
+  const tokenAccountsInfo = []
 
-  const governedTokenAccounts = (
-    await Promise.all(
-      // Load infos in batch, cannot load 9999 accounts within one request
-      group(tokenAccountsInfo).map((group) =>
-        getTokenAssetAccounts(group, governancesArray, connection)
-      )
+  function grouping(array, size) {
+    const result = []
+    for (let i = 0; i < array.length; i += size) {
+      // @ts-ignore
+      result.push(array.slice(i, i + size))
+    }
+    return result
+  }
+
+  for (const group of grouping(tokenAccountsOwnedByGovernances, 10)) {
+    // Load infos in batch, cannot load 9999 accounts within one request
+    const groupInfo = await getTokenAccountsInfo(connection, group)
+    // @ts-ignore
+    tokenAccountsInfo.push(...groupInfo)
+  }
+
+  const governedTokenAccounts = []
+
+  for (const group of grouping(tokenAccountsInfo, 10)) {
+    // Load infos in batch, cannot load 9999 accounts within one request
+    const groupAccounts = await getTokenAssetAccounts(
+      group,
+      governancesArray,
+      connection
     )
-  ).flat()
+    // @ts-ignore
+    governedTokenAccounts.push(...groupAccounts)
+  }
 
   // Remove potential accounts duplicate
   return uniqueGovernedTokenAccounts(governedTokenAccounts)

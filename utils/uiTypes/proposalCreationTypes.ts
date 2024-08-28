@@ -25,6 +25,7 @@ export enum PackageEnum {
   Serum,
   Solend,
   Squads,
+  MapleFinance,
   Switchboard,
   VsrPlugin,
 }
@@ -294,6 +295,8 @@ export interface JoinDAOForm {
 }
 
 export enum Instructions {
+  MapleFinanceWithdrawalRequestInitialize,
+  MapleFinanceWithdrawalRequestExecute,
   Base64,
   Burn,
   ChangeMakeDonation,

@@ -32,11 +32,11 @@ const NewProposalBtn = () => {
     (communityOwnVoterWeight && communityOwnVoterWeight.value?.gtn(0)) ||
     (councilOwnVoterWeight && councilOwnVoterWeight.value?.gtn(0))
 
-  const canCreateProposal =
-    realm &&
-    hasVotingPower &&
-    !toManyCommunityOutstandingProposalsForUser &&
-    !toManyCouncilOutstandingProposalsForUse
+  const canCreateProposal = true
+  // realm &&
+  // hasVotingPower &&
+  // !toManyCommunityOutstandingProposalsForUser &&
+  // !toManyCouncilOutstandingProposalsForUse
 
   const tooltipContent = !connected
     ? 'Connect your wallet to create new proposal'

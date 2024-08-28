@@ -141,6 +141,8 @@ import PythRecoverAccount from './components/instructions/Pyth/PythRecoverAccoun
 import { useVoteByCouncilToggle } from '@hooks/useVoteByCouncilToggle'
 import BurnTokens from './components/instructions/BurnTokens'
 import RemoveLockup from './components/instructions/Validators/removeLockup'
+import WithdrawalRequestInitialize from './components/instructions/MapleFinance/WithdrawalRequestInitialize'
+import WithdrawalRequestExecute from './components/instructions/MapleFinance/WithdrawalRequestExecute'
 
 const TITLE_LENGTH_LIMIT = 130
 // the true length limit is either at the tx size level, and maybe also the total account size level (I can't remember)
@@ -511,6 +513,8 @@ const New = () => {
       [Instructions.MeanTransferStream]: MeanTransferStream,
       [Instructions.SquadsMeshRemoveMember]: MeshRemoveMember,
       [Instructions.SquadsMeshAddMember]: MeshAddMember,
+      [Instructions.MapleFinanceWithdrawalRequestInitialize]: WithdrawalRequestInitialize,
+      [Instructions.MapleFinanceWithdrawalRequestExecute]: WithdrawalRequestExecute,
       [Instructions.SquadsMeshChangeThresholdMember]: MeshChangeThresholdMember,
       [Instructions.PythRecoverAccount]: PythRecoverAccount,
       [Instructions.CreateSolendObligationAccount]: CreateObligationAccount,

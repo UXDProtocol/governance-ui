@@ -5,6 +5,8 @@ import {
   getAllProposals,
   getProposal,
   getProposalsByGovernance,
+  ProgramAccount,
+  Proposal,
 } from '@solana/spl-governance'
 import { fetchRealmByPubkey, useRealmQuery } from './realm'
 import { useRouter } from 'next/router'
@@ -13,7 +15,6 @@ import { useMemo } from 'react'
 import { useRealmGovernancesQuery } from './governance'
 import queryClient from './queryClient'
 import useLegacyConnectionContext from '@hooks/useLegacyConnectionContext'
-import { HIDDEN_PROPOSALS } from '@components/instructions/tools'
 
 export const proposalQueryKeys = {
   all: (endpoint: string) => [endpoint, 'Proposal'],
@@ -82,18 +83,27 @@ export const useRealmProposalsQuery = () => {
       if (!enabled) throw new Error()
       console.log('query: fetching realm proposals')
 
-      const results = (
-        await Promise.all(
-          governances.map((x) =>
-            // why not just get all proposals for a realm? what was i doing here?
-            getProposalsByGovernance(connection.current, realm.owner, x.pubkey)
-          )
-        )
-      )
-        .flat()
-        // Blacklisted proposals which should not be displayed in the UI
-        // hidden legacy accounts to declutter UI
-        .filter((x) => HIDDEN_PROPOSALS.get(x.pubkey.toBase58()) === undefined)
+      const results: ProgramAccount<Proposal>[] = [];
+
+      for (const x of governances) {
+        // why not just get all proposals for a realm? what was i doing here?
+        const proposals = await getProposalsByGovernance(connection.current, realm.owner, x.pubkey);
+        results.push(...proposals);
+      }
+
+      // const results = (
+      //   await Promise.all(
+      //     governances.map((x) =>
+      //       // why not just get all proposals for a realm? what was i doing here?
+      //       getProposalsByGovernance(connection.current, realm.owner, x.pubkey)
+      //     )
+      //   )
+      // )
+      //   .flat();
+
+      // Blacklisted proposals which should not be displayed in the UI
+      // hidden legacy accounts to declutter UI
+      // .filter((x) => HIDDEN_PROPOSALS.get(x.pubkey.toBase58()) === undefined)
 
       // TODO instead of using setQueryData, prefetch queries on mouseover ?
       results.forEach((x) => {

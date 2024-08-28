@@ -56,6 +56,7 @@
     "@hookform/resolvers": "2.8.10",
     "@identity.com/sol-did-client": "3.3.0",
     "@jup-ag/referral-sdk": "0.1.5",
+    "@maplelabs/syrup-sdk": "2.0.4",
     "@marinade.finance/marinade-ts-sdk": "2.0.9",
     "@mean-dao/payment-streaming": "4.0.3",
     "@metaplex-foundation/js": "0.19.4",
@@ -90,6 +91,7 @@
     "@solana-mobile/wallet-adapter-mobile": "2.0.0",
     "@solana/buffer-layout": "4.0.0",
     "@solana/governance-program-library": "npm:@civic/governance-program-library@0.18.2-beta.24",
+    "@solana/promises": "2.0.0-canary-20240812091942",
     "@solana/spl-account-compression": "~0.2.0",
     "@solana/spl-governance": "0.3.28",
     "@solana/spl-stake-pool": "1.1.5",
@@ -174,8 +176,7 @@
     "tsconfig-paths": "3.14.1",
     "urql": "3.0.3",
     "yup": "0.32.11",
-    "zustand": "3.7.2",
-    "@solana/promises": "2.0.0-canary-20240812091942"
+    "zustand": "3.7.2"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "2.3.0",

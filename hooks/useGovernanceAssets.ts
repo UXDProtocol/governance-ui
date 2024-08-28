@@ -140,6 +140,11 @@ export default function useGovernanceAssets() {
   //
   // Packages are visible by default
   const packages: Packages = {
+    // =================
+    [PackageEnum.MapleFinance]: {
+      name: "Maple Finance",
+    },
+    // =================
     [PackageEnum.Common]: {
       name: 'Common',
     },
@@ -213,6 +218,16 @@ export default function useGovernanceAssets() {
   //
   // If isVisible is not set, it is equal to canUseAnyInstruction
   const instructionsMap: InstructionsMap = {
+    /* =============== MAPLE FINANCE ===============*/
+    [Instructions.MapleFinanceWithdrawalRequestInitialize]: {
+      name: 'Withdrawal Request Initialize',
+      packageId: PackageEnum.MapleFinance,
+    },
+    [Instructions.MapleFinanceWithdrawalRequestExecute]: {
+      name: 'Withdrawal Request Execute',
+      packageId: PackageEnum.MapleFinance,
+    },
+
     /*
         ██████  ██████  ███    ███ ███    ███  ██████  ███    ██
        ██      ██    ██ ████  ████ ████  ████ ██    ██ ████   ██
