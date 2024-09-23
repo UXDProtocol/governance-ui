@@ -90,7 +90,6 @@ export default function InitializeRealm({
 
       const instruction = await uxdRedemptionProgram.methods
         .initializeRealm({
-          uxpTrueCirculatingSupply: new BN(0), // TODO: Will soon not exist anymore, waiting for latest IDL
           liquidInsuranceFundUsdcAmount: new BN(
             form.liquidInsuranceFundUsdcAmount * 10 ** 6
           ),

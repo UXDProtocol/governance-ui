@@ -4,7 +4,7 @@ import * as yup from 'yup'
 import { isFormValid, validatePubkey } from '@utils/formValidation'
 import { UiInstruction } from '@utils/uiTypes/proposalCreationTypes'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
-import { Governance, SYSTEM_PROGRAM_ID } from '@solana/spl-governance'
+import { Governance } from '@solana/spl-governance'
 import { ProgramAccount } from '@solana/spl-governance'
 import { serializeInstructionToBase64 } from '@solana/spl-governance'
 import useWalletOnePointOh from '@hooks/useWalletOnePointOh'
@@ -14,7 +14,6 @@ import { NewProposalContext } from '../../../new'
 import { PublicKey } from '@solana/web3.js'
 import { AssetAccount } from '@utils/uiTypes/assets'
 import useUXDRedemptionProgram from '@hooks/useUXDRedemptionProgram'
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import * as uxdRedemptionUtils from '@tools/sdk/uxdRedemption/utils'
 
 export interface StartPhaseOneForm {
@@ -60,10 +59,6 @@ export default function StartPhaseOne({
       const realmPda = uxdRedemptionUtils.getRealmPda(
         uxdRedemptionProgram.programId
       )
-      const realmUsdcPda = uxdRedemptionUtils.getRealmUsdcPda(
-        realmPda,
-        uxdRedemptionProgram.programId
-      )
 
       const instruction = await uxdRedemptionProgram.methods
         .startPhaseOne()
@@ -71,9 +66,6 @@ export default function StartPhaseOne({
           payer: wallet.publicKey,
           realm: realmPda,
           authority: form.governedAccount.pubkey,
-          systemProgram: SYSTEM_PROGRAM_ID,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          realmUsdc: realmUsdcPda,
         })
         .instruction()
 

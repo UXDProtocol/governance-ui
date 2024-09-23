@@ -1,5 +1,5 @@
 export type Redemption = {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "redemption",
   "instructions": [
     {
@@ -644,30 +644,6 @@ export type Redemption = {
           "docs": [
             "#3"
           ]
-        },
-        {
-          "name": "realmUsdc",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "#4"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "#5"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "#6"
-          ]
         }
       ],
       "args": []
@@ -712,6 +688,56 @@ export type Redemption = {
           "docs": [
             "#4"
           ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "spillRealm",
+      "docs": [
+        "Once all phases are finished, we can withdraw remaining funds",
+        "The requested usdc will be transfered back to the spill account"
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "#1 - Permissioned IX, can be called only by the realm's authority"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "#2"
+          ]
+        },
+        {
+          "name": "realm",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#2"
+          ]
+        },
+        {
+          "name": "realmUsdc",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#3"
+          ]
+        },
+        {
+          "name": "spillUsdc",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#4"
+          ]
         },
         {
           "name": "systemProgram",
@@ -730,7 +756,12 @@ export type Redemption = {
           ]
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "usdcAmount",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -804,7 +835,7 @@ export type Redemption = {
             "type": "publicKey"
           },
           {
-            "name": "uxpTrueCirculatingSupply",
+            "name": "uxpInitialSupply",
             "type": "u64"
           },
           {
@@ -852,11 +883,15 @@ export type Redemption = {
             "type": "u64"
           },
           {
+            "name": "spilledUsdcAmount",
+            "type": "u64"
+          },
+          {
             "name": "reserved",
             "type": {
               "array": [
                 "u8",
-                496
+                488
               ]
             }
           }
@@ -870,10 +905,6 @@ export type Redemption = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "uxpTrueCirculatingSupply",
-            "type": "u64"
-          },
           {
             "name": "liquidInsuranceFundUsdcAmount",
             "type": "u64"
@@ -920,7 +951,7 @@ export type Redemption = {
 };
 
 export const IDL: Redemption = {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "redemption",
   "instructions": [
     {
@@ -1565,30 +1596,6 @@ export const IDL: Redemption = {
           "docs": [
             "#3"
           ]
-        },
-        {
-          "name": "realmUsdc",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "#4"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "#5"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "#6"
-          ]
         }
       ],
       "args": []
@@ -1633,6 +1640,56 @@ export const IDL: Redemption = {
           "docs": [
             "#4"
           ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "spillRealm",
+      "docs": [
+        "Once all phases are finished, we can withdraw remaining funds",
+        "The requested usdc will be transfered back to the spill account"
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "#1 - Permissioned IX, can be called only by the realm's authority"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "#2"
+          ]
+        },
+        {
+          "name": "realm",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#2"
+          ]
+        },
+        {
+          "name": "realmUsdc",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#3"
+          ]
+        },
+        {
+          "name": "spillUsdc",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#4"
+          ]
         },
         {
           "name": "systemProgram",
@@ -1651,7 +1708,12 @@ export const IDL: Redemption = {
           ]
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "usdcAmount",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -1725,7 +1787,7 @@ export const IDL: Redemption = {
             "type": "publicKey"
           },
           {
-            "name": "uxpTrueCirculatingSupply",
+            "name": "uxpInitialSupply",
             "type": "u64"
           },
           {
@@ -1773,11 +1835,15 @@ export const IDL: Redemption = {
             "type": "u64"
           },
           {
+            "name": "spilledUsdcAmount",
+            "type": "u64"
+          },
+          {
             "name": "reserved",
             "type": {
               "array": [
                 "u8",
-                496
+                488
               ]
             }
           }
@@ -1791,10 +1857,6 @@ export const IDL: Redemption = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "uxpTrueCirculatingSupply",
-            "type": "u64"
-          },
           {
             "name": "liquidInsuranceFundUsdcAmount",
             "type": "u64"

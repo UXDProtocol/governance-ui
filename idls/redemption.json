@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "redemption",
   "instructions": [
     {
@@ -644,30 +644,6 @@
           "docs": [
             "#3"
           ]
-        },
-        {
-          "name": "realmUsdc",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "#4"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "#5"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "#6"
-          ]
         }
       ],
       "args": []
@@ -712,6 +688,56 @@
           "docs": [
             "#4"
           ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "spillRealm",
+      "docs": [
+        "Once all phases are finished, we can withdraw remaining funds",
+        "The requested usdc will be transfered back to the spill account"
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "#1 - Permissioned IX, can be called only by the realm's authority"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "#2"
+          ]
+        },
+        {
+          "name": "realm",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#2"
+          ]
+        },
+        {
+          "name": "realmUsdc",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#3"
+          ]
+        },
+        {
+          "name": "spillUsdc",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "#4"
+          ]
         },
         {
           "name": "systemProgram",
@@ -730,7 +756,12 @@
           ]
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "usdcAmount",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -804,7 +835,7 @@
             "type": "publicKey"
           },
           {
-            "name": "uxpTrueCirculatingSupply",
+            "name": "uxpInitialSupply",
             "type": "u64"
           },
           {
@@ -852,11 +883,15 @@
             "type": "u64"
           },
           {
+            "name": "spilledUsdcAmount",
+            "type": "u64"
+          },
+          {
             "name": "reserved",
             "type": {
               "array": [
                 "u8",
-                496
+                488
               ]
             }
           }
@@ -870,10 +905,6 @@
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "uxpTrueCirculatingSupply",
-            "type": "u64"
-          },
           {
             "name": "liquidInsuranceFundUsdcAmount",
             "type": "u64"
@@ -916,5 +947,8 @@
       "name": "InvalidParameters",
       "msg": "The provided parameters are invalid."
     }
-  ]
+  ],
+  "metadata": {
+    "address": "4MiVF1JAUmrLFGhK7JSpA6U5jc7TTL76kVKAp1zHBBwc"
+  }
 }
