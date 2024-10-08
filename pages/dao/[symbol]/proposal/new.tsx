@@ -142,6 +142,12 @@ import { useVoteByCouncilToggle } from '@hooks/useVoteByCouncilToggle'
 import BurnTokens from './components/instructions/BurnTokens'
 import RemoveLockup from './components/instructions/Validators/removeLockup'
 
+import UxdRedemptionInitializeRealm from './components/instructions/UXDRedemption/InitializeRealm'
+import UxdRedemptionStartPhaseOne from './components/instructions/UXDRedemption/StartPhaseOne'
+import UxdRedemptionStartPhaseTwo from './components/instructions/UXDRedemption/StartPhaseTwo'
+import UxdRedemptionSetUXDProgramAdmin from './components/instructions/UXDRedemption/SetUXDProgramAdmin'
+import UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc from './components/instructions/UXDRedemption/DepositIlliquidInsuranceFundIntoRealmUsdc'
+
 const TITLE_LENGTH_LIMIT = 130
 // the true length limit is either at the tx size level, and maybe also the total account size level (I can't remember)
 // so this is semi arbitrary
@@ -598,6 +604,11 @@ const New = () => {
       [Instructions.RemoveServiceFromDID]: RemoveServiceFromDID,
       [Instructions.RevokeGoverningTokens]: RevokeGoverningTokens,
       [Instructions.SetMintAuthority]: SetMintAuthority,
+      [Instructions.UxdRedemptionInitializeRealm]: UxdRedemptionInitializeRealm,
+      [Instructions.UxdRedemptionStartPhaseOne]: UxdRedemptionStartPhaseOne,
+      [Instructions.UxdRedemptionStartPhaseTwo]: UxdRedemptionStartPhaseTwo,
+      [Instructions.UxdRedemptionSetUXDProgramAdmin]: UxdRedemptionSetUXDProgramAdmin,
+      [Instructions.UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc]: UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc,
     }),
     [governance?.pubkey?.toBase58()]
   )

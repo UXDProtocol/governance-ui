@@ -384,6 +384,7 @@ export enum Instructions {
   UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc,
   UxdRedemptionInitializeRealm,
   UxdRedemptionStartPhaseOne,
+  UxdRedemptionSetUXDProgramAdmin,
   UxdRedemptionStartPhaseTwo,
   VotingMintConfig,
   WithdrawObligationCollateralAndRedeemReserveLiquidity,

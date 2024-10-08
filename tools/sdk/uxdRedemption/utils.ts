@@ -1,7 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
 
-
-
 export function getRealmPda(
     programId: PublicKey,
 ): PublicKey {
@@ -16,7 +14,7 @@ export function getRealmUsdcPda(
     programId: PublicKey,
 ): PublicKey {
     return PublicKey.findProgramAddressSync(
-        [Buffer.from('realm'), realmPda.toBuffer()],
+        [Buffer.from('realm_usdc'), realmPda.toBuffer()],
         programId
     )[0]
 }

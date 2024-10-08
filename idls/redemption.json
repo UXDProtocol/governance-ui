@@ -947,8 +947,5 @@
       "name": "InvalidParameters",
       "msg": "The provided parameters are invalid."
     }
-  ],
-  "metadata": {
-    "address": "4MiVF1JAUmrLFGhK7JSpA6U5jc7TTL76kVKAp1zHBBwc"
-  }
+  ]
 }

@@ -132,6 +132,8 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       s.assetAccounts = []
     })
 
+    console.log('>>> LOAD')
+
     const governancesArray = _get().governancesArray
     const accounts: AssetAccount[] = []
     const nativeAddresses = await Promise.all([
@@ -145,6 +147,9 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
         nativeTreasuryAddress: nativeAddresses[index],
       })
     )
+
+    console.log('>>> LOAD 2')
+
     //due to long request for mint accounts that are owned by every governance
     //we fetch
     const possibleMintAccountPks = [
@@ -157,12 +162,18 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
     if (additionalMintAccounts) {
       possibleMintAccountPks.push(...additionalMintAccounts)
     }
+
+    console.log('>>> LOAD 3')
+
     // 1 - Load token accounts behind any type of governance
     const governedTokenAccounts = await loadGovernedTokenAccounts(
       connection,
       realm,
       governancesWithNativeTreasuryAddress
     )
+
+    console.log('>>> LOAD 4')
+
     // 2 - Call to fetch token prices for every token account's mints
     await tokenPriceService.fetchTokenPrices(
       governedTokenAccounts.reduce((mints, governedTokenAccount) => {
@@ -176,6 +187,9 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
         ]
       }, [] as string[])
     )
+
+    console.log('>>> LOAD 5')
+
     accounts.push(...governedTokenAccounts)
     const stakeAccounts = await loadStakeAccounts(
       connection,
@@ -184,6 +198,8 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       )
     )
     accounts.push(...stakeAccounts)
+
+    console.log('>>> LOAD 6')
 
     set((s) => {
       s.loadTokenAccounts = false
@@ -198,6 +214,8 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       s.assetAccounts = accounts.filter(filterOutHiddenAccounts)
     })
 
+    console.log('>>> LOAD 7')
+
     // 3 - Load accounts related to mint
     const mintAccounts = await loadMintGovernanceAccounts(
       connection,
@@ -210,6 +228,8 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       s.assetAccounts = accounts.filter(filterOutHiddenAccounts)
     })
 
+    console.log('>>> LOAD 8')
+
     // 4 - Load accounts related to program governances
     const programAccounts = await getProgramAssetAccounts(
       connection,
@@ -221,6 +241,7 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       s.assetAccounts = accounts.filter(filterOutHiddenAccounts)
     })
 
+    console.log('>>> LOAD 9')
     // 5 - Create generic asset accounts for governance's governedAccounts that have not been handled yet
     // We do this so theses accounts may be selected
     const genericGovernances = getGenericAssetAccounts(
@@ -233,6 +254,7 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
     )
     accounts.push(...genericGovernances)
 
+    console.log('>>> LOAD 10')
     set((s) => {
       s.loadGovernedAccounts = false
       s.assetAccounts = accounts.filter(filterOutHiddenAccounts)
@@ -820,7 +842,7 @@ const loadGovernedTokenAccounts = async (
   const tokenAccountsInfo = (
     await Promise.all(
       // Load infos in batch, cannot load 9999 accounts within one request
-      group(tokenAccountsOwnedByGovernances, 100).map((group) =>
+      group(tokenAccountsOwnedByGovernances, 10).map((group) =>
         getTokenAccountsInfo(connection, group)
       )
     )

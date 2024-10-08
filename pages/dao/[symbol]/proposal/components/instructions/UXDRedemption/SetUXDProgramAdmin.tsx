@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useContext, useEffect, useState } from 'react'
 import * as yup from 'yup'
-import { isFormValid, validatePubkey } from '@utils/formValidation'
+import { isFormValid } from '@utils/formValidation'
 import { UiInstruction } from '@utils/uiTypes/proposalCreationTypes'
 import useGovernanceAssets from '@hooks/useGovernanceAssets'
 import { Governance } from '@solana/spl-governance'
@@ -13,15 +13,14 @@ import { InstructionInputType } from '../inputInstructionType'
 import { NewProposalContext } from '../../../new'
 import { PublicKey } from '@solana/web3.js'
 import { AssetAccount } from '@utils/uiTypes/assets'
-import useUXDRedemptionProgram from '@hooks/useUXDRedemptionProgram'
-import * as uxdRedemptionUtils from '@tools/sdk/uxdRedemption/utils'
+import useUXDProgram from '@hooks/useUXDProgram'
 
-export interface StartPhaseOneForm {
+export interface SetUXDProgramAdminForm {
   governedAccount: AssetAccount | null
-  redemptionProgramId: PublicKey | null
+  newAuthority: string | null
 }
 
-export default function StartPhaseOne({
+export default function SetUXDProgramAdmin({
   index,
   governance,
 }: {
@@ -30,15 +29,16 @@ export default function StartPhaseOne({
 }) {
   const wallet = useWalletOnePointOh()
   const { assetAccounts } = useGovernanceAssets()
+
   const shouldBeGoverned = !!(index !== 0 && governance)
-  const [form, setForm] = useState<StartPhaseOneForm>({
+  const [form, setForm] = useState<SetUXDProgramAdminForm>({
     governedAccount: null,
-    redemptionProgramId: null,
+    newAuthority: null,
   })
   const [formErrors, setFormErrors] = useState({})
   const { handleSetInstructions } = useContext(NewProposalContext)
-  const uxdRedemptionProgram = useUXDRedemptionProgram({
-    programId: form.redemptionProgramId,
+  const uxdProgram = useUXDProgram({
+    programId: new PublicKey('UXD8m9cvwk4RcSxnX2HZ9VudQCEeDH6fRnB4CAP57Dr'),
   })
 
   const validateInstruction = async (): Promise<boolean> => {
@@ -54,22 +54,29 @@ export default function StartPhaseOne({
       isValid &&
       form.governedAccount?.governance?.account &&
       wallet?.publicKey &&
-      uxdRedemptionProgram
+      uxdProgram &&
+      form.newAuthority
     ) {
-      const realmPda = uxdRedemptionUtils.getRealmPda(
-        uxdRedemptionProgram.programId
-      )
+      console.log('NEW AUTHORITY', new PublicKey(form.newAuthority).toBase58())
 
-      const instruction = await uxdRedemptionProgram.methods
-        .startPhaseOne()
+      const instruction = await uxdProgram.methods
+        .editControllerAuthority(new PublicKey(form.newAuthority))
         .accountsStrict({
-          payer: wallet.publicKey,
-          realm: realmPda,
-          authority: form.governedAccount.pubkey,
+          authority: new PublicKey(
+            'CzZySsi1dRHMitTtNe2P12w3ja2XmfcGgqJBS8ytBhhY'
+          ),
+          controller: new PublicKey(
+            '3tbJcXAWQkFVN26rZPtwkFNvC24sPT35fDxG4M7irLQW'
+          ),
         })
         .instruction()
 
       if (!instruction) throw new Error('Error generating instruction')
+
+      console.log(
+        'GOVERNANCE',
+        form.governedAccount?.governance.pubkey.toBase58()
+      )
 
       return {
         serializedInstruction: serializeInstructionToBase64(instruction),
@@ -93,23 +100,13 @@ export default function StartPhaseOne({
       index
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO please fix, it can cause difficult bugs. You might wanna check out https://bobbyhadz.com/blog/react-hooks-exhaustive-deps for info. -@asktree
-  }, [form, uxdRedemptionProgram])
+  }, [form, uxdProgram])
 
   const schema = yup.object().shape({
     governedAccount: yup
       .object()
       .nullable()
       .required('Program governed account is required'),
-    redemptionProgramId: yup
-      .string()
-      .required('Redemption program id is required')
-      .test(
-        'is-redemption-program-id-valid',
-        'Invalid Redemption Program ID',
-        function (val: string) {
-          return val ? validatePubkey(val) : true
-        }
-      ),
   })
 
   const inputs: InstructionInput[] = [
@@ -123,11 +120,11 @@ export default function StartPhaseOne({
       options: assetAccounts,
     },
     {
-      label: 'Redemption Program ID',
-      initialValue: form.redemptionProgramId,
+      label: 'New Authority',
+      initialValue: form.newAuthority,
       type: InstructionInputType.INPUT,
       inputType: 'text',
-      name: 'redemptionProgramId',
+      name: 'newAuthority',
     },
   ]
 

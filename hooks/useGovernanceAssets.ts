@@ -778,6 +778,10 @@ export default function useGovernanceAssets() {
       name: 'Start Phase Two',
       packageId: PackageEnum.UxdRedemption,
     },
+    [Instructions.UxdRedemptionSetUXDProgramAdmin]: {
+      name: 'Set UXD Program Admin',
+      packageId: PackageEnum.UxdRedemption,
+    },
 
     /*
       ██    ██ ███████ ██████      ██████  ██      ██    ██  ██████  ██ ███    ██

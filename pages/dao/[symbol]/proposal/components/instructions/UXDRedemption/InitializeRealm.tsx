@@ -69,7 +69,7 @@ export default function InitializeRealm({
       form.spillWallet
     ) {
       const usdcMint = new PublicKey(
-        'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+        '9ZzK3pwvVUgwuFe5kjHo1V9kzmmQ6nJMPMQyTVQPwzuM'
       )
       const realmPda = uxdRedemptionUtils.getRealmPda(
         uxdRedemptionProgram.programId
@@ -102,7 +102,9 @@ export default function InitializeRealm({
           authority: form.governedAccount.pubkey,
           spill: form.spillWallet,
           uctMint: utcMint,
-          uxpMint: new PublicKey('UXPhBoR3qG4UCiGNJfV7MqhHyFqKN68g45GoYvAeL2M'),
+          uxpMint: new PublicKey(
+            '7NQz61WtEmCr2jUvaLX779H553WmuvhkXsaZuzzE8ygx'
+          ),
           usdcMint: usdcMint,
           funding: form.governedAccount.pubkey,
           fundingUsdc,

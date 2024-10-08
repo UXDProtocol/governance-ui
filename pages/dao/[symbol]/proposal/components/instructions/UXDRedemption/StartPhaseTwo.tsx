@@ -98,7 +98,7 @@ export default function StartPhaseTwo({
       index
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps -- TODO please fix, it can cause difficult bugs. You might wanna check out https://bobbyhadz.com/blog/react-hooks-exhaustive-deps for info. -@asktree
-  }, [form])
+  }, [form, uxdRedemptionProgram])
 
   const schema = yup.object().shape({
     governedAccount: yup
