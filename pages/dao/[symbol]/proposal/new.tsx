@@ -141,12 +141,18 @@ import PythRecoverAccount from './components/instructions/Pyth/PythRecoverAccoun
 import { useVoteByCouncilToggle } from '@hooks/useVoteByCouncilToggle'
 import BurnTokens from './components/instructions/BurnTokens'
 import RemoveLockup from './components/instructions/Validators/removeLockup'
+import SymmetryCreateBasket from './components/instructions/Symmetry/SymmetryCreateBasket'
+import SymmetryEditBasket from './components/instructions/Symmetry/SymmetryEditBasket'
+import SymmetryDeposit from './components/instructions/Symmetry/SymmetryDeposit'
+import SymmetryWithdraw from './components/instructions/Symmetry/SymmetryWithdraw'
+import PythUpdatePoolAuthority from './components/instructions/Pyth/PythUpdatePoolAuthority'
 
 import UxdRedemptionInitializeRealm from './components/instructions/UXDRedemption/InitializeRealm'
 import UxdRedemptionStartPhaseOne from './components/instructions/UXDRedemption/StartPhaseOne'
 import UxdRedemptionStartPhaseTwo from './components/instructions/UXDRedemption/StartPhaseTwo'
 import UxdRedemptionSetUXDProgramAdmin from './components/instructions/UXDRedemption/SetUXDProgramAdmin'
 import UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc from './components/instructions/UXDRedemption/DepositIlliquidInsuranceFundIntoRealmUsdc'
+import UxdRedemptionExchangeLiquidityWithCredixLpDepository from './components/instructions/UXDRedemption/ExchangeLiquidityWithCredixLpDepository'
 
 const TITLE_LENGTH_LIMIT = 130
 // the true length limit is either at the tx size level, and maybe also the total account size level (I can't remember)
@@ -519,6 +525,7 @@ const New = () => {
       [Instructions.SquadsMeshAddMember]: MeshAddMember,
       [Instructions.SquadsMeshChangeThresholdMember]: MeshChangeThresholdMember,
       [Instructions.PythRecoverAccount]: PythRecoverAccount,
+      [Instructions.PythUpdatePoolAuthority]: PythUpdatePoolAuthority,
       [Instructions.CreateSolendObligationAccount]: CreateObligationAccount,
       [Instructions.InitSolendObligationAccount]: InitObligationAccount,
       [Instructions.DepositReserveLiquidityAndObligationCollateral]: DepositReserveLiquidityAndObligationCollateral,
@@ -609,6 +616,11 @@ const New = () => {
       [Instructions.UxdRedemptionStartPhaseTwo]: UxdRedemptionStartPhaseTwo,
       [Instructions.UxdRedemptionSetUXDProgramAdmin]: UxdRedemptionSetUXDProgramAdmin,
       [Instructions.UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc]: UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc,
+      [Instructions.UxdRedemptionExchangeLiquidityWithCredixLpDepository]: UxdRedemptionExchangeLiquidityWithCredixLpDepository,
+      [Instructions.SymmetryCreateBasket]: SymmetryCreateBasket,
+      [Instructions.SymmetryEditBasket]: SymmetryEditBasket,
+      [Instructions.SymmetryDeposit]: SymmetryDeposit,
+      [Instructions.SymmetryWithdraw]: SymmetryWithdraw,
     }),
     [governance?.pubkey?.toBase58()]
   )

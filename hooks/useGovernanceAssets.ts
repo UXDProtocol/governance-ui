@@ -188,6 +188,10 @@ export default function useGovernanceAssets() {
       name: 'Solend',
       image: '/img/solend.png',
     },
+    [PackageEnum.Symmetry]: {
+      name: 'Symmetry',
+      image: '/img/symmetry.png',
+    },
     [PackageEnum.Squads]: {
       name: 'Squads',
       image: '/img/squads.png',
@@ -648,6 +652,10 @@ export default function useGovernanceAssets() {
       name: 'Recover Account',
       packageId: PackageEnum.Pyth,
     },
+    [Instructions.PythUpdatePoolAuthority]: {
+      name: 'Update Pool Authority',
+      packageId: PackageEnum.Pyth,
+    },
     /*
       ███████ ███████ ██████  ██    ██ ███    ███
       ██      ██      ██   ██ ██    ██ ████  ████
@@ -717,6 +725,30 @@ export default function useGovernanceAssets() {
       name: 'Withdraw Funds',
       packageId: PackageEnum.Solend,
     },
+
+    /*
+    ███████ ██    ██ ███    ███ ███    ███ ███████ ████████ ██████  ██    ██ 
+    ██       ██  ██  ████  ████ ████  ████ ██         ██    ██   ██  ██  ██  
+    ███████   ████   ██ ████ ██ ██ ████ ██ █████      ██    ██████    ████   
+         ██    ██    ██  ██  ██ ██  ██  ██ ██         ██    ██   ██    ██    
+    ███████    ██    ██      ██ ██      ██ ███████    ██    ██   ██    ██    
+    */
+    [Instructions.SymmetryCreateBasket]: {
+      name: 'Create Basket',
+      packageId: PackageEnum.Symmetry,
+    },
+    [Instructions.SymmetryEditBasket]: {
+      name: 'Edit Basket',
+      packageId: PackageEnum.Symmetry,
+    },
+    [Instructions.SymmetryDeposit]: {
+      name: 'Deposit into Basket',
+      packageId: PackageEnum.Symmetry,
+    },
+    [Instructions.SymmetryWithdraw]: {
+      name: 'Withdraw from Basket',
+      packageId: PackageEnum.Symmetry,
+    },
     /*
     ███████  ██████  ██    ██  █████  ██████  ███████ 
     ██      ██    ██ ██    ██ ██   ██ ██   ██ ██      
@@ -780,6 +812,10 @@ export default function useGovernanceAssets() {
     },
     [Instructions.UxdRedemptionSetUXDProgramAdmin]: {
       name: 'Set UXD Program Admin',
+      packageId: PackageEnum.UxdRedemption,
+    },
+    [Instructions.UxdRedemptionExchangeLiquidityWithCredixLpDepository]: {
+      name: 'Exchange Liquidity With Credix Lp Depository',
       packageId: PackageEnum.UxdRedemption,
     },
 

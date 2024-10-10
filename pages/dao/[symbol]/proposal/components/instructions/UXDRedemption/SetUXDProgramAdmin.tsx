@@ -73,11 +73,6 @@ export default function SetUXDProgramAdmin({
 
       if (!instruction) throw new Error('Error generating instruction')
 
-      console.log(
-        'GOVERNANCE',
-        form.governedAccount?.governance.pubkey.toBase58()
-      )
-
       return {
         serializedInstruction: serializeInstructionToBase64(instruction),
         isValid,
