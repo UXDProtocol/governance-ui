@@ -68,6 +68,7 @@ export const getTokenAccountsByMint = async (
       },
     ],
   })
+
   return results.map((r) => {
     const publicKey = r.pubkey
     const data = Buffer.from(r.account.data)

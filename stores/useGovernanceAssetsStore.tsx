@@ -157,12 +157,16 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
     if (additionalMintAccounts) {
       possibleMintAccountPks.push(...additionalMintAccounts)
     }
+    console.log('LOAD 1')
+
     // 1 - Load token accounts behind any type of governance
     const governedTokenAccounts = await loadGovernedTokenAccounts(
       connection,
       realm,
       governancesWithNativeTreasuryAddress
     )
+    console.log('LOAD 2')
+
     // 2 - Call to fetch token prices for every token account's mints
     await tokenPriceService.fetchTokenPrices(
       governedTokenAccounts.reduce((mints, governedTokenAccount) => {
@@ -177,6 +181,8 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       }, [] as string[])
     )
     accounts.push(...governedTokenAccounts)
+
+    console.log('LOAD 3')
     const stakeAccounts = await loadStakeAccounts(
       connection,
       governedTokenAccounts.filter(
@@ -198,6 +204,7 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       s.assetAccounts = accounts.filter(filterOutHiddenAccounts)
     })
 
+    console.log('LOAD 4')
     // 3 - Load accounts related to mint
     const mintAccounts = await loadMintGovernanceAccounts(
       connection,
@@ -210,6 +217,7 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       s.assetAccounts = accounts.filter(filterOutHiddenAccounts)
     })
 
+    console.log('LOAD 5')
     // 4 - Load accounts related to program governances
     const programAccounts = await getProgramAssetAccounts(
       connection,
@@ -221,6 +229,7 @@ const useGovernanceAssetsStore = create<GovernanceAssetsStore>((set, _get) => ({
       s.assetAccounts = accounts.filter(filterOutHiddenAccounts)
     })
 
+    console.log('LOAD 6')
     // 5 - Create generic asset accounts for governance's governedAccounts that have not been handled yet
     // We do this so theses accounts may be selected
     const genericGovernances = getGenericAssetAccounts(
@@ -690,6 +699,8 @@ const getTokenAccountsInfo = async (
   }
 
   return tokenAccountsInfoJson.reduce((tokenAccountsInfo, { result }) => {
+    if (!result) return tokenAccountsInfo
+
     result.forEach(
       ({
         account: {
@@ -1046,6 +1057,8 @@ const getProgramAccountInfo = async (
     if (executableAccountInfoJson && executableAccountInfoJson.length) {
       const executableDataPks = executableAccountInfoJson.reduce(
         (executableAccountInfo, { result, id }) => {
+          if (!result) return executableAccountInfo
+
           result.forEach(({ pubkey }) => {
             const executableDataPk = new PublicKey(pubkey)
             executableAccountInfo.push({
