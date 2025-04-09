@@ -208,6 +208,10 @@ export default function useGovernanceAssets() {
           currentPluginPk.toBase58()
         ),
     },
+    [PackageEnum.UxdRedemption]: {
+      name: 'UXD Redemption',
+      image: '/img/uxd.svg',
+    },
   }
 
   // Alphabetical order, Packages then instructions
@@ -373,6 +377,25 @@ export default function useGovernanceAssets() {
       isVisible: canUseTransferInstruction,
       packageId: PackageEnum.Common,
     },
+
+    /*
+      ██    ██ ██   ██ ██████      ██████  ███████ ██████  ███████ ███    ███ ██████  ████████ ██  ██████  ███    ██ 
+      ██    ██  ██ ██  ██   ██     ██   ██ ██      ██   ██ ██      ████  ████ ██   ██    ██    ██ ██    ██ ████   ██ 
+      ██    ██   ███   ██   ██     ██████  █████   ██   ██ █████   ██ ████ ██ ██████     ██    ██ ██    ██ ██ ██  ██ 
+      ██    ██  ██ ██  ██   ██     ██   ██ ██      ██   ██ ██      ██  ██  ██ ██         ██    ██ ██    ██ ██  ██ ██ 
+       ██████  ██   ██ ██████      ██   ██ ███████ ██████  ███████ ██      ██ ██         ██    ██  ██████  ██   ████ 
+    */
+
+    // UxdRedemptionStartPhaseTwo,
+    [Instructions.UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc]: {
+      name: 'Deposit Illiquid Insurance Fund into Realm USDC',
+      packageId: PackageEnum.UxdRedemption,
+    },
+    [Instructions.UxdRedemptionStartPhaseTwo]: {
+      name: 'Start Phase Two',
+      packageId: PackageEnum.UxdRedemption,
+    },
+
     /*
       ██████  ██    ██  █████  ██          ███████ ██ ███    ██  █████  ███    ██  ██████ ███████
       ██   ██ ██    ██ ██   ██ ██          ██      ██ ████   ██ ██   ██ ████   ██ ██      ██

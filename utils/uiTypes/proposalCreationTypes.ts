@@ -28,6 +28,7 @@ export enum PackageEnum {
   Squads,
   Switchboard,
   VsrPlugin,
+  UxdRedemption,
 }
 
 export interface UiInstruction {
@@ -397,7 +398,9 @@ export enum Instructions {
   SymmetryCreateBasket,
   SymmetryEditBasket,
   SymmetryDeposit,
-  SymmetryWithdraw
+  SymmetryWithdraw,
+  UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc,
+  UxdRedemptionStartPhaseTwo,
 }
 
 export interface ComponentInstructionData {
@@ -570,7 +573,7 @@ export interface SymmetryCreateBasketForm {
   rebalanceThreshold: number,
   rebalanceSlippageTolerance: number,
   depositFee: number,
-  feeCollectorAddress:string,
+  feeCollectorAddress: string,
   liquidityProvision: boolean,
   liquidityProvisionRange: number,
 }
@@ -592,7 +595,7 @@ export interface SymmetryEditBasketForm {
   rebalanceThreshold: number,
   rebalanceSlippageTolerance: number,
   depositFee: number,
-  feeCollectorAddress:string,
+  feeCollectorAddress: string,
   liquidityProvision: boolean,
   liquidityProvisionRange: number,
 }

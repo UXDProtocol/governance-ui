@@ -66,6 +66,9 @@ import SplitStake from './components/instructions/Validators/SplitStake'
 import useCreateProposal from '@hooks/useCreateProposal'
 import RealmConfig from './components/instructions/RealmConfig'
 import CloseTokenAccount from './components/instructions/CloseTokenAccount'
+import UxdRedemptionStartPhaseTwo from './components/instructions/UXDRedemption/StartPhaseTwo'
+import UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc from './components/instructions/UXDRedemption/DepositIlliquidInsuranceFundIntoRealmUsdc'
+
 import CloseMultipleTokenAccounts from './components/instructions/CloseMultipleTokenAccounts'
 import { InstructionDataWithHoldUpTime } from 'actions/createProposal'
 import StakingOption from './components/instructions/Dual/StakingOption'
@@ -536,6 +539,8 @@ const New = () => {
       [Instructions.CreateNftPluginMaxVoterWeight]: CreateNftPluginMaxVoterWeightRecord,
       [Instructions.ConfigureNftPluginCollection]: ConfigureNftPluginCollection,
       [Instructions.CloseTokenAccount]: CloseTokenAccount,
+      [Instructions.UxdRedemptionStartPhaseTwo]: UxdRedemptionStartPhaseTwo,
+      [Instructions.UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc]: UxdRedemptionDepositIlliquidInsuranceFundIntoRealmUsdc,
       [Instructions.CloseMultipleTokenAccounts]: CloseMultipleTokenAccounts,
       [Instructions.VotingMintConfig]: VotingMintConfig,
       [Instructions.CreateVsrRegistrar]: CreateVsrRegistrar,
